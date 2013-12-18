@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name.
+ * Community Commons Salud America
  *
- * @package   Plugin_Name
- * @author    Your Name <email@example.com>
+ * @package   Community_Commons_Salud_America
+ * @author    David Cavins
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2013 Your Name or Company Name
+ * @link      http://www.communitycommons.org
+ * @copyright 2013 Community Commons
  */
 
 /**
@@ -14,26 +14,25 @@
  * public-facing side of the WordPress site.
  *
  * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `class-plugin-name-admin.php`
+ * functionality, then refer to `admin/class-cc-salud-america-admin.php`
  *
  * @TODO: Rename this class to a proper name for your plugin.
  *
- * @package Plugin_Name
- * @author  Your Name <email@example.com>
+ * @package Community_Commons_Salud_America
+ * @author  David Cavins
  */
-class Plugin_Name {
+class CC_Salud_America {
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
 	 *
-	 * @since   1.0.0
+	 * @since   0.1.0
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '0.1.0';
 
 	/**
-	 * @TODO - Rename "plugin-name" to the name your your plugin
 	 *
 	 * Unique identifier for your plugin.
 	 *
@@ -46,7 +45,7 @@ class Plugin_Name {
 	 *
 	 * @var      string
 	 */
-	protected $plugin_slug = 'plugin-name';
+	protected $plugin_slug = 'cc-salud-america';
 
 	/**
 	 * Instance of this class.
@@ -78,8 +77,8 @@ class Plugin_Name {
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_action( '@TODO', array( $this, 'action_method_name' ) );
-		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+		// add_action( '@TODO', array( $this, 'action_method_name' ) );
+		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 
 	}
 
@@ -266,6 +265,7 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+		// @TODO Scope this once we know the scope
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
 	}
 
@@ -275,6 +275,7 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+		// @TODO Scope this once we know the scope
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
 	}
 

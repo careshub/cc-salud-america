@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name.
+ * Community Commons Salud America
  *
- * @package   Plugin_Name_Admin
- * @author    Your Name <email@example.com>
+ * @package   Community_Commons_Salud_America_Admin
+ * @author    David Cavins
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2013 Your Name or Company Name
+ * @link      http://www.communitycommons.org
+ * @copyright 2013 Community Commons
  */
 
 /**
@@ -18,10 +18,10 @@
  *
  * @TODO: Rename this class to a proper name for your plugin.
  *
- * @package Plugin_Name_Admin
+ * @package   Community_Commons_Salud_America_Admin
  * @author  Your Name <email@example.com>
  */
-class Plugin_Name_Admin {
+class CC_Salud_America_Admin {
 
 	/**
 	 * Instance of this class.
@@ -66,10 +66,11 @@ class Plugin_Name_Admin {
 		 * - Rename "Plugin_Name" to the name of your initial plugin class
 		 *
 		 */
-		$plugin = Plugin_Name::get_instance();
+		$plugin = CC_Salud_America::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
 		// Load admin style sheet and JavaScript.
+		// @TODO scope these
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
@@ -136,7 +137,7 @@ class Plugin_Name_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Plugin_Name::VERSION );
+			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), CC_Salud_America::VERSION );
 		}
 
 	}
@@ -160,7 +161,7 @@ class Plugin_Name_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Plugin_Name::VERSION );
+			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), CC_Salud_America::VERSION );
 		}
 
 	}
@@ -187,8 +188,8 @@ class Plugin_Name_Admin {
 		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Page Title', $this->plugin_slug ),
-			__( 'Menu Text', $this->plugin_slug ),
+			__( 'Salud America Admin Page Title', $this->plugin_slug ),
+			__( 'Salud America', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
