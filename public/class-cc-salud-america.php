@@ -16,7 +16,6 @@
  * If you're interested in introducing administrative or dashboard
  * functionality, then refer to `admin/class-cc-salud-america-admin.php`
  *
- * @TODO: Rename this class to a proper name for your plugin.
  *
  * @package Community_Commons_Salud_America
  * @author  David Cavins
@@ -71,14 +70,20 @@ class CC_Salud_America {
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
 		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
 		// add_action( '@TODO', array( $this, 'action_method_name' ) );
 		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+		
+		// Add our templates to BuddyPress' template stack.
+		add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack'), 10, 1 );
+
+		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
+		add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
 
 	}
 
@@ -303,6 +308,41 @@ class CC_Salud_America {
 	 */
 	public function filter_method_name() {
 		// @TODO: Define your filter hook callback here
+	}
+
+	/**
+	 * Add our templates to BuddyPress' template stack.
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_template_stack( $templates ) {
+	    // if we're on a page of our plugin and the theme is not BP Default, then we
+	    // add our path to the template path array
+	    if ( bp_is_current_component( 'groups' ) && sa_is_sa_group() ) {
+	        $templates[] = trailingslashit( plugin_dir_path( __FILE__ ) . 'templates' );
+	    }
+	   // $towrite = print_r($templates, TRUE);
+	   // $fp = fopen('template_stack.txt', 'a');
+	   // fwrite($fp, $towrite);
+	   // fclose($fp);
+	    return $templates;
+	}
+
+	/**
+	 * Modify the permalinks for SA-related CPTs. Point all traffic to the group.
+	 *
+	 * @since    1.0.0
+	 */
+	function cpt_permalink_filter( $permalink, $post ) {
+		$post_type = get_post_type( $post );
+
+		if ( in_array( $post_type, array( 'saresources', 'sa_success_story', 'sa_take_action', 'sapolicies' ) ) ) {
+			$section = sa_get_section_by_cpt( $post_type );
+			$section_permalink = sa_get_section_permalink( $section );
+			$permalink = $section_permalink . $post->post_name;
+		}
+
+	    return $permalink;
 	}
 
 }

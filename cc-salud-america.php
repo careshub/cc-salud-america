@@ -5,14 +5,14 @@
  * A foundation off of which to build well-documented WordPress plugins that
  * also follow WordPress Coding Standards and PHP best practices.
  *
- * @package   Community Commons Salud America 
- * @author    David Cavins <email@example.com>
+ * @package   Community_Commons_Salud_America
+ * @author    David Cavins
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2013 Your Name or Company Name
+ * @link      http://www.communitycommons.org
+ * @copyright 2013 Community Commons
  *
  * @wordpress-plugin
- * Plugin Name:       Community Commons Salud America
+ * Plugin Name:       CC Salud America
  * Plugin URI:        @TODO
  * Description:       Adds SA functionality to CC site
  * Version:           0.1.0
@@ -34,7 +34,33 @@ if ( ! defined( 'WPINC' ) ) {
  * Public-Facing Functionality
  *----------------------------------------------------------------------------*/
 
-require_once( plugin_dir_path( __FILE__ ) . 'public/class-cc-salud-america.php' );
+function sa_class_init() {
+
+    // Helper functions
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/sa-functions.php' );
+    // Template output functions
+    require_once( plugin_dir_path( __FILE__ ) . 'public/views/template-tags.php' );
+
+    // The main class
+    require_once( plugin_dir_path( __FILE__ ) . 'public/class-cc-salud-america.php' );
+    add_action( 'bp_include', array( 'CC_Salud_America', 'get_instance' ), 21 );
+
+    // Admin and dashboard functionality
+    // if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+        // require_once( plugin_dir_path( __FILE__ ) . 'admin/class-cc-group-narratives-admin.php' );
+        // add_action( 'bp_include', array( 'CC_Group_Narratives_Admin', 'get_instance' ), 21 );
+    // }
+
+}
+add_action( 'bp_include', 'sa_class_init' );
+
+
+/* Only load the component if BuddyPress is loaded and initialized. */
+function bp_startup_cc_salud_america_extension() {
+	require_once( plugin_dir_path( __FILE__ ) . 'public/class-group-ext.php' );
+}
+add_action( 'bp_include', 'bp_startup_cc_salud_america_extension', 32 );
+
 
 /*
  * Register hooks that are fired when the plugin is activated or deactivated.
@@ -43,27 +69,3 @@ require_once( plugin_dir_path( __FILE__ ) . 'public/class-cc-salud-america.php' 
  */
 register_activation_hook( __FILE__, array( 'CC_Salud_America', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'CC_Salud_America', 'deactivate' ) );
-
-add_action( 'plugins_loaded', array( 'CC_Salud_America', 'get_instance' ) );
-
-/*----------------------------------------------------------------------------*
- * Dashboard and Administrative Functionality
- *----------------------------------------------------------------------------*/
-
-/*
- *
- * If you want to include Ajax within the dashboard, change the following
- * conditional to:
- *
- * if ( is_admin() ) {
- *   ...
- * }
- *
- * The code below is intended to to give the lightest footprint possible.
- */
-if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-	// @TODO if we need an admin area, uncomment these lines
-	// require_once( plugin_dir_path( __FILE__ ) . 'admin/class-cc-salud-america-admin.php' );
-	// add_action( 'plugins_loaded', array( 'CC_Salud_America_Admin', 'get_instance' ) );
-
-}
