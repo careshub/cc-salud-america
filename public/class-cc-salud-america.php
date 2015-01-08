@@ -70,7 +70,7 @@ class CC_Salud_America {
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
 		// Load public-facing style sheet and JavaScript.
-		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		/* Define custom functionality.
@@ -270,8 +270,9 @@ class CC_Salud_America {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		// @TODO Scope this once we know the scope
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
+		if ( sa_is_sa_group() ) {
+			wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'css/public.css', __FILE__ ), array(), self::VERSION );
+		}
 	}
 
 	/**
@@ -280,8 +281,9 @@ class CC_Salud_America {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		// @TODO Scope this once we know the scope
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		if ( sa_is_sa_group() ) {
+			wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.min.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		}
 	}
 
 	/**
