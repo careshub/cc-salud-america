@@ -32,7 +32,7 @@ class CC_Salud_America_Policies extends BP_Group_Extension {
         parent::init( $args );
     }
  
-    function display() {
+    function display( $group_id = null ) {
         bp_get_template_part( 'groups/single/sapolicies/index' );
     }
  	
