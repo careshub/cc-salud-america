@@ -43,7 +43,13 @@ function sa_class_init() {
 
     // The main class
     require_once( plugin_dir_path( __FILE__ ) . 'public/class-cc-salud-america.php' );
-    add_action( 'bp_include', array( 'CC_Salud_America', 'get_instance' ), 21 );
+    // add_action( 'bp_include', array( 'CC_Salud_America', 'get_instance' ), 21 );
+    // new CC_Salud_America();
+
+    // Extension classes
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sapolicies-cpt-tax.php' );
+    // add_action( 'bp_include', array( 'CC_SA_Policies_CPT_Tax', 'get_instance' ), 21 );
+    // new CC_SA_Policies_CPT_Tax();
 
     // Admin and dashboard functionality
     // if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {

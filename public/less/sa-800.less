@@ -1,0 +1,201 @@
+.group-salud-america #secondary .sidebar-activity-tabs { //sub navigation on member and group pages
+	margin-top: .5em;
+	//padding-bottom:1.5em;
+	border-bottom: none;
+	ul {
+		margin: 0 0 .5em 0;
+		padding: 0;
+		li {
+			.outliner();
+			//padding: .8em 1.5em .8em 6em;
+			margin:0 0 .2em -3.5em;
+			//margin: 0 1.5em;
+			display: block;
+			// background-color: @white;
+			.border-radius-variable(4px, 0, 0, 4px);
+			background-color: lighten(@graylight,11);
+			border-color: @graylight @graymid @graylight @graylight ;
+			border-style: solid;
+			border-width: 1px;
+			margin-right: -1px;
+			&.selected, &.current-menu-item {
+				.drop-shadow(-2px, 1px, 2px, 0, 0.1);
+				margin-right: -1px;
+				background-color: @white;
+			    border-color: @graymid @white @graymid @graymid;
+			    //padding-left: 5.3em;
+			    font-weight: 700;
+			    a {
+			    	color: @graydark;		    		    
+			    	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+			    	border:none;
+			    	background: none;
+					    padding-top: 1em;
+					    padding-bottom: 1em;
+
+			    }
+			}
+			&:hover {
+				background-color: @white;
+			}
+			a { 
+				// text-decoration: none; 
+				text-align: left;
+				// display: block;
+			    padding: .5em 1.5em .5em 3.6em;
+			    border:none;
+			    background: none;
+			    .font-size(1);
+			}
+			span { 
+				font-weight: 400;
+				display: inline;
+				//line-height: 3;
+				background-color: @graymid;
+				.border-radius(10px);
+				color: @white;
+				padding: 0 6px;
+				margin:0 8px;
+
+				//border:solid 1px @white;
+				&.alert {
+					background-color: lighten(@ccblue,8) ;
+					color:@white;
+					
+					}
+				}
+		}
+	}
+}
+
+//Salud America
+.salud-america {
+	// .site-content { 
+	// 	float: right;
+	// 	width: 80%;
+	// }
+	// .widget-area { 
+	// 	float: left; 
+	// 	margin-top:3.4em;
+	// }
+	.salud-header {
+		h1 {
+			width: 65%;
+		}
+		.logo {
+			top: 12px;
+			left: -19px;
+			width: 17%;
+		}
+		.sa-kids-photo {
+			display: block;
+			position: absolute;
+			right:-12px;
+			top: 0;
+			z-index: 1;
+			width: 32%;
+			// background: url(img/salud_america/sa-kids-335.png) no-repeat left bottom;
+			img {
+				display: block;
+				width: 100%;
+			}
+		}
+		.social-icons {
+			display:inline-block; 
+			margin-top:32px;
+		}
+	}
+	#content {
+	// embed,
+	// iframe,
+	// object,
+	// video {
+	// 	max-height: 206px;
+	// }
+
+	}
+}
+.tax-sa_advocacy_targets {
+	.advocacy_target_introduction {
+		// header {
+		// 	margin-bottom: 2em;
+		// }
+		// p {
+		// 	width: 45%;
+		// 	float: left;
+		// }
+		// embed,
+		// iframe,
+		// object,
+		// video {
+		// 	width: 45%;
+		// 	float:right;
+		// 	height: auto;
+		// 	margin-left: 5%;
+		// }
+
+	}
+}
+.policy-meta {
+	display: block;
+	// float: left;
+	// width: 90%;
+}
+// Progress tracker used on Salud America content-sapolicies
+ol.progtrckr {
+    margin: 0;
+    margin-bottom: 1em;
+    padding: 0;
+    list-style-type: none;
+}
+ol.progtrckr li {
+    display: inline-block;
+    text-align: center;
+    margin-left: 0;
+    // line-height: 2em;
+}
+ol.progtrckr[data-progtrckr-steps="2"] li { width: 49%; }
+ol.progtrckr[data-progtrckr-steps="3"] li { width: 33%; }
+ol.progtrckr[data-progtrckr-steps="4"] li { width: 24.9%; }
+ol.progtrckr[data-progtrckr-steps="5"] li { width: 19%; }
+ol.progtrckr[data-progtrckr-steps="6"] li { width: 16%; }
+ol.progtrckr[data-progtrckr-steps="7"] li { width: 14%; }
+
+ol.progtrckr li.progtrckr-done {
+    color: black;
+    border-bottom: 4px solid yellowgreen;
+}
+ol.progtrckr li.progtrckr-todo {
+    color: silver; 
+    border-bottom: 4px solid silver;
+}
+// ol.progtrckr li:after {
+//     content: "\00a0\00a0";
+// }
+ol.progtrckr li:before {
+    position: relative;
+    bottom: -13px;
+    // float: left;
+    // left: 50%;
+    float: right;
+    line-height: 24px;
+    border-radius: 20px;
+}
+ol.progtrckr li.progtrckr-done:before {
+    content: "\2713";
+    color: white;
+	height: 24px;
+    width: 24px;
+    background-color: yellowgreen;
+    border: none;
+}
+ol.progtrckr li.progtrckr-todo:before {
+    content: " ";
+	height: 18px;
+    width: 18px;
+    // color: silver;
+    border: 3px solid silver;
+    background-color: white;
+    // font-size: 1.5em;
+    // bottom: -1.6em;
+}

@@ -1,0 +1,633 @@
+//Salud America subsection
+.group-salud-america { 
+
+    // "Archive" pages
+    .sa-archive-navigation {
+        margin-bottom: 2em;
+        padding-bottom: 2em;
+        border-bottom: 1px solid #ccc;
+    }
+    .entry-header .entry-title {
+        .font-size(1.8);
+        margin-bottom: .5em;
+    }
+
+    // Policies "Archive"
+    // .browse-topics .salud-topic h4 {
+    //     clear: none;
+    //     float: left;
+    //     padding-left: 4%;
+    //     width: 68%;
+    //     margin-top: 0.5em;
+    //     margin-bottom: 0px;
+    //     line-height: 1.4;
+    // }
+
+	.site-content { 
+		// float: right;
+		width: 100%;
+		article {
+			border-bottom: 1px solid @saorange;
+			margin-bottom: 24px;
+			margin-bottom: 1.71429rem;
+			padding-bottom: 0;
+			overflow: auto;
+		&:last-child {
+			border-bottom: none;
+		}
+		&.sa_archive_introduction, &.page {
+			// border-bottom: none;
+			// margin-bottom: 0;
+		}
+		&.no-border {
+			border-bottom: none;
+		}
+		}
+		.main-article {
+			// padding-bottom: 3.4em;
+			// margin-bottom: 3.4em;
+			border-bottom: none;
+		}
+		.comments-area {
+			padding-bottom: 1em;
+			margin-bottom: 1em;
+			// border-bottom: 1px solid @saorange;
+		}
+	}
+	h2 {
+			color:@sared;
+			.font-size(2);
+	}
+	h3 {
+			color:@sared;
+			.font-size(1.6);
+	}
+	h4 {
+			color:@sared;
+			.font-size(1.2);
+	}
+	.widget-area { 
+		// float: left; 
+		// margin-top:3.4em;
+	}
+	.salud-header{
+		width:100%;
+		position: relative;
+		.logo {
+			img { 
+				display: none;
+			}
+		}
+		.sa-kids-photo {
+			img { 
+				display: none;
+			}		
+		}
+		h1, h3 {
+			float: left;
+			clear:none;
+			// margin-left: 2%;
+		    font-style: italic;
+		    position: relative;
+		    z-index: 10;
+		}
+		h1 {
+			.font-size(2.4);
+			color: @sared;
+			margin-top: .6em;
+			.salud-tagline {
+				.font-size(2);
+			}
+		}
+		h3 {
+			.font-size(1.2);
+			padding: 2%;
+			width: 96%;
+			background-color: @saorange;
+			// width:83%;
+			display: block;
+			line-height:1.4;
+			margin-top: 1em;
+			color:#FFF;
+			font-weight: 400;
+		    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+
+		}
+
+	}
+	.salud-footer {
+		border-top:1px solid @saorange;
+		float: left;
+		padding: 2.4em 1em 2em 1em;
+		margin-top: 1em;
+		// img {
+		// 	float: left;
+		// 	margin-right: 1.2em;
+		// }
+		p {
+			line-height: 1.6;
+			.font-size(.85);
+			font-style: italic;
+			margin-bottom: .8em;
+		}
+
+	}
+	.site-content {
+		.salud-banner { 
+			border-bottom:1px solid @saorange;
+			margin-bottom: 2em;
+			h2 {
+				color: darken(@sagreen,10);
+				font-style: italic;
+				.font-size(1.8);
+				clear:none;
+				display: inline-block;
+				margin-left: 8%;
+				// margin-top: 6%;
+				line-height:1.2;
+				vertical-align: top;
+				span {
+					color:@sagreen;
+					.font-size(2);
+				}
+			}
+		}
+		.browse-topics {
+			// border-top: 1px solid @saorange;
+			.salud-topic{
+				// float: left;
+				// margin-bottom: 3%;
+			 //    margin-right: 3%;
+			 //    width: 43%;
+				// display: inline-block;
+				// text-align: left;
+				// padding:.6em;
+				h3, h4 {
+					clear: none;
+				    float: left;
+				    padding-left: 4%;
+				    width: 68%;
+				    .font-size(1.3);
+				    margin-top: .5em;
+				    margin-bottom: 0;
+				    line-height: 1.4;
+				    .font-size(1.8);
+				}
+				p { 
+					border-left: 2px solid @sayellow;
+				    clear: left;
+				    line-height: 1.7;
+				    .font-size(1.0);
+				    margin-bottom: 0;
+				    margin-left: 1px;
+				    margin-top: 6px;
+				    padding-left: 10px;
+				    padding-top: 6px;
+				}
+				&.sa-active-spaces p {
+					border-left-color: @sablue; 
+				}
+				&.sa-better-food-in-neighborhoods p {
+					border-left-color: @saorange; 
+				}
+				&.sa-healthier-marketing p {
+					border-left-color: @sapink; 
+				}
+				&.sa-healthier-school-snacks p {
+					border-left-color: @salime; 
+				}
+				&.sa-sugary-drinks p {
+					border-left-color: @sapurple; 
+				}
+			}
+		} //End browse topics
+		.salud-topic .topic-header-link {
+			display: block;
+			overflow: auto;
+		}
+	.policy-search {
+		// border-bottom: 1px solid @saorange;
+	    margin-bottom: 1em;
+	    // padding-bottom: 2em;
+	 //    h3 {
+		// 		color:@sared;
+		// 		.font-size(1.4);
+		// 	}
+		// h4 {
+		// 		color:@sared;
+		// 		.font-size(1.2);
+		// 	}
+	}
+	.policy-search-home {
+		// border-bottom: 1px solid @saorange;
+	    margin-bottom: 1em;
+	    // padding-bottom: 2em;
+	    // display: inline-block;
+	    h4 {
+				color:@sared;
+				.font-size(1.2);
+		}
+	}
+	.sa-page-intro p {
+		padding: 12px;	
+		background-color: lighten(@graylight,11);	
+		color: @black;	
+		.font-size(1.1);	
+		line-height: 1.6;	
+		// font-style: italic;
+	}
+	.sapolicies, .saresources {
+		.icon { margin-right: 2%; }
+		// h1, h2, h4, p { 
+		// 	clear: none; 
+		// 	margin: 0 0 .5em 0;
+		// }
+		.entry-header .header-meta {
+			background-color: lighten( @graylight, 7%);
+			padding: 1em;
+			margin-top: -1.4em;
+			// border-bottom: 1px solid @sapurple;
+		}
+
+		.sa-policy-meta {
+			.font-size(0.9);
+			margin-bottom: .4em;
+		}
+		.sa-policy-date {
+			color: #777;
+			margin-left: 2em;
+		}
+		#sa_associated_resources {
+			list-style: none;
+			li{
+				margin: 0 0 .2em 0;
+				padding: 2px 4px;
+				&:nth-child(even) {
+					background-color: desaturate( lighten(@saorange, 44), 15);
+				}
+				p {
+					margin: .2em 0;
+				}
+			}
+			.sa_assoc_resource_title {
+				// .font-size(1.1);
+			}
+			.sa_assoc_resource_title p {
+				.font-size(0.9);
+			}
+		}
+	}
+	.related-policies, .taxonomy-policies {
+		h3 {
+			margin-top: 0;
+			margin-bottom: .7em !important;
+		}
+		.related-by-topic, .related-by-tag {
+			article:last-child {
+				// border-bottom: none;
+			}
+		}
+		.third-block {
+			margin-bottom: .5em;
+			padding-bottom: 0;
+
+			article {
+				margin-bottom: 0;
+				padding-bottom: 0;
+			}
+		}
+	}
+	.related-what-can-you-do {
+		margin-bottom: 24px;
+		margin-bottom: 1.71429rem;
+		padding-bottom: 24px;
+		padding-bottom: 1.71429rem;
+		.column1of3.aligncenter > img {
+		    margin: 1em;
+		}
+	}
+	.sa-item-short-form {
+			.entry-content {
+				.entry-header {
+					// margin-bottom: 0;
+					h2 {
+						margin-bottom: .7em
+					}
+					.location {
+						margin-bottom: .7em;
+					}
+				}
+			}
+		}
+	
+	// .related-items-sidebar {
+	// 	display: none;
+	// }
+
+	.sa-resource-header-icon {
+		position: relative;
+		span {
+		  // position: absolute;
+		  color: white;
+		  // bottom: 15px;
+		  // text-align: center;
+		  width: 92%;
+		  // font-weight: bold;
+		  line-height: 2;
+		  .font-size(1.2);
+		  padding-left: 2%;
+		  background-color: fade(@black, 80%);
+		  display: block;
+		}
+		img {
+			display: none;
+		}
+	}
+	.entry-header  {
+		// margin-bottom: 0;
+		// background-color: #AAA;
+		// border: 1px solid @sagreen;
+		img.wp-post-image {
+		    margin-top: 18px;
+		    margin-top: 1.285714286rem;
+		    margin-bottom: 14px;
+		    margin-bottom: 1rem;
+			}
+			h1 {
+				margin-top: 0;
+				margin-bottom: 1em !important;
+			}
+		}
+		.learn-from-success-stories, .find-changes, .examples-of-change {
+			.third-block, .half-block {
+				margin-bottom: 1em;
+				padding-bottom: 1em;
+				border-bottom: none;
+			}
+		}
+	.salud-hero-video-summary h3 {
+		margin-top:0;
+	}
+	} //End #content
+	.salud-success-stories-sidebar {
+		width:90%;
+		li {
+			margin: 1.2em 0;
+			h5 {
+				line-height: 1.2;
+				margin-bottom: .4em;
+			}
+		}
+	}
+	.video-container-group {
+		figcaption {
+			text-align: center;
+			input {
+				margin-right: .5em;
+			}
+		}
+	}
+	&.post-type-archive-sa_success_story .salud-topic .entry-title {
+		.font-size(1);
+	}
+}
+
+.tax-sa_advocacy_targets {
+	.advocacy_target_introduction {
+		border-bottom: none !important;
+		header {
+			margin-bottom: 2em;
+		}
+	}
+}
+
+.policy-meta {
+	//border: 1px solid #FAB;
+	// display: none;
+	float: left;
+	width: 100%;
+	margin-top: 4em;
+	h3 {
+		font-weight: 400;
+		margin-bottom:1em;
+		line-height: 1.5;
+
+	}
+	.policy-stats {
+		float: left;
+		.stat-group{
+			margin-bottom: 2em;
+			.stat-title {
+				font-weight: 400;
+				margin-bottom: .4em;
+				.font-size(.95);
+				//margin-top: 2em;
+
+			}
+		}
+	}
+	iframe {
+		margin: 10px auto 0;
+	}
+	#dial #gauge-widget {
+		font-weight: bold;
+	}
+}
+.sa-active-playx60, .sa-active-spacesx60, .sa-better-food-in-neighborhoodsx60, .sa-healthier-marketingx60, .sa-healthier-school-snacksx60, .sa-sugary-drinksx60{
+	background: url(../images/sa-sprites.png) no-repeat;
+	display: block;
+	float: left;
+	margin-right: 4%;
+	height: 60px;
+	width: 60px;
+}
+
+.sa-active-playx30, .sa-active-spacesx30, .sa-better-food-in-neighborhoodsx30, .sa-healthier-marketingx30, .sa-healthier-school-snacksx30, .sa-sugary-drinksx30{
+	background: url(../images/sa-sprites.png) no-repeat;
+	display: block;
+	float: left;
+	margin-right: 2%;
+	height: 30px;
+	width: 30px;
+}
+
+.sa-active-playx90, .sa-active-spacesx90, .sa-better-food-in-neighborhoodsx90, .sa-healthier-marketingx90, .sa-healthier-school-snacksx90, .sa-sugary-drinksx90, .sa-active-play-whx90, .sa-active-spaces-whx90, .sa-better-food-in-neighborhoods-whx90, .sa-healthier-marketing-whx90, .sa-healthier-school-snacks-whx90, .sa-sugary-drinks-whx90{
+	background: url(../images/sa-sprites.png) no-repeat;
+	display: inline-block;
+	vertical-align: middle;
+	// float: left;
+	margin-right: 2%;
+	height: 90px;
+	width: 90px;
+}
+
+.facebook-whx26, .sa-blog-wh-26x54, .twitter-whx26, .youtube-whx26{
+	background: url(../images/sa-sprites.png) no-repeat;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 2%;
+	margin-top: -5px;
+}
+
+.sa-active-playx60{
+	background-position: -140px -70px ;
+}
+
+.sa-active-spacesx60{
+	background-position: -70px -70px ;
+}
+
+.sa-better-food-in-neighborhoodsx60{
+	background-position: 0 -70px ;
+}
+
+.sa-healthier-marketingx60{
+	background-position: -140px 0;
+}
+
+.sa-healthier-school-snacksx60{
+	background-position: -70px 0;
+}
+
+.sa-sugary-drinksx60{
+	background-position: 0 0;
+}
+
+.sa-active-playx30{
+	background-position: -200px -140px ;
+}
+
+.sa-active-spacesx30{
+	background-position: -160px -140px ;
+}
+
+.sa-better-food-in-neighborhoodsx30{
+	background-position: -120px -140px ;
+}
+
+.sa-healthier-marketingx30{
+	background-position: -80px -140px ;
+}
+
+.sa-healthier-school-snacksx30{
+	background-position: -40px -140px ;
+}
+
+.sa-sugary-drinksx30{
+	background-position: 0 -140px ;
+}
+.sa-active-playx90{
+	background-position: -200px -280px ;
+}
+
+.sa-active-spacesx90{
+	background-position: -100px -280px ;
+}
+
+.sa-better-food-in-neighborhoodsx90{
+	background-position: 0 -280px ;
+}
+
+.sa-healthier-marketingx90{
+	background-position: -200px -180px ;
+}
+
+.sa-healthier-school-snacksx90{
+	background-position: -100px -180px ;
+}
+
+.sa-sugary-drinksx90{
+	background-position: 0 -180px ;
+}
+
+.sa-active-play-whx90{
+	background-position: -200px -480px ;
+}
+
+.sa-active-spaces-whx90{
+	background-position: -100px -480px ;
+}
+
+.sa-better-food-in-neighborhoods-whx90{
+	background-position: 0 -480px ;
+}
+
+.sa-healthier-marketing-whx90{
+	background-position: -200px -380px ;
+}
+
+.sa-healthier-school-snacks-whx90{
+	background-position: -100px -380px ;
+}
+
+.sa-sugary-drinks-whx90{
+	background-position: 0 -380px ;
+}
+
+.facebook-whx26{
+	background-position: -210px 0;
+	width: 26px;
+	height: 26px;
+}
+
+.sa-blog-wh-26x54{
+	background-position: -210px -30px ;
+	width: 54px;
+	height: 26px;
+}
+
+.twitter-whx26{
+	background-position: -240px 0;
+	width: 26px;
+	height: 26px;
+}
+
+.youtube-whx26{
+	background-position: -210px -60px ;
+	width: 26px;
+	height: 26px;
+}
+
+.sa-social-icons {
+	float: right;
+	width: 28%;
+}
+//Styles for salud advanced search form
+#cc-adv-search{
+	#saps {
+		width:70%;
+		float: left;
+		margin-right: 1%;
+		margin-bottom: 1em;
+	}
+	#cc_advanced_search_toggle {
+		float: left;
+		width: 100%;
+		display: block;
+		margin-bottom: 1em;
+	}
+	#cc-adv-search-pane-container {
+		margin-bottom: 1.5em;
+		.cc-adv-search-option-pane {
+			margin-top: 0;
+			margin-bottom: 0;
+			padding-bottom: 0;
+			ul li  {
+				margin-bottom: 6px;
+				input {
+					float: left;
+					margin-left: 0;
+				}
+				label {
+					display: block;
+					margin-left: 20px;
+					line-height: 1.4;
+					}
+			}
+			.cc-adv-search-scroll-container {
+				max-height:250px;
+				overflow: auto;
+			}
+		}
+	}
+}

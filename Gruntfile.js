@@ -9,6 +9,9 @@ module.exports = function(grunt) {
 
         // watch for changes and trigger sass, jshint, uglify and livereload
         watch: {
+            options: { 
+                livereload: true,
+            },
             scripts: {
                 files: 'public/js/public.js',
                 tasks: ['uglify']

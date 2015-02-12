@@ -47,21 +47,12 @@ class CC_Salud_America {
 	protected $plugin_slug = 'cc-salud-america';
 
 	/**
-	 * Instance of this class.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      object
-	 */
-	protected static $instance = null;
-
-	/**
 	 * Initialize the plugin by setting localization and loading public scripts
 	 * and styles.
 	 *
 	 * @since     1.0.0
 	 */
-	private function __construct() {
+	public function __construct() {
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -85,7 +76,10 @@ class CC_Salud_America {
 		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
 		add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
 
+		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) ); 
+
 	}
+
 
 	/**
 	 * Return the plugin slug.
@@ -96,23 +90,6 @@ class CC_Salud_America {
 	 */
 	public function get_plugin_slug() {
 		return $this->plugin_slug;
-	}
-
-	/**
-	 * Return an instance of this class.
-	 *
-	 * @since     1.0.0
-	 *
-	 * @return    object    A single instance of this class.
-	 */
-	public static function get_instance() {
-
-		// If the single instance hasn't been set, set it now.
-		if ( null == self::$instance ) {
-			self::$instance = new self;
-		}
-
-		return self::$instance;
 	}
 
 	/**
@@ -335,7 +312,7 @@ class CC_Salud_America {
 	 *
 	 * @since    1.0.0
 	 */
-	function cpt_permalink_filter( $permalink, $post ) {
+	public function cpt_permalink_filter( $permalink, $post ) {
 		$post_type = get_post_type( $post );
 
 		if ( in_array( $post_type, array( 'saresources', 'sa_success_story', 'sa_take_action', 'sapolicies' ) ) ) {
@@ -347,4 +324,9 @@ class CC_Salud_America {
 	    return $permalink;
 	}
 
+	public function register_admin_page_aggregator() { 
+		add_menu_page( 'Salud America', 'Salud America', 'edit_others_posts', 'salud_america', function() { echo 'Salud America'; }, 'dashicons-arrow-right', 48 );
+	}
+
 }
+$cc_salud_america = new CC_Salud_America();

@@ -54,7 +54,7 @@ if ( sa_is_section_front() ) {
                     ?>
                     <div class="half-block salud-topic <?php echo $cat_slug; ?>">
                         <a href="<?php sa_the_cpt_tax_intersection_link( 'policies', 'sa_advocacy_targets', $cat_slug ) ?>" class="<?php echo $cat_slug; ?>  clear">
-                            <span class="<?php echo $cat_slug; ?>x60"></span>
+                            <span class="<?php echo $cat_slug; ?>x90 alignleft"></span>
                             <h4><?php echo $section_title; ?></h4>
                         </a>
                         <p><?php echo $section_description; ?></p>
