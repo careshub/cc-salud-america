@@ -315,7 +315,7 @@ function sa_is_single_post(){
         $cpt = sa_get_cpt_by_section( $section );
         // What taxonomies are associated with that cpt?
         $taxonomy_names = get_object_taxonomies( $cpt );
-        $other_names = array( 'page', 'paged' );
+        $other_names = array( 'page', 'paged', 'search' );
 
         $action_variables = bp_action_variables();
 
@@ -376,4 +376,24 @@ function sa_is_section_front(){
     }
 
     return apply_filters( 'sa_is_section_front', $section_front );
+}
+
+/**
+ * Is this the front page of a section?
+ *
+ * @since   1.0.0
+ *
+ * @return  bool
+ */
+function sa_is_policy_search(){
+    $is_search = false;
+
+    // if the first action variable is empty, this is the basic view.
+    if ( sa_is_sa_group() ) {
+        if ( 'search' == bp_action_variable() ) {
+            $is_search = true;
+        }
+    }
+
+    return apply_filters( 'sa_is_policy_search', $is_search );
 }

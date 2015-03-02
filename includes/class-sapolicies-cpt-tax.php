@@ -858,8 +858,8 @@ $sa_policies_cpt_tax = new CC_SA_Policies_CPT_Tax();
 
 add_action( 'wp_ajax_get_geographies_list', 'ajax_get_geographies_list' );
 function ajax_get_geographies_list() {
-    global $wpdb; // this is how you get access to the database
-
+    // global $wpdb;
+    
     if( wp_verify_nonce( $_REQUEST['security'], 'get_geographies_list' ) ) {
            
       $selstate = (int)$_POST['selstate'];
@@ -981,6 +981,13 @@ function cc_get_the_geo_tax_type() {
     return $geo_type;
 }
 
+/**
+ * Get the human-readable name for a geography.
+ *
+ * @since   1.0.0
+ *
+ * @return  string
+ */
 function cc_get_the_geo_tax_name(){
   global $post;
   $geo_tax = wp_get_object_terms( $post->ID, 'geographies' );
@@ -991,6 +998,13 @@ function cc_get_the_geo_tax_name(){
 
 }
 
+/**
+ * Get the human-readable name of the state that contains a geography.
+ *
+ * @since   1.0.0
+ *
+ * @return  string
+ */
 function cc_get_the_geo_tax_state(){
   global $post;
   $geo_tax = wp_get_object_terms( $post->ID, 'geographies' );
@@ -1018,29 +1032,33 @@ function cc_get_the_geo_tax_state(){
   return $geo_tax_state;
 
 }
-//++++++++++
 
-  function sa_searchpolicies( $searchresults ) {
-          ?>
+/**
+ * Output policy search form and build search results.
+ *
+ * @since   1.0.0
+ *
+ * @return  html
+ */
+function sa_searchpolicies() {
+  ?>
   <div id="cc-adv-search" class="clear">
-      <form action="/salud-america<?php echo $searchresults; ?>" method="POST" enctype="multipart/form-data" name="sa_ps">
-              <div class="row">
-          <input type="text" id="saps" name="saps" Placeholder="Enter search terms here" value="<?php 
-                  if (isset($_POST['saps'])) {
-                      echo $_POST['saps']; 
-                  }   elseif (isset($_GET['qs'])) {
-                          echo $_GET['qs'];   
-                  }
-                      ?>" />
-          <!-- Hidden input to set post type for search-->
-          <input type="hidden" name="requested_content" value="sapolicies" />
-              
-              <input id="searchsubmit" type="submit" alt="Search" value="Search" />
-        </div>
+    <form action="<?php echo sa_get_section_permalink( $section = 'policies' ) . 'search'; ?>" method="POST" enctype="multipart/form-data" name="sa_ps">
+      <div class="row">
+        <input type="text" id="saps" name="saps" Placeholder="Enter search terms here" value="<?php 
+          if ( isset($_POST['saps'] ) ) {
+            echo $_POST['saps']; 
+          } elseif ( isset($_GET['qs'] ) ) {
+            echo $_GET['qs'];   
+          }
+        ?>" />
+        <!-- Hidden input to set post type for search-->
+        <input type="hidden" name="requested_content" value="sapolicies" />
+        <input id="searchsubmit" type="submit" alt="Search" value="Search" />
+      </div>
       
       <a role="button" id="cc_advanced_search_toggle" class="clear" >+ Advanced Search</a>
-           
-              <div id="cc-adv-search-pane-container" class="row clear">
+        <div id="cc-adv-search-pane-container" class="row clear">
           <div class="cc-adv-search-option-pane third-block">
             <h4>Topic Area</h4>
             <ul>
@@ -1051,7 +1069,7 @@ function cc_get_the_geo_tax_state(){
               }
               ?>
             </ul>
-          </div> <!-- End option pane -->
+          </div> <!-- End .cc-adv-search-option-pane -->
         
           <div class="cc-adv-search-option-pane third-block">
             <h4>Stage of Change</h4>        
@@ -1061,7 +1079,7 @@ function cc_get_the_geo_tax_state(){
               <li><input type="checkbox" name="policy_stages[]" id="policy-stage-enact" value="enactment" /> <label for="policy-stage-enact">Enactment</label></li>
               <li><input type="checkbox" name="policy_stages[]" id="policy-stage-implement" value="implementation" /> <label for="policy-stage-implement">Implementation</label></li>
             </ul>
-          </div> <!-- End option pane -->
+          </div> <!-- End .cc-adv-search-option-pane -->
         
           <div class="cc-adv-search-option-pane third-block">
             <h4>Tags</h4>
@@ -1077,141 +1095,97 @@ function cc_get_the_geo_tax_state(){
               ?>
             </ul>
             </div> <!-- End scroll container -->
-          </div> <!-- End option pane -->
-        </div>
-              
-          </form> 
+          </div> <!-- End .cc-adv-search-option-pane -->
+        </div> <!-- End .cc-adv-search-pane-container -->
+      </div> <!-- End .row -->
+    </form>
+  </div> <!-- End #cc-adv-search -->
           
-      </div>
-      <script type="text/javascript">
-          var $j = jQuery.noConflict();
-          
-          $j(document).ready(function(){
-
-             $j('#cc-adv-search-pane-container').hide();  
-             $j('#cc_advanced_search_toggle').click(function(){
-                  $j('#cc-adv-search-pane-container').slideToggle('fast');
-                  if ($j("#cc_advanced_search_toggle").text() == "+ Advanced Search") {
-                      $j("#cc_advanced_search_toggle").text("- Advanced Search");
-                  }
-                  else {
-                      $j("#cc_advanced_search_toggle").text("+ Advanced Search");
-                  }
-             });
-
-          });
+  <script type="text/javascript">
+      var $j = jQuery.noConflict();
       
-      </script>
+      $j(document).ready(function(){
+
+         $j('#cc-adv-search-pane-container').hide();  
+         $j('#cc_advanced_search_toggle').click(function(){
+              $j('#cc-adv-search-pane-container').slideToggle('fast');
+              if ($j("#cc_advanced_search_toggle").text() == "+ Advanced Search") {
+                  $j("#cc_advanced_search_toggle").text("- Advanced Search");
+              }
+              else {
+                  $j("#cc_advanced_search_toggle").text("+ Advanced Search");
+              }
+         });
+
+      });
+  
+  </script>
 
   <?php
-       global $wpdb; 
+  if ( sa_is_policy_search() ) {
+    // Parse the search query
+    // Begin by handling any combination of advanced search checkboxes selected.
+    $tax_query = array();
+    $meta_query = array();
 
-       if(isset($_POST['sa_advocacy_target']))
-        {
-           $chk1 = $_POST['sa_advocacy_target'];   
-        }
-       if(isset($_POST['policy_stages']))
-        {
-           $chk2 = $_POST['policy_stages'];           
-        } 
-       if(isset($_POST['sa_sapolicy_tag']))
-        {
-           $chk3 = $_POST['sa_sapolicy_tag'];     
-        }
-       
-       if(isset($_POST['sa_advocacy_target']) || isset($_POST['policy_stages']) || isset($_POST['sa_sapolicy_tag'])) {
-          $post_ids = get_objects_in_term($chk1, 'sa_advocacy_targets');
-          $post_ids2 = get_objects_in_term($chk3, 'sa_policy_tags');
-          $post_ids3 = array_merge($post_ids,$post_ids2);
-          
-                  $tax_query = array();
-                      if (!empty($chk1)) {
-                          $tax_query[] = array(
-                             'taxonomy' => 'sa_advocacy_targets',
-                             'field' => 'term_id',
-                             'terms' => $chk1
-                          );
-                      }
-                                 
-                      if (!empty($chk3)) {
-                          $tax_query[] = array(
-                             'taxonomy' => 'sa_policy_tags',
-                             'field' => 'term_id',
-                             'terms' => $chk3
-                          );
-                      }    
-                  
-                  $meta_query = array();
-                      if (!empty($chk2)) {
-                          $meta_query[] = array(
-                             'key' => 'sa_policystage',
-                             'value' => $chk2
-                          );
-                      }
-                  
-                    $filter_args = array(
-                        'post_type' => 'sapolicies',
-                        's' => $_POST['saps'],
-                        'relation' => 'AND',
-                        'tax_query'=> $tax_query,
-                        'meta_query' => $meta_query,
-                        'posts_per_page' => -1,
-                        );
-                  
-  //                $filter_args = array(
-  //                   'post_type' => 'sapolicies',
-  //                   's' => $_POST['saps'],
-  //                   'post__in' => $post_ids3,                   
-  //                   'meta_query' => array(
-  //                                      array(
-  //                                          'key' => 'sa_policystage',
-  //                                          'value' => $chk2
-  //                                           )
-  //                                       )
-  //                   
-  //                   );
-              //var_dump($filter_args);
-              $query2 = new WP_Query($filter_args);
-              if($query2->have_posts()) : 
-                while($query2->have_posts()) : 
-                      $query2->the_post();
-                      get_template_part( 'content', 'sa-policy-short' ); 
+    if ( isset( $_POST['sa_advocacy_target'] ) ) {
+      $tax_query[] = array(
+         'taxonomy' => 'sa_advocacy_targets',
+         'field' => 'term_id',
+         'terms' => $_POST['sa_advocacy_target']
+      );   
+    }
+    if ( isset( $_POST['sa_sapolicy_tag'] ) ) {
+      $tax_query[] = array(
+        'taxonomy' => 'sa_policy_tags',
+        'field' => 'term_id',
+        'terms' => $_POST['sa_sapolicy_tag']
+      );   
+    }
+    if ( isset( $_POST['policy_stages'] ) ) {
+      $meta_query[] = array(
+       'key' => 'sa_policystage',
+       'value' => $_POST['policy_stages']
+      );         
+    }        
+              
+    $filter_args = array(
+      'post_type' => 'sapolicies',
+      'relation' => 'AND',
+      'tax_query'=> $tax_query,
+      'meta_query' => $meta_query,
+      'posts_per_page' => -1,
+    );
 
-                endwhile;
-             else: 
-                echo "No Results - Search criteria too specific"; 
-             endif;                       
-       } else {
-          if(isset($_POST['saps']))
-          {                  
-                  $saps = $_POST['saps'];             
-
-                  $query = new WP_Query( array(
-                          's' => $saps, 
-                          'post_type' => 'sapolicies'));
+    // Add the text search term if necessary
+    if ( isset( $_POST['saps'] ) ) { 
+      $filter_args['s'] = $_POST['saps'];
+    }               
+   
+    $policy_search = new WP_Query( $filter_args );
                   
-                  if($query->have_posts()) : 
-                    while($query->have_posts()) : 
-                          $query->the_post();
-                          get_template_part( 'content', 'sa-policy-short' );  
-
-                    endwhile;
-                 else: 
-                    echo "No Results - Search criteria too specific"; 
-                 endif;   
-          }       
-       }
+    if ( $policy_search->have_posts() ) { 
+      echo '<div class="row">';
+      echo '<h3 class="screamer sapurple">Search Results</h3>';
+      while( $policy_search->have_posts() ) : 
+        $policy_search->the_post();
+        bp_get_template_part( 'groups/single/sapolicies/policy-short' );  
+      endwhile;
+      echo '</div>';
+    } else { 
+      echo "No Results - Search criteria too specific"; 
+    } 
   }
+}
 
-  function sa_highlight_search_results($saps,$text) {
-                  
-                  $keys2 = explode(" ",$saps);
-                  $text2 = preg_replace('/('.implode('|', $keys2) .')/iu', '<strong style="color:#EF403B;">'.$saps.'</strong>', $text);
-                  return $text2;
-  }
+/*
+function sa_highlight_search_results($saps,$text) {        
+  $keys2 = explode(" ",$saps);
+  $text2 = preg_replace('/('.implode('|', $keys2) .')/iu', '<strong style="color:#EF403B;">'.$saps.'</strong>', $text);
+  return $text2;
+}
 
-  function sa_searchpolicies_single() 
-  { 
+  function sa_searchpolicies_single() { 
   ?>     <div id="cc-adv-search" class="clear">
       <form action="search-results" method="POST" enctype="multipart/form-data" name="sa_ps_single">
               <div class="row">
@@ -1221,23 +1195,28 @@ function cc_get_the_geo_tax_state(){
         </div>    
 
   <?php }
+*/
 
-  function sa_location_search() { 
-          ?>
-      
-        <h3 class="screamer sapurple">Search for Changes in Progress by Location</h3>
-          
-          <div>
-            <form method="GET" action="http://maps.communitycommons.org/policymap/" name="sa_ls" enctype="multipart/form-data"> 
-                <input type="text" id="address" size="70" Placeholder="e.g. Mosinee, Wisconsin" name="address" />
-                <input type="submit" name="submit" value="Search"/>
-            </form>
-            <a href="http://maps.communitycommons.org/policymap/"><img src="<?php echo get_stylesheet_directory_uri(); ?>/img/salud_america/policy-map.jpg" class="alignnone" alt="Use the maproom to find changes in your area." style="margin:1.4em 0;"></a>
-          </div>
-
-  <?php
-  }
-
+/**
+ * Output location search form.
+ *
+ * @since   1.0.0
+ *
+ * @return  html
+ */
+function sa_location_search() { 
+  ?>
+  <h3 class="screamer sapurple">Search for Changes in Progress by Location</h3>
+  <div>
+    <form method="GET" action="http://maps.communitycommons.org/policymap/" name="sa_ls" enctype="multipart/form-data"> 
+        <input type="text" id="address" size="70" Placeholder="e.g. Mosinee, Wisconsin" name="address" />
+        <input type="submit" name="submit" value="Search"/>
+    </form>
+    <a href="http://maps.communitycommons.org/policymap/"><img src="<?php echo get_stylesheet_directory_uri(); ?>/img/salud_america/policy-map.jpg" class="alignnone" alt="Use the maproom to find changes in your area." style="margin:1.4em 0;"></a>
+  </div>
+<?php
+}
+/*
 //Make the menus reflect where we are
 //Apply current-menu-item class to nav items when child pages, related tax or CPT is active
 add_filter('nav_menu_css_class' , 'cc_filter_nav_class' , 10 , 2);
@@ -1260,41 +1239,54 @@ function sa_taxonomy_filter_queries( $query ) {
     }
  
 }
+*/
+/**
+ * Print the correct color (css class) based on the policy taxonomy term .
+ *
+ * @since   1.0.0
+ *
+ * @return  string
+ */
 function sa_the_topic_color ( $tax_term ) {
   echo sa_get_topic_color( $tax_term );
 }
-
-function sa_get_topic_color( $tax_term ){
-  switch ( $tax_term ) {
-          case 'sa-active-play':
-            $topic_color = 'sayellow';
-            break;
-        case 'sa-active-spaces':
-            $topic_color = 'sablue';
-            break;
-        case 'sa-better-food-in-neighborhoods':
-            $topic_color = 'saorange';
-            break;
-        case 'sa-healthier-marketing':
-            $topic_color = 'sapink';
-            break;
-        case 'sa-healthier-school-snacks':
-            $topic_color = 'sagreen';
-            break;
-        case 'sa-sugary-drinks':
-            $topic_color = 'sapurple';
-            break;
-        default:
-            $topic_color = 'saorange';
-            break;
-                  }
-  return $topic_color;
-}
+  function sa_get_topic_color( $tax_term ){
+    switch ( $tax_term ) {
+            case 'sa-active-play':
+              $topic_color = 'sayellow';
+              break;
+          case 'sa-active-spaces':
+              $topic_color = 'sablue';
+              break;
+          case 'sa-better-food-in-neighborhoods':
+              $topic_color = 'saorange';
+              break;
+          case 'sa-healthier-marketing':
+              $topic_color = 'sapink';
+              break;
+          case 'sa-healthier-school-snacks':
+              $topic_color = 'sagreen';
+              break;
+          case 'sa-sugary-drinks':
+              $topic_color = 'sapurple';
+              break;
+          default:
+              $topic_color = 'saorange';
+              break;
+                    }
+    return $topic_color;
+  }
 
 //Utility/helper functions
 
-// Helps identify when we're working on a salud page.
-// @returns true or false
+/**
+ * Helps identify when we're working on a salud page.
+ *
+ * @since   1.0.0
+ *
+ * @return  bool
+ */
+// 
 function cc_is_salud_page() {
 
   $return = false;

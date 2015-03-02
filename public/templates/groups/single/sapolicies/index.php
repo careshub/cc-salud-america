@@ -25,14 +25,14 @@ if ( sa_is_section_front() ) {
             // @ need to redo the search function to also use this page.
             // maybe action = /?s=term
             if ( function_exists('sa_searchpolicies') ) { 
-                sa_searchpolicies('/search-results'); 
+                sa_searchpolicies(); 
             } ?>
         </div>
 
-        <?php if ( function_exists('sa_location_search') ) {
-            sa_location_search();
-        } ?>
-                
+            <?php if ( function_exists('sa_location_search') ) {
+                sa_location_search();
+            } ?>
+                    
         <div class="browse-topics">
             <h3 class="screamer sablue">Browse Changes by Topic</h3>
                 <?php 
@@ -69,15 +69,28 @@ if ( sa_is_section_front() ) {
                  ?>
 
         </div>
-        <?php } // end if ( $paged = 1 ) ?>  
-    <div class="row">
-        <h3 class="screamer sapink">Newest Changes</h3>
-        <?php
-            bp_get_template_part( 'groups/single/sapolicies/policy-loop' );
-        ?>
-    </div>
+    <?php } // end if ( $paged = 1 ) ?> 
+        <div class="row">
+            <h3 class="screamer sapink">Newest Changes</h3>
+            <?php
+                bp_get_template_part( 'groups/single/sapolicies/policy-loop' );
+            ?>
+        </div>
 <?php
 // Not the section front? OK, let's figure out what to display.
+} elseif ( sa_is_policy_search() ) {
+?>
+    <div class="policy-search">
+        <!--<form id="sa-policy-search" class="standard-form" method="get" action="/search-results">-->
+        <h3 class="screamer sagreen">Search for Changes by Keyword</h3>
+        <?php
+        // @ need to redo the search function to also use this page.
+        // maybe action = /?s=term
+        if ( function_exists('sa_searchpolicies') ) { 
+            sa_searchpolicies(); 
+        } ?>
+    </div>
+<?php
 } else {
 
     if ( sa_is_single_post() ){
@@ -97,7 +110,7 @@ if ( sa_is_section_front() ) {
                 ?></h3>
                     
                 <?php while ( have_posts() ) : the_post(); ?>
-                    <?php get_template_part( 'content', 'sa-policy-short' ); ?>
+                    <?php bp_get_template_part( 'groups/single/sapolicies/policy-short' ); ?>
                     <?php comments_template( '', true ); ?>
                 <?php endwhile; // end of the loop. ?>
                 <?php twentytwelve_content_nav( 'nav-below' ); ?>
