@@ -48,6 +48,8 @@ function sa_class_init() {
 
     // Extension classes
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sapolicies-cpt-tax.php' );
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-saresources-cpt-tax.php' );
+
     // add_action( 'bp_include', array( 'CC_SA_Policies_CPT_Tax', 'get_instance' ), 21 );
     // new CC_SA_Policies_CPT_Tax();
 

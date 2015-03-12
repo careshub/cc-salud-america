@@ -28,6 +28,9 @@ function sa_get_group_id(){
         case 'http://dev.communitycommons.org':
             $group_id = 42;
             break;
+        case 'http://staging.communitycommons.org':
+            $group_id = 583;
+            break;
         case 'http://www.communitycommons.org':
             $group_id = 42;
             break;
@@ -40,7 +43,7 @@ function sa_get_group_id(){
 
 /**
  * Get base url for the Salud America group
- *  
+ *
  * @since   1.0.0
  *
  * @return  string url
@@ -48,13 +51,13 @@ function sa_get_group_id(){
 function sa_get_group_permalink() {
     $group_id = sa_get_group_id();
     $permalink = bp_get_group_permalink( groups_get_group( array( 'group_id' => $group_id ) ) );
-    
+
     return apply_filters( "sa_get_group_permalink", $permalink, $group_id);
 }
 
 /**
  * Get url for a tab within the Salud America group.
- *  
+ *
  * @since   1.0.0
  *
  * @param   string $section The shorthand name of the section
@@ -64,7 +67,7 @@ function sa_get_group_permalink() {
 function sa_get_section_permalink( $section = 'policies' ) {
     // If a group_id is supplied, it is probably because the post originated from another group (and editing should occur from the original group's space).
     $permalink = sa_get_group_permalink() .  trailingslashit( sa_get_tab_slug( $section ) );
-    
+
     return apply_filters( "sa_get_section_permalink", $permalink );
 }
 
@@ -248,11 +251,11 @@ function sa_get_query(){
             'name' => bp_action_variable( 0 ),
             'post_type' => $cpt,
             // 'post_status' => array( 'publish', 'draft'),
-        );      
+        );
     } else {
         // This is a taxonomy term view
         $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-        
+
         $query = array(
             'post_type' => $cpt,
             'paged' => $paged,
@@ -280,7 +283,7 @@ function sa_get_query(){
  *
  * @since   1.0.0
  *
- * @param   int $group_id Optional. Group ID to check. 
+ * @param   int $group_id Optional. Group ID to check.
  *          Defaults to current group.
  * @return  bool
  */
@@ -379,13 +382,13 @@ function sa_is_section_front(){
 }
 
 /**
- * Is this the front page of a section?
+ * Is this a policy/resources/etc search page?
  *
  * @since   1.0.0
  *
  * @return  bool
  */
-function sa_is_policy_search(){
+function sa_is_archive_search(){
     $is_search = false;
 
     // if the first action variable is empty, this is the basic view.
@@ -395,5 +398,114 @@ function sa_is_policy_search(){
         }
     }
 
-    return apply_filters( 'sa_is_policy_search', $is_search );
+    return apply_filters( 'sa_is_archive_search', $is_search );
+}
+
+/**
+ * General handler for saving post meta.
+ *
+ * @since   1.0.0
+ *
+ * @return  bool
+ */
+function sa_save_meta_fields( $post_id, $fields = array() ) {
+    $successes = 0;
+
+    foreach( $fields as $field ) {
+      //groups_update_groupmeta returns false if the old value matches the new value, so we'll need to check for that case
+      $old_setting = get_post_meta( $post_id, $field, true );
+      $new_setting = ( isset( $_POST[$field] ) ) ? $_POST[$field] : '' ;
+      $success = false;
+
+      $towrite = PHP_EOL . 'field: ' . print_r( $field, TRUE );
+      $towrite .= PHP_EOL . 'old setting: ' . print_r($old_setting, TRUE);
+      $towrite .= PHP_EOL . 'new setting: ' . print_r($new_setting, TRUE);
+
+
+      if ( empty( $new_setting ) && ! empty( $old_setting ) ) {
+        $success = delete_post_meta( $post_id, $field );
+        $towrite .= PHP_EOL . 'did delete';
+
+      } elseif ( $new_setting == $old_setting ) {
+          // No need to resave settings if they're the same
+          $success = true;
+          $towrite .= PHP_EOL . 'did nothing';
+      } else {
+        $success = update_post_meta( $post_id, $field, $new_setting );
+        $towrite .= PHP_EOL . 'did update';
+      }
+
+      if ( $success ) {
+        $successes++;
+      }
+
+     $fp = fopen('saving_meta.txt', 'a');
+     fwrite($fp, $towrite);
+     fclose($fp);
+    }
+
+    if ( $successes == count( $fields ) ) {
+      return true;
+    } else {
+      return false;
+    }
+}
+/**
+ * Convert $_POST search args to WP_Query-ready argument array.
+ *
+ * @since   1.0.0
+ *
+ * @param   string $post_type saresources or similar
+ * @param   array  $taxonomies list of taxonomy names to include
+ * @param   array  $metas list of meta_keys to check for
+ * @return  array WP_Query-ready query arguments
+ */
+function sa_build_search_query( $post_type, $taxonomies = array(), $metas = array() ){
+    $filter_args = array(
+        'post_type' => $post_type,
+        'posts_per_page' => -1,
+    );
+    // Parse the search query
+    // Begin by handling any combination of advanced search checkboxes selected.
+    $tax_query = array();
+    $meta_query = array();
+
+    foreach ( $taxonomies as $tax) {
+        if ( ! empty( $_POST[$tax] ) ) {
+            $tax_query[] = array(
+                 'taxonomy' => $tax,
+                 'field' => 'term_id',
+                 'terms' => $_POST[$tax]
+            );
+        }
+    }
+    if ( ! empty( $tax_query ) ) {
+        if ( count( $tax_query ) > 1 ) {
+            $tax_query[ 'relation' ] = 'AND';
+        }
+        $filter_args['tax_query'] = $tax_query;
+    }
+
+    foreach ( $metas as $meta ) {
+        if ( ! empty( $_POST[$meta] ) ) {
+            $meta_query[] = array(
+                'key' => $meta,
+                'value' => $_POST[$meta],
+                'compare' => 'IN',
+            );
+        }
+    }
+    if ( ! empty( $meta_query ) ) {
+        if ( count( $meta_query ) > 1 ) {
+            $meta_query[ 'relation' ] = 'AND';
+        }
+        $filter_args['meta_query'] = $meta_query;
+    }
+
+    // Add the text search term if necessary
+    if ( ! empty( $_POST['keyword'] ) ) {
+        $filter_args['s'] = $_POST['keyword'];
+    }
+
+    return $filter_args;
 }
