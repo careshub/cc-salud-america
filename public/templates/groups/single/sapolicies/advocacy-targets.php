@@ -14,7 +14,7 @@ $tax_term = sa_get_requested_tax_term();
 
             <?php //Get the page header image ?>
             <header>
-                 <img class="size-full wp-image-16768 no-box" alt="Topic header for <?php echo $tax_term->name ?>" src="<?php echo get_stylesheet_directory_uri(); ?>/img/salud_america/topic_headers/<?php echo $tax_term->slug ?>.jpg" />
+                 <img class="size-full wp-image-16768 no-box" alt="Topic header for <?php echo $tax_term->name ?>" src="<?php echo sa_get_plugin_base_uri() . 'public/images/topic_headers/' . $tax_term->slug ?>.jpg" />
              </header>
              <?php
 

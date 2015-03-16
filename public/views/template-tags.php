@@ -96,36 +96,51 @@ function saresources_get_featured_blocks( $resource_cats = array() ) {
             'post__not_in' => $do_not_duplicate,
         );
         $resources_results = new WP_Query( $args );
+        // echo "<pre>";
+        // var_dump($resources_results);
+        // echo "</pre>";
 
         // The Loop
         if ( $resources_results->have_posts() ) : ?>
-            <div class="<?php echo $block_class; ?>">
-                <header class="entry-header">
+                <div class="<?php echo $block_class; ?>">
                     <?php
-                    $topic_link = sa_get_the_cpt_tax_intersection_link( 'resources', 'sa_resource_cat', $resource_cat );
-                    echo '<a href="' . $topic_link . '">' . salud_get_taxonomy_images( $resource_cat, 'sa_resource_cat' ) . '</a>';
-                    ?>
-                    <h4 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h4>
-                </header>
-                <div class="entry-content">
-                    <?php the_excerpt();?>
-                </div> <!-- End .entry-content -->
-                <h4>Other Resources</h4>
-                <ul class="related-posts no-bullets">
-                <?php
-                while ( $resources_results->have_posts() ) : $resources_results->the_post();
-                    //Add each displayed post to the do_not_duplicate array
-                    $do_not_duplicate[] = get_the_ID();
-                    ?>
-                    <li>
-                      <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a>
-                    </li>
-                    <?php
-                endwhile;
-                ?>
-                </ul>
-          </div> <?php echo '<!-- End ' . $block_class . '-->'; ?>
-        <?php
+                    while ( $resources_results->have_posts() ) : $resources_results->the_post();
+                        if ( $resources_results->current_post == 0 ) :
+                        ?>
+                            <header class="entry-header">
+                                <?php
+                                $topic_link = sa_get_the_cpt_tax_intersection_link( 'resources', 'sa_resource_cat', $resource_cat );
+                                echo '<a href="' . $topic_link . '">' . salud_get_taxonomy_images( $resource_cat, 'sa_resource_cat' ) . '</a>';
+                                ?>
+                                <h4 class="entry-title"><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h4>
+                            </header>
+                            <div class="entry-content">
+                                <?php the_excerpt();?>
+                            </div> <!-- End .entry-content -->
+                            <?php
+                        else:
+                            // Open a ul for the second through nth posts
+                            if ( $resources_results->current_post == 1 ) { ?>
+                                <h4>Other Resources</h4>
+                                <ul class="related-posts no-bullets">
+                            <?php
+                            }
+                            ?>
+                                <li>
+                                  <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a>
+                                </li>
+                            <?php
+                            // Close the ul after the last post
+                            if ( $resources_results->current_post == ( $resources_results->post_count - 1 ) ) { ?>
+                                </ul>
+                                <?php
+                            }
+                        endif;
+                            //Add each displayed post to the do_not_duplicate array
+                            $do_not_duplicate[] = get_the_ID();
+                        endwhile; ?>
+                </div> <!-- End <?php echo $block_class; ?> '-->
+            <?php
         endif;
     } // Ends foreach for four top blocks
     wp_reset_query();

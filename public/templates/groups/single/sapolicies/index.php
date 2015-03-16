@@ -86,12 +86,7 @@ if ( sa_is_section_front() ) {
             echo $tax_term->name;
             echo ( $tax_term->taxonomy == 'sa_policy_tags' ? ' tag' : ' topic' )
             ?></h3>
-
-            <?php while ( have_posts() ) : the_post(); ?>
-                <?php bp_get_template_part( 'groups/single/sapolicies/policy-short' ); ?>
-                <?php comments_template( '', true ); ?>
-            <?php endwhile; // end of the loop. ?>
-            <?php twentytwelve_content_nav( 'nav-below' ); ?>
+            <?php bp_get_template_part( 'groups/single/sapolicies/policy-loop' ); ?>
         </div>
         <?php
     }

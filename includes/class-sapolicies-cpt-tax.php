@@ -21,6 +21,10 @@
  */
 class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 
+	private $nonce_value = 'sa_policy_meta_box_nonce';
+	private $nonce_name = 'sa_policy_meta_box';
+	private $post_type = 'sapolicies';
+
 	/**
 	 * Initialize the extension class
 	 *
@@ -41,7 +45,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		add_action( 'parent_file', array( $this, 'sa_tax_menu_highlighting' ) );
 
 		// Handle saving policies
-		add_action( 'save_post', array( $this, 'sapolicy_save' ) );
+		add_action( 'save_post', array( $this, 'save' ) );
 
 		// Add our templates to BuddyPress' template stack.
 		add_filter( 'manage_edit-sapolicies_columns', array( $this, 'edit_admin_columns') );
@@ -49,10 +53,6 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		add_filter( 'manage_edit-sapolicies_sortable_columns', array( $this, 'register_sortable_columns' ) );
 		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
-
-
-		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
-		// add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
 
 	}
 
@@ -93,11 +93,11 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,
 					'supports' => array('title','editor','comments', 'thumbnail'),
-					'capability_type' => 'sapolicies',
+					'capability_type' => $this->post_type,
 					'map_meta_cap' => true
 			);
 
-			register_post_type( 'sapolicies', $args );
+			register_post_type( $this->post_type, $args );
 	}
 
 	public function register_sa_advocacy_targets() {
@@ -141,7 +141,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 				'query_var' => true
 		);
 
-		register_taxonomy( 'sa_advocacy_targets', array('sapolicies'), $args );
+		register_taxonomy( 'sa_advocacy_targets', array( $this->post_type ), $args );
 	}
 
 	public function register_sa_policy_tags() {
@@ -182,7 +182,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 				'query_var' => true
 		);
 
-		register_taxonomy( 'sa_policy_tags', array('sapolicies','saresources'), $args );
+		register_taxonomy( 'sa_policy_tags', array( $this->post_type, 'saresources' ), $args );
 	}
 
 	public function register_sa_geographies() {
@@ -218,7 +218,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					 // 'query_var' => true
 				);
 
-		register_taxonomy( 'geographies', 'sapolicies', $args );
+		register_taxonomy( 'geographies', $this->post_type, $args );
 	}
 
 	/**
@@ -351,8 +351,8 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 */
 	//Building the input form in the WordPress admin area
 	function add_meta_box() {
-			 add_meta_box( 'sa_policy_meta_box', 'Policy Information', array( $this, 'sa_policy_meta_box' ), 'sapolicies', 'normal', 'high');
-			 add_meta_box( 'sa_geog_meta_box', 'Geography',  array( $this, 'sa_geog_meta_box' ), 'sapolicies', 'normal', 'high' );
+			 add_meta_box( 'sa_policy_meta_box', 'Policy Information', array( $this, 'sa_policy_meta_box' ), $this->post_type, 'normal', 'high');
+			 add_meta_box( 'sa_geog_meta_box', 'Geography',  array( $this, 'sa_geog_meta_box' ), $this->post_type, 'normal', 'high' );
 	}
 
 	/**
@@ -523,6 +523,9 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 			} else {
 					$ptdef = $sapolicy_type;
 			}
+
+		// Add a nonce field so we can check for it later.
+		wp_nonce_field( $this->nonce_name, $this->nonce_value );
 	?>
 	<!-- @TODO: switch types to a taxonomy
 				Also use sensible select-->
@@ -769,44 +772,32 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 *
 	 * @since    1.0.0
 	 *
-	 * @return   html
+	 * @return   void
 	 */
-	public function sapolicy_save() {
-		global $post;
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	public function save( $post_id ) {
+
+		if ( get_post_type( $post_id ) != $this->post_type ) {
 			return;
 		}
-		if ( $post->post_type != 'sapolicies' ) {
+		if ( ! $this->user_can_save( $post_id, $this->nonce_value, $this->nonce_name  ) ) {
 			return;
 		}
+
 		// Save policy meta
 		$meta_fields = array( 'sa_policytype', 'sa_policystage', 'sa_pre1', 'sa_pre2', 'sa_pre3', 'sa_dev1', 'sa_dev2', 'sa_dev3', 'sa_enact1', 'sa_enact2', 'sa_enact3', 'sa_post1', 'sa_post2', 'sa_post3', 'sa_dateenacted', 'sa_dateimplemented', 'sa_emergencedate_stg', 'sa_developmentdate_stg', 'sa_enactmentdate_stg' );
-		$meta_success = sa_save_meta_fields( $post->ID, $meta_fields );
+		$meta_success = $this->save_meta_fields( $post_id, $meta_fields );
 
 		// Save Geography terms
 		//Try to save the more specific option first
 		if ( ! empty( $_POST["sa_selectedgeog"] ) ) {
-			$this->save_taxonomy_field( "sa_selectedgeog" );
+			$this->save_taxonomy_field( $post_id, 'sa_selectedgeog', 'geographies' );
 		} elseif ( ! empty( $_POST["sa_state"] ) ) {
 			//Save the state term if a more specific term isn't set
-			$this->save_taxonomy_field( "sa_state" );
+			$this->save_taxonomy_field( $post_id, 'sa_state', 'geographies' );
 		} else {
 			//if that fails, set the terms as 'national'
 			$term_ids = array( intval( get_geo_tax_top_level_term_id() ) );
-			wp_set_object_terms( $post->ID, $term_ids, 'geographies' );
-		}
-	}
-	//@TODO: Could be shared by several classes.
-	public function save_taxonomy_field( $tax_field ) {
-		global $post;
-		// Don't save empty metas
-		// @TODO: This wouldn't allow for the removal of a term
-		if ( ! empty( $_POST[$tax_field] ) ) {
-			$term_ids = array( $_POST[$tax_field] );
-			//Make sure the terms IDs are integers:
-			$term_ids = array_map('intval', $term_ids);
-			$term_ids = array_unique( $term_ids );
-			wp_set_object_terms( $post->ID, $term_ids, 'geographies' );
+			wp_set_object_terms( $post_id, $term_ids, 'geographies' );
 		}
 	}
 
@@ -820,31 +811,29 @@ function ajax_get_geographies_list() {
 		if( wp_verify_nonce( $_REQUEST['security'], 'get_geographies_list' ) ) {
 
 			$selstate = (int)$_POST['selstate'];
-			$geog = $_POST['geog'];
+			$result = '';
 
-			$geog_str_prefix = sa_get_geography_prefix($geog);
+			if ( $selstate ) {
+				//get the selected state slug
+				$state_term = get_term_by('id', $selstate, 'geographies');
+				//Trim the "-state" from the end of the state slug
+				$state_clean = substr( $state_term->slug, 0, -6);
 
-			if( $selstate ) {
-					//get the selected state slug
-					$state_term = get_term_by('id', $selstate, 'geographies');
-					//Trim the "-state" from the end of the state slug
-					$state_clean = substr( $state_term->slug, 0, -6);
-
-					if ( $geog ) {
-							$thisid = $geog_str_prefix . $state_clean;
-							$geoterm = get_term_by('slug', $thisid, 'geographies');
-							$tid = $geoterm->term_id;
-									$args = array(
-													'parent' => $tid,
-													'hide_empty' => 0,
-									);
-									$terms = get_terms( 'geographies', $args );
-									if ( $terms ) {
-													foreach ( $terms as $term ) {
-																	$result .= '<option value="' . $term->term_id . '">' . $term->name . '</option> ';
-													}
-									}
+				if ( ! empty( $_POST['geog'] ) ) {
+					$thisid = sa_get_geography_prefix( $_POST['geog'] ) . $state_clean;
+					$geoterm = get_term_by('slug', $thisid, 'geographies');
+					$tid = $geoterm->term_id;
+					$args = array(
+						'parent' => $tid,
+						'hide_empty' => 0,
+					);
+					$terms = get_terms( 'geographies', $args );
+					if ( $terms ) {
+						foreach ( $terms as $term ) {
+							$result .= '<option value="' . $term->term_id . '">' . $term->name . '</option> ';
+						}
 					}
+				}
 			}
 			//return the result
 			die( $result );
@@ -1084,9 +1073,9 @@ function sa_searchpolicies() {
 		$taxonomies = array( 'sa_advocacy_targets', 'sa_policy_tags' );
 		$metas = array( 'sa_policystage' );
 		$filter_args = sa_build_search_query( $post_type, $taxonomies, $metas );
-		echo '<pre>';
-		print_r($filter_args);
-		echo '</pre>';
+		// echo '<pre>';
+		// print_r($filter_args);
+		// echo '</pre>';
 
 		$policy_search = new WP_Query( $filter_args );
 
@@ -1213,6 +1202,7 @@ function sa_the_topic_color ( $tax_term ) {
  * @return  bool
  */
 //
+// @TODO: This will be out of date.
 function cc_is_salud_page() {
 
 	$return = false;
@@ -1229,8 +1219,8 @@ function cc_is_salud_page() {
 			|| is_post_type_archive('saresources')
 			|| is_post_type_archive('sapolicies')
 			) {
-				$return = true;
-				}
+		$return = true;
+	}
 
 	return apply_filters( 'cc_is_salud_page', $return );
 
@@ -1269,6 +1259,7 @@ function cc_sa_custom_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'cc_sa_custom_body_class', 99 );
+
 /**
  * Template tag that outputs the structure for the policy tracker progress bar
  *
@@ -1277,7 +1268,7 @@ add_filter( 'body_class', 'cc_sa_custom_body_class', 99 );
  */
 function cc_the_policy_progress_tracker( $progress ) {
 
-	switch ($progress) {
+	switch ( $progress ) {
 		case "emergence":
 			$percentage = 25;
 			$progress_label = 'in emergence';
@@ -1304,10 +1295,10 @@ function cc_the_policy_progress_tracker( $progress ) {
 <div class="meter-box clear">
 	<p class="visible-mini">This change is <a href="/saresources/spectrum/" title="More information about policy development"><?php echo $progress_label; ?></a>.</p>
 	<ol class="progtrckr visible-maxi" data-progtrckr-steps="4">
-		<li class="<?php echo ( in_array($progress, array('emergence', 'development', 'enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/salud-america/what-is-change/the-science-behind-change/">Emergence</a></li><!--
-		--><li class="<?php echo ( in_array($progress, array('development', 'enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/salud-america/what-is-change/the-science-behind-change/">Development</a></li><!--
-		--><li class="<?php echo ( in_array($progress, array('enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/salud-america/what-is-change/the-science-behind-change/">Enactment</a></li><!--
-		--><li class="<?php echo ( in_array($progress, array('implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/salud-america/what-is-change/the-science-behind-change/">Implementation</a></li>
+		<li class="<?php echo ( in_array($progress, array('emergence', 'development', 'enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Emergence</a></li><!--
+		--><li class="<?php echo ( in_array($progress, array('development', 'enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Development</a></li><!--
+		--><li class="<?php echo ( in_array($progress, array('enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Enactment</a></li><!--
+		--><li class="<?php echo ( in_array($progress, array('implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Implementation</a></li>
 	</ol>
 </div> <!-- end .meter-box -->
 <?php
@@ -1315,7 +1306,7 @@ function cc_the_policy_progress_tracker( $progress ) {
 /* Filter the page title for certain Salud America page.
 *  filters value in wp_title
 */
-add_filter( 'wp_title', 'cc_salud_title_filter', 20, 2 );
+// add_filter( 'wp_title', 'cc_salud_title_filter', 20, 2 );
 function cc_salud_title_filter( $title, $sep ) {
 
 	if ( is_feed() )

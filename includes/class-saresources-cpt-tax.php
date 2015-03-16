@@ -21,6 +21,10 @@
  */
 class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 
+	private $nonce_value = 'sa_resource_meta_box_nonce';
+	private $nonce_name = 'sa_resource_meta_box';
+	private $post_type = 'saresources';
+
 	/**
 	 * Initialize the extension class
 	 *
@@ -40,7 +44,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 		add_action( 'parent_file', array( $this, 'sa_tax_menu_highlighting' ) );
 
 		// Handle saving policies
-		add_action( 'save_post', array( $this, 'saresource_save' ) );
+		add_action( 'save_post', array( $this, 'save' ) );
 
 		// Add our templates to BuddyPress' template stack.
 		// add_filter( 'manage_edit-sapolicies_columns', array( $this, 'edit_admin_columns') );
@@ -48,10 +52,6 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 		// add_filter( 'manage_edit-sapolicies_sortable_columns', array( $this, 'register_sortable_columns' ) );
 		// add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
-
-
-		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
-		// add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
 
 	}
 
@@ -93,11 +93,11 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 			'supports' => array('title','editor','comments', 'thumbnail'),
 			'has_archive' => true,
-			'capability_type' => 'saresources',
+			'capability_type' => $this->post_type,
 			'map_meta_cap' => true
 		);
 
-		register_post_type( 'saresources', $args );
+		register_post_type( $this->post_type, $args );
 	}
 
 	public function register_resource_types_taxonomy() {
@@ -133,7 +133,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 						)
 		);
 
-		register_taxonomy( 'sa_resource_type', array( 'saresources' ), $args );
+		register_taxonomy( 'sa_resource_type', array( $this->post_type ), $args );
 	}
 
 	public function register_resource_cats_taxonomy() {
@@ -167,7 +167,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 						)
 		);
 
-		register_taxonomy( 'sa_resource_cat', array( 'saresources' ), $args );
+		register_taxonomy( 'sa_resource_cat', array( $this->post_type ), $args );
 	}
 	/**
 	 * Manage wp-admin behavior/appearance of CPT and taxonomy menus.
@@ -306,6 +306,9 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			$saresource_date = $custom["saresource_date"][0];
 			$saresource_policy = $custom["saresource_policy"][0];
 			$saresource_promote = $custom["saresource_promote"][0];
+
+			// Add a nonce field so we can check for it later.
+			wp_nonce_field( $this->nonce_name, $this->nonce_value );
 			?>
 			<p><input type="checkbox" id="saresource_promote" name="saresource_promote" <?php checked( $saresource_promote, 'on' ); ?> > <label for="saresource_promote">Promote to Resources <em>(visible independent of related policies)</em></label></input></p>
 
@@ -371,17 +374,19 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 	 *
 	 * @return   void
 	 */
-	public function saresource_save() {
-		global $post;
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	public function save( $post_id ) {
+
+ 		if ( get_post_type( $post_id ) != $this->post_type ) {
 			return;
 		}
-		if ( $post->post_type != 'saresources' ) {
-			return;
+
+		if ( ! $this->user_can_save( $post_id, $this->nonce_value, $this->nonce_name  ) ) {
+			return false;
 		}
+
 		// Save meta
 		$meta_fields = array( "saresource_date", "saresource_policy", "saresource_promote" );
-		$meta_success = sa_save_meta_fields( $post->ID, $meta_fields );
+		$meta_success = $this->save_meta_fields( $post_id, $meta_fields );
 
 	}
 

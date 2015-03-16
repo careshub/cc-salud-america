@@ -363,5 +363,78 @@ class CC_Salud_America {
 
 	} // end user_can_save
 
+	/**
+	 * General handler for saving post meta.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param 	int $post_id
+	 * @param 	array meta_key names to save
+	 * @return  bool
+	 */
+	function save_meta_fields( $post_id, $fields = array() ) {
+	    $successes = 0;
+
+	    foreach( $fields as $field ) {
+	      //groups_update_groupmeta returns false if the old value matches the new value, so we'll need to check for that case
+	      $old_setting = get_post_meta( $post_id, $field, true );
+	      $new_setting = ( isset( $_POST[$field] ) ) ? $_POST[$field] : '' ;
+	      $success = false;
+
+	      $towrite = PHP_EOL . 'field: ' . print_r( $field, TRUE );
+	      $towrite .= PHP_EOL . 'old setting: ' . print_r($old_setting, TRUE);
+	      $towrite .= PHP_EOL . 'new setting: ' . print_r($new_setting, TRUE);
+
+
+	      if ( empty( $new_setting ) && ! empty( $old_setting ) ) {
+	        $success = delete_post_meta( $post_id, $field );
+	        $towrite .= PHP_EOL . 'did delete';
+
+	      } elseif ( $new_setting == $old_setting ) {
+	          // No need to resave settings if they're the same
+	          $success = true;
+	          $towrite .= PHP_EOL . 'did nothing';
+	      } else {
+	        $success = update_post_meta( $post_id, $field, $new_setting );
+	        $towrite .= PHP_EOL . 'did update';
+	      }
+
+	      if ( $success ) {
+	        $successes++;
+	      }
+
+	     $fp = fopen('saving_meta.txt', 'a');
+	     fwrite($fp, $towrite);
+	     fclose($fp);
+	    }
+
+	    if ( $successes == count( $fields ) ) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	}
+
+	/**
+	 * General handler for saving post taxonomy (like geography terms).
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param 	int $post_id
+	 * @param 	string $tax_field $_POST key_value to check.
+	 * @return  bool
+	 */
+	public function save_taxonomy_field( $post_id, $tax_field, $taxonomy ) {
+		// Don't save empty metas
+		// @TODO: This wouldn't allow for the removal of a term
+		if ( ! empty( $_POST[$tax_field] ) ) {
+			$term_ids = array( $_POST[$tax_field] );
+			//Make sure the terms IDs are integers:
+			$term_ids = array_map('intval', $term_ids);
+			$term_ids = array_unique( $term_ids );
+			return wp_set_object_terms( $post_id, $term_ids, $taxonomy );
+		}
+	}
+
 }
 $cc_salud_america = new CC_Salud_America();
