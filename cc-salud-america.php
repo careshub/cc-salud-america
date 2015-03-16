@@ -49,6 +49,7 @@ function sa_class_init() {
     // Extension classes
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sapolicies-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-saresources-cpt-tax.php' );
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-success-stories-cpt-tax.php' );
 
     // add_action( 'bp_include', array( 'CC_SA_Policies_CPT_Tax', 'get_instance' ), 21 );
     // new CC_SA_Policies_CPT_Tax();
@@ -77,3 +78,11 @@ add_action( 'bp_include', 'bp_startup_cc_salud_america_extension', 32 );
  */
 register_activation_hook( __FILE__, array( 'CC_Salud_America', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'CC_Salud_America', 'deactivate' ) );
+
+/*
+ * Helper function .
+ * @return Fully-qualified URI to the root of the plugin.
+ */
+function sa_get_plugin_base_uri(){
+    return plugin_dir_url( __FILE__ );
+}

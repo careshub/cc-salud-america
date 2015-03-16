@@ -69,14 +69,14 @@ class CC_Salud_America {
 		 */
 		// add_action( '@TODO', array( $this, 'action_method_name' ) );
 		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
-		
+
 		// Add our templates to BuddyPress' template stack.
 		add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack'), 10, 1 );
 
 		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
 		add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
 
-		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) ); 
+		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
 
 	}
 
@@ -324,9 +324,44 @@ class CC_Salud_America {
 	    return $permalink;
 	}
 
-	public function register_admin_page_aggregator() { 
+	public function register_admin_page_aggregator() {
 		add_menu_page( 'Salud America', 'Salud America', 'edit_others_posts', 'salud_america', function() { echo 'Salud America'; }, 'dashicons-arrow-right', 48 );
 	}
+
+
+	/*--------------------------------------------*
+	 * Helper Functions
+	 *--------------------------------------------*/
+
+	/**
+	 * Determines whether or not the current user has the ability to save meta data associated with this post.
+	 *
+	 * @param		int		$post_id	The ID of the post being save
+	 * @param		bool				Whether or not the user has the ability to save this post.
+	 */
+	public function user_can_save( $post_id, $nonce_value, $nonce_name ) {
+
+	    // Don't save if the user hasn't submitted the changes
+		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return false;
+		} // end if
+
+		// Verify that the input is coming from the proper form
+		if( ! wp_verify_nonce( $_POST[ $nonce_value ], $nonce_name ) ) {
+			return false;
+		} // end if
+
+		// @TODO: Add user permission checks
+		// Make sure the user has permissions to post
+		// if( 'post' == $_POST['post_type'] ) {
+		// 	if( ! current_user_can( 'edit_post', $post_id ) ) {
+		// 		return;
+		// 	} // end if
+		// } // end if/else
+
+		return true;
+
+	} // end user_can_save
 
 }
 $cc_salud_america = new CC_Salud_America();

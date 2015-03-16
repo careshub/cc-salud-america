@@ -243,7 +243,8 @@ function sa_get_requested_tax_term(){
  * @return  array query variables
  */
 function sa_get_query(){
-    $cpt = sa_get_cpt_by_section( bp_current_action() );
+    $section = bp_current_action();
+    $cpt = sa_get_cpt_by_section( $section );
 
     // For a single post, get the post by the slug
     if ( sa_is_single_post() ){
@@ -271,6 +272,12 @@ function sa_get_query(){
                 )
             );
         }
+
+        // On the video archive, only find stories with a set video url.
+        if ( $section == 'heroes' && isset( $_GET['style'] ) && $_GET['style'] == 'videos' ) {
+            $query['meta_key'] = 'sa_success_story_video_url';
+        }
+
     }
 
     return apply_filters( "sa_get_query", $query );
@@ -365,16 +372,24 @@ function sa_is_archive_taxonomy(){
  *
  * @since   1.0.0
  *
+ * @param   string section name to check for.
  * @return  bool
  */
-function sa_is_section_front(){
+function sa_is_section_front( $section = false ){
     $section_front = false;
-
     // if the first action variable is empty, this is the basic view.
     if ( sa_is_sa_group() ) {
         $av = bp_action_variable();
         if ( false == $av || in_array( $av, array( 'page', 'paged' ) )  ) {
         $section_front = true;
+        }
+    }
+
+    // If we're checking that we're on a specific section, make that check.
+    if ( ! empty( $section ) && $section_front ) {
+        $section_front = false;
+        if ( $section == bp_current_action() ) {
+            $section_front = true;
         }
     }
 
