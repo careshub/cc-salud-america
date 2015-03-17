@@ -1,6 +1,6 @@
 <?php
 /**
- * Generate for the public-facing pieces of the plugin.
+ * Generate the public-facing pieces of the plugin.
  *
  * Community Commons Salud America
  *
@@ -246,6 +246,38 @@ function salud_the_target_icons() {
     }
 
 /**
+ * Create all six advocacy target icons with links to the taxonomy archive
+ *
+ * @since   1.0.0
+ * @param   string $section used to incorporate correct section in link
+ * @param   int $columns  number of columns to arrange icons in
+ * @param   int $icon_size Size of icons to use, in px. Will be converted to 30, 60 or 90.
+ * @return  html used to show icon
+ */
+function sa_advocacy_target_icon_links( $section = 'changes', $columns = 3, $icon_size = 90 ) {
+    $class = sa_get_classname_from_columns( $columns );
+    $cpt = sa_get_cpt_by_section( $section );
+    // Convert all requests to 30, 60 or 90.
+    switch ( $icon_size ) {
+        case ( $icon_size < 46 ) :
+            $icon_size = 30;
+            break;
+        case ( $icon_size < 76 ) :
+            $icon_size = 60;
+            break;
+        default:
+            $icon_size = 90;
+            break;
+    }
+
+    $advocacy_targets = get_terms('sa_advocacy_targets');
+    foreach ($advocacy_targets as $target) {
+        ?>
+        <div class="<?php echo $class; ?> mini-text"><a href="<?php sa_the_cpt_tax_intersection_link( $cpt, 'sa_advocacy_targets', $target->slug ) ?>" title="<?php echo $target->description; ?>"><span class="<?php echo $target->slug . 'x' . $icon_size; ?>"></span><br /><?php echo $target->name; ?></a></div>
+    <?php } //end foreach
+}
+
+/**
  * Output html for taxonomy-related images
  *
  * @since   1.0.0
@@ -264,4 +296,101 @@ function salud_get_taxonomy_images( $category, $taxonomy ){
     $output .= '</div>';
 
     return $output;
+}
+
+/**
+ * Output html for a small recent posts loop, like on the group home page.
+ *
+ * @since   1.0.0
+ *
+ * @param   int $columns Number of columns the posts should be displayed in.
+ * @param   int $numposts How many posts to fetch.
+ * @return  html The blocks and their contents.
+ */
+function sa_recent_posts_loop( $section = 'policies', $columns = 3, $numposts = 3 ){
+    //Grab the possible advocacy targets
+    $advocacy_targets = get_terms( 'sa_advocacy_targets' );
+    $possible_targets = array();
+    foreach ( $advocacy_targets as $target ) {
+        $possible_targets[] = $target->slug;
+    }
+    $class = sa_get_classname_from_columns( $columns );
+    $cpt = sa_get_cpt_by_section( $section );
+
+    // Grab the N most recent policies
+    $args = array (
+            'post_type' => $cpt,
+            'posts_per_page' => $numposts,
+        );
+    $recent_posts = new WP_Query( $args );
+
+    if ( $recent_posts->have_posts() ) {
+        while ( $recent_posts->have_posts() ) {
+            $recent_posts->the_post();
+            ?>
+            <div class="<?php echo $class; ?>">
+                <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" >
+                <?php
+                if ( has_post_thumbnail()) {
+                    // Use the post thumbnail if it exists
+                    the_post_thumbnail('feature-front-sub');
+                } else {
+                    // Otherwise, use some stand-in images by advocacy target
+                    sa_the_advocacy_target_thumbnail( get_the_ID(), $possible_targets, 300 );
+                }
+                ?>
+                <h5 class="entry-title"><?php the_title(); ?></h5></a>
+                <?php
+                if ( $cpt == 'sapolicies' ){
+                    the_excerpt();
+                    }
+                ?>
+            </div>
+            <?php
+        } // endwhile $recent_policies->have_posts()
+    } // endif $recent_policies->have_posts()
+    wp_reset_postdata();
+}
+
+/**
+ * Output html for a generic advocacy target thumbnail.
+ *
+ * @since   1.0.0
+ *
+ * @param   int $columns Number of columns the posts should be displayed in.
+ * @param   array $possible_targets Array of unused advocacy targets
+ * @param   int $numposts How many posts to fetch.
+ * @return  html The blocks and their contents.
+ */
+function sa_the_advocacy_target_thumbnail( $post_id = null, &$possible_targets = array(), $width = 300 ) {
+    if ( is_null( $post_id ) ) {
+        $post_id = get_the_ID();
+    }
+    $advo_target = '';
+
+    // We're trying to find a good stand-in image based on the advocacy targets of the post.
+    $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
+    if ( ! empty( $terms ) ) {
+        // Loop through the post terms to find a usable (unique) image
+        foreach ( $terms as $term ) {
+            if ( in_array( $term->slug, $possible_targets ) ) {
+                $advo_target = $term->slug;
+                break;
+            }
+        }
+    } // end check for empty terms
+
+    // If an advo_target didn't get set, we'll set one at random
+    if ( empty( $advo_target ) ) {
+        $advo_target = current( $possible_targets );
+    }
+    // Delete the term we used from the possible values for future use.
+    $key_to_delete = array_search( $advo_target, $possible_targets );
+    if ( false !== $key_to_delete ) {
+        unset( $possible_targets[$key_to_delete] );
+    }
+
+    ?>
+    <img src="<?php echo sa_get_plugin_base_uri() . 'public/images/advocacy_targets/' . $advo_target . 'x' . $width; ?>.jpg" >
+    <?php
 }

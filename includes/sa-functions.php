@@ -82,14 +82,19 @@ function sa_get_section_permalink( $section = 'policies' ) {
 function sa_get_tab_slug( $section = 'policies' ){
     switch ( $section ) {
         case 'resources':
+        case 'saresources':
             $slug = "resources"; //old value = saresources
             break;
         case 'heroes':
+        case 'sa_success_story':
             $slug = "heroes"; //old value = sa_success_story
             break;
         case 'take_action':
             $slug = "take-action"; //old value = take-action-list
             break;
+        case 'changes':
+        case 'policies':
+        case 'sapolicies':
         default:
             $slug = "changes"; //old value = sapolicies
             break;
@@ -112,11 +117,14 @@ function sa_get_tab_label( $section = 'policies' ){
             $label = "Resources for Change";
             break;
         case 'heroes':
+        case 'success-stories':
             $label = "Salud Heroes";
             break;
         case 'take_action':
             $label = "Take Action!";
             break;
+        case 'policies':
+        case 'changes':
         default:
             $label = "Find Change";
             break;
@@ -136,20 +144,23 @@ function sa_get_tab_label( $section = 'policies' ){
 function sa_get_cpt_by_section( $section = 'policies' ){
     switch ( $section ) {
         case 'resources':
-            $label = "saresources";
+            $cpt = "saresources";
             break;
         case 'heroes':
-            $label = "sa_success_story";
+        case 'success-stories':
+            $cpt = "sa_success_story";
             break;
         case 'take_action':
-            $label = 'sa_take_action';
+            $cpt = 'sa_take_action';
             break;
+        case 'policies':
+        case 'changes':
         default:
-            $label = "sapolicies";
+            $cpt = "sapolicies";
             break;
     }
 
-    return apply_filters( 'sa_get_cpt_by_section', $label );
+    return apply_filters( 'sa_get_cpt_by_section', $cpt );
 }
 
 /**
@@ -474,4 +485,31 @@ function sa_build_search_query( $post_type, $taxonomies = array(), $metas = arra
     }
 
     return $filter_args;
+}
+
+/**
+ * Convert number of columns to appropriate class for blocks.
+ *
+ * @since   1.0.0
+ *
+ * @param   int $columns number of columns
+ * @return  string class name
+ */
+function sa_get_classname_from_columns( $columns ) {
+        switch ( (int) $columns ) {
+        case 2:
+            $class = 'half-block';
+            break;
+        case 4:
+            $class = 'quarter-block';
+            break;
+        case 6:
+            $class = 'sixth-block';
+            break;
+        case 3:
+        default:
+            $class = 'third-block';
+            break;
+    }
+    return apply_filters( 'sa_get_classname_from_columns', $class );
 }
