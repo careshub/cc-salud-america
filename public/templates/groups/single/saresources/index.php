@@ -29,7 +29,7 @@ if ( sa_is_section_front() ) {
 			$advocacy_targets = get_terms('sa_advocacy_targets');
 			foreach ($advocacy_targets as $target) {
 				?>
-				<div class="sixth-block mini-text"><a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $target->slug ) ?>"><span class="<?php echo $target->slug; ?>x90"></span><br /><?php echo $target->name; ?></a></div>
+				<div class="sixth-block mini-text"><a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $target->slug ); ?>"><span class="<?php echo $target->slug; ?>x90"></span><br /><?php echo $target->name; ?></a></div>
 			<?php } //end foreach ?>
 		</div>
 

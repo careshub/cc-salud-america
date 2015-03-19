@@ -534,7 +534,6 @@ function sa_heroes_video_post_archive( $query ) {
 }
 
 function sa_get_random_hero_video() {
-
 	$args = array(
 		'post_type' 			=> 'sa_success_story',
 		'orderby'               => 'rand',
@@ -554,11 +553,11 @@ function sa_get_random_hero_video() {
 	// print_r($video_story);
 
 	// Use alternate syntax (using the_post() object messes up the outer WP_Query loop because wp_reset_postdata in this case resets the postdata to the archive page's real job, not the page intro secondary loop.
-	foreach ($video_story->posts as $video) {
+	foreach ( $video_story->posts as $video ) {
 
 		$video_url = get_post_meta( $video->ID, 'sa_success_story_video_url', 'true' );
 
-		if ( !empty( $video_url ) ) {
+		if ( ! empty( $video_url ) ) {
 			$video_embed_code = wp_oembed_get( $video_url );
 		}
 
