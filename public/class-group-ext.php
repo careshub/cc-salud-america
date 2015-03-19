@@ -80,4 +80,29 @@ class CC_Salud_America_Heroes extends BP_Group_Extension {
 }
 bp_register_group_extension( 'CC_Salud_America_Heroes' );
 
+class CC_Salud_America_Video_Contests extends BP_Group_Extension {
+    // Documentation: https://codex.buddypress.org/developer/group-extension-api/
+    function __construct() {
+        $args = array(
+            'slug' => sa_get_tab_slug( $section = 'video-contest' ),
+            'name' => sa_get_tab_label( $section = 'video-contest' ),
+            // 'nav_item_position' => 13,
+            'access' => 'anyone', // Make this a publicly accessible tab in the SA group
+            'show_tab' => $this->enable_cc_sa_video_contests_tab() ? 'anyone' : 'noone', // Don't create a nav tab
+        );
+        parent::init( $args );
+    }
+
+    function display( $group_id = null ) {
+        bp_get_template_part( 'groups/single/savideocontests/index' );
+    }
+
+    function enable_cc_sa_video_contests_tab() {
+        $setting = sa_is_sa_group();
+        return apply_filters( 'enable_cc_sa_video_contests_tab', $setting );
+    }
+
+}
+bp_register_group_extension( 'CC_Salud_America_Video_Contests' );
+
 endif;  // if ( class_exists( 'BP_Group_Extension' ) )

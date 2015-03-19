@@ -92,6 +92,9 @@ function sa_get_tab_slug( $section = 'policies' ){
         case 'take_action':
             $slug = "take-action"; //old value = take-action-list
             break;
+        case 'video-contest':
+            $slug = "video-contest";
+            break;
         case 'changes':
         case 'policies':
         case 'sapolicies':
@@ -123,6 +126,9 @@ function sa_get_tab_label( $section = 'policies' ){
         case 'take_action':
             $label = "Take Action!";
             break;
+        case 'video-contest':
+            $label = "Video Contest";
+            break;
         case 'policies':
         case 'changes':
         default:
@@ -153,6 +159,9 @@ function sa_get_cpt_by_section( $section = 'policies' ){
         case 'take_action':
             $cpt = 'sa_take_action';
             break;
+        case 'video-contest':
+            $cpt = 'sa_video_contest';
+            break;
         case 'policies':
         case 'changes':
         default:
@@ -181,6 +190,9 @@ function sa_get_section_by_cpt( $cpt = 'sapolicies' ){
             break;
         case 'sa_take_action':
             $section = 'take_action';
+            break;
+        case 'sa_video_contest':
+            $section = 'video-contest';
             break;
         default:
             $section = "policies";
@@ -383,10 +395,11 @@ function sa_is_archive_taxonomy(){
  *
  * @since   1.0.0
  *
- * @param   string section name to check for.
+ * @param   string  $section name to check for. Optional. Otherwise just checks
+ *                  that this is a section front generally.
  * @return  bool
  */
-function sa_is_section_front( $section = false ){
+function sa_is_section_front( $section = false ) {
     $section_front = false;
     // if the first action variable is empty, this is the basic view.
     if ( sa_is_sa_group() ) {
@@ -405,6 +418,23 @@ function sa_is_section_front( $section = false ){
     }
 
     return apply_filters( 'sa_is_section_front', $section_front );
+}
+
+/**
+ * Is this part of a section?
+ *
+ * @since   1.0.0
+ *
+ * @param   string $section name to check for.
+ * @return  bool
+ */
+function sa_is_section( $section = false ) {
+    $is_section = false;
+    if ( sa_is_sa_group() && $section == bp_current_action() ) {
+        $is_section = true;
+    }
+
+    return apply_filters( 'sa_is_section', $is_section );
 }
 
 /**
