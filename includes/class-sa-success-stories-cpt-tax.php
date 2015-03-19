@@ -562,7 +562,7 @@ function sa_get_random_hero_video() {
 		}
 
 		if ( $video_embed_code ) { ?>
-			<div class="video-container-group">
+			<div class="video-container-group video-right">
 				<figure class="video-container">
 					<?php echo $video_embed_code; ?>
 				</figure>

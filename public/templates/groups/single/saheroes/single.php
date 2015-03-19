@@ -1,7 +1,7 @@
 <?php
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
-    $video_url = get_post_meta( get_the_ID(), 'sa_success_story_video_url', 'true' );
+    $video_url = get_post_meta( get_the_ID(), 'sa_success_story_video_url', true );
     $video_embed_code = '';
     if ( ! empty( $video_url ) ) {
         $video_embed_code = wp_oembed_get( $video_url );
@@ -30,9 +30,11 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
             </header>
 
             <?php if ( ! empty( $video_embed_code ) ) { ?>
-            <figure class="video-container">
-                <?php echo $video_embed_code; ?>
-            </figure>
+            <div class="video-container-group video-right">
+                <figure class="video-container">
+                    <?php echo $video_embed_code; ?>
+                </figure>
+            </div>
             <?php } ?>
 
             <?php the_content(); ?>

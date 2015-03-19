@@ -634,7 +634,16 @@
 // Video contest styles
 .video-contest {
 	.half-block.selected-video {
-		background-color: @sapink;
+		figcaption {
+			background-color: lighten( @sayellow, 25% );
+			.font-size( 1 );
+		}
+		// background-color: @sapink;
 	}
-
+}
+// Videos, generally
+.video-container-group{
+	&.video-right {
+		float: none;
+	}
 }
