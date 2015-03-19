@@ -210,7 +210,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		function sa_video_contest_meta_box() {
 			$custom = get_post_custom( $post->ID );
 			$end_date = maybe_unserialize( $custom[ 'sa_video_contest_end_date' ][0] );
-			$votes = maybe_unserialize( $custom[ 'sa_video_contest_votes' ] );
+			$votes = sa_video_contest_count_votes( $post->ID );
 
 			// Add a nonce field so we can check for it later.
 			wp_nonce_field( $this->nonce_name, $this->nonce_value );
@@ -220,7 +220,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 				<p>
 					<input type='text' name='sa_video_contest_end_date' id='sa_video_contest_end_date' value='<?php
 						if ( ! empty( $end_date ) ) {
-							echo $this->convert_to_human_date( $end_date );
+							echo sa_convert_to_human_date( $end_date );
 						}
 					 ?>'/>
 				</p>
@@ -293,7 +293,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		$meta_fields_to_save = array( 'sa_video_contest_end_date' );
 		// Convert the end date for storage.
 		if ( ! empty( $_POST[ 'sa_video_contest_end_date' ] ) ) {
-			$_POST[ 'sa_video_contest_end_date' ] = $this->convert_to_computer_date( $_POST[ 'sa_video_contest_end_date' ] );
+			$_POST[ 'sa_video_contest_end_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_video_contest_end_date' ] );
 		}
 
 		for ( $i = 1; $i < 7; $i++ ) {
@@ -303,18 +303,6 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 
 		// Save meta
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields_to_save );
-
-	}
-
-	public function convert_to_human_date( $date ){
-		// Goal format is "F j, Y"
-		$shuffle = date_create_from_format( 'Ymd', $date );
-		return date_format( $shuffle, 'F j, Y' );
-	}
-	public function convert_to_computer_date( $date ){
-		// Goal format is "Ymd"
-		$shuffle = date_create_from_format( 'F j, Y', $date );
-		return date_format( $shuffle, 'Ymd' );
 
 	}
 
@@ -571,5 +559,17 @@ function add_current_sa_video_contest(){
 	}
 
 	sa_has_current_video_contest();
+
+}
+
+function sa_convert_to_human_date( $date ){
+	// Goal format is "F j, Y"
+	$shuffle = date_create_from_format( 'Ymd', $date );
+	return date_format( $shuffle, 'F j, Y' );
+}
+function sa_convert_to_computer_date( $date ){
+	// Goal format is "Ymd"
+	$shuffle = date_create_from_format( 'F j, Y', $date );
+	return date_format( $shuffle, 'Ymd' );
 
 }

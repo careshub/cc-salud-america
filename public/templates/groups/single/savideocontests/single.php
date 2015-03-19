@@ -6,6 +6,8 @@ $user_can_vote = sa_video_contest_current_user_can_vote( get_the_ID() );
 // Has the user already voted?
 $user_vote = sa_video_contest_get_current_user_vote( get_the_ID() );
 
+$end_date = sa_convert_to_human_date( $custom_fields['sa_video_contest_end_date'][0] );
+
 // echo '<pre>'; var_dump( get_post_meta( get_the_ID(), 'sa_video_contest_votes', true ) ); echo '</pre>';
 
 // Fetch the votes
@@ -26,7 +28,17 @@ if ( $is_active ) {
             <h3 class="entry-title">
             <a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
             </h3>
-            <?php salud_the_target_icons(); ?>
+            <?php
+            if ( $is_active ) {
+                ?>
+                <p class="meta">This contest runs until <?php echo $end_date; ?>.</p>
+                <?php
+            } else {
+                ?>
+                <p class="meta">This contest ended <?php echo $end_date; ?>.</p>
+                <?php
+            }
+            salud_the_target_icons(); ?>
         </header>
         <?php // The content is the description of the contest in this case.
         the_content();
