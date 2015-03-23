@@ -157,6 +157,7 @@ function sa_get_cpt_by_section( $section = 'policies' ){
             $cpt = "sa_success_story";
             break;
         case 'take_action':
+        case 'take-action':
             $cpt = 'sa_take_action';
             break;
         case 'video-contest':
