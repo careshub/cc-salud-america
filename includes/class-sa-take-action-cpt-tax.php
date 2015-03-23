@@ -56,6 +56,8 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 		// add_action( 'bp_init', array( $this, 'capture_vote_submission'), 78 );
 		// add_action( 'bp_init', array( $this, 'capture_join_group_submission'), 78 );
 
+		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 20 );
+
 	}
 
 	/**
@@ -257,6 +259,36 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 		// Save meta
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields_to_save );
 
+	}
+
+	/**
+	 * Add current petition to group home page notices box.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   html
+	 */
+	public function add_notices( $notices ) {
+		$args = array(
+            'post_type' 		=> $this->post_type,
+            'posts_per_page' 	=> 1,
+            'meta_key'			=> 'sa_take_action_highlight'
+        );
+        $petition = new WP_Query( $args );
+
+        if ( $petition->have_posts() ) {
+        	while ( $petition->have_posts() ):
+        		$petition->the_post();
+        		$petition_url = get_post_meta( get_the_ID(), 'sa_take_action_url', true );
+		 		$notices .= PHP_EOL . '<h4 style="color:black"><a style="text-decoration:none;color:black" href="' . get_the_permalink() . '"><span style="text-transform:uppercase; color:red;" class="uppercase">Take Action:</span>&ensp;';
+		 		$notices .= get_the_title();
+		 		$notices .= '</a></h4>';
+		 		$notices .= '<a class="button" target="_blank" href="' . $petition_url . '">Sign the Petition</a>';
+			endwhile;
+			wp_reset_query();
+		}
+
+		return $notices;
 	}
 
 } //End class CC_SA_Resources_CPT_Tax

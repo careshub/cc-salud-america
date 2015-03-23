@@ -78,6 +78,8 @@ class CC_Salud_America {
 
 		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
 
+		add_action( 'cc_group_home_page_before_content', array( $this, 'build_home_page_notices' ) );
+
 	}
 
 
@@ -433,6 +435,30 @@ class CC_Salud_America {
 			$term_ids = array_map('intval', $term_ids);
 			$term_ids = array_unique( $term_ids );
 			return wp_set_object_terms( $post_id, $term_ids, $taxonomy );
+		}
+	}
+
+	/**
+	 * Build the notices box on the Salud America group homepage.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param 	int $group_id
+	 * @return  html
+	 */
+	public function build_home_page_notices( $current_group_id ){
+		if ( $current_group_id != sa_get_group_id() ) {
+			return;
+		}
+
+		$notices = apply_filters( 'sa_group_home_page_notices', '' );
+
+		if ( ! empty( $notices ) ){
+			?>
+			<div id="message" class="error">
+				<?php echo $notices; ?>
+			</div>
+			<?php
 		}
 	}
 

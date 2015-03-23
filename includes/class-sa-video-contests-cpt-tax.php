@@ -56,6 +56,9 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		add_action( 'bp_init', array( $this, 'capture_vote_submission'), 78 );
 		add_action( 'bp_init', array( $this, 'capture_join_group_submission'), 78 );
 
+		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 10 );
+
+
 	}
 
 	/**
@@ -210,6 +213,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		function sa_video_contest_meta_box() {
 			$custom = get_post_custom( $post->ID );
 			$end_date = maybe_unserialize( $custom[ 'sa_video_contest_end_date' ][0] );
+			$stem_sentence = $custom[ 'sa_video_contest_notice_stem' ][0];
 			$votes = sa_video_contest_count_votes( $post->ID );
 
 			// Add a nonce field so we can check for it later.
@@ -224,7 +228,19 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 						}
 					 ?>'/>
 				</p>
-				 <p class="info">Set the start date by scheduling the publication date in the "Publish" box.</p>
+				<p class="info">Set the start date by scheduling the publication date in the "Publish" box.</p>
+				<h4>Hub Home Page Notice Box Title</h4>
+				<p>
+					<input type='text' name='sa_video_contest_notice_stem' id='sa_video_contest_notice_stem' value='<?php
+						if ( ! empty( $stem_sentence) ) {
+							echo $stem_sentence;
+						}
+					 ?>'/>
+				</p>
+				<p class="info">This will be output in the notices box on the hub home page:<br />
+					VOTE &amp; WIN: <em>notice box title</em>
+				</p>
+
 			</div>
 			<div>
 				<h4>Candidate Videos</h4>
@@ -290,7 +306,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			return false;
 		}
 		// Create array of fields to save
-		$meta_fields_to_save = array( 'sa_video_contest_end_date' );
+		$meta_fields_to_save = array( 'sa_video_contest_end_date', 'sa_video_contest_notice_stem' );
 		// Convert the end date for storage.
 		if ( ! empty( $_POST[ 'sa_video_contest_end_date' ] ) ) {
 			$_POST[ 'sa_video_contest_end_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_video_contest_end_date' ] );
@@ -428,6 +444,44 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		return $success;
 	}
 
+	/**
+	 * Add current contest to group home page notices box.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   html
+	 */
+	public function add_notices( $notices ) {
+		$args = array(
+		'post_type' => $this->post_type,
+		'posts_per_page' => 1,
+		'meta_query' => array(
+				            array(
+				                'key' => 'sa_video_contest_end_date', // Check the start date field
+				                'value' => date("Ymd"), // Set today's date (note the similar format)
+				                'compare' => '>=', // Return the ones greater than today's date
+				                'type' => 'NUMERIC,' // Let WordPress know we're working with numbers
+				                )
+				            ),
+		);
+		$contest = new WP_Query( $args );
+		if ( $contest->have_posts() ) {
+        	while ( $contest->have_posts() ):
+        		$contest->the_post();
+        		$post_meta = get_post_meta( get_the_ID() );
+        		$end_date = $post_meta['sa_video_contest_end_date'][0];
+        		$teaser = $post_meta['sa_video_contest_notice_stem'][0];
+		 		$notices .= PHP_EOL . '<h4 style="color:black"><a style="text-decoration:none;color:black" href="' . get_the_permalink() . '"><span style="text-transform:uppercase; color:red;" class="uppercase">Vote &amp; Win:</span>&ensp;';
+		 		$notices .= apply_filters( 'the_title', $teaser );
+		 		$notices .= '</a></h4>';
+		 		$notices .= '<a class="button" href="' . get_the_permalink() . '">Vote Now</a>';
+			endwhile;
+			wp_reset_query();
+		}
+
+		return $notices;
+	}
+
 } //End class CC_SA_Resources_CPT_Tax
 $sa_video_contest_cpt_tax = new CC_SA_Video_Contests_CPT_Tax();
 
@@ -545,21 +599,18 @@ function sa_has_current_video_contest() {
 				            array(
 				                'key' => 'sa_video_contest_end_date', // Check the start date field
 				                'value' => date("Ymd"), // Set today's date (note the similar format)
-				                'compare' => '<=', // Return the ones greater than today's date
+				                'compare' => '>=', // Return the ones greater than today's date
 				                'type' => 'NUMERIC,' // Let WordPress know we're working with numbers
 				                )
 				            ),
 		);
-}
-
-add_action( 'bp_before_group_body', 'add_current_sa_video_contest');
-function add_current_sa_video_contest(){
-	if ( ! sa_is_sa_group() ){
-		return;
+	$contest = new WP_Query( $args );
+	if ( $contest->have_posts() ) {
+		$retval = true;
+	} else {
+		$retval = false;
 	}
-
-	sa_has_current_video_contest();
-
+	return $retval;
 }
 
 function sa_convert_to_human_date( $date ){
