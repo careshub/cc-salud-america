@@ -362,8 +362,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 *
 	 * @return   html
 	 */
-	function sa_geog_meta_box() {
-			global $post;
+	function sa_geog_meta_box( $post ) {
 		 //  $custom = get_post_custom($post->ID);
 		 //  $geog = $custom["sa_geog"][0];
 		 //  $state = $custom["sa_state"][0];
@@ -494,8 +493,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 *
 	 * @return   html
 	 */
-	public function sa_policy_meta_box() {
-			global $post;
+	public function sa_policy_meta_box( $post ) {
 			$custom = get_post_custom($post->ID);
 			$sapolicy_type = $custom["sa_policytype"][0];
 			$sapolicy_stage = $custom["sa_policystage"][0];

@@ -209,7 +209,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	function add_meta_box() {
 		add_meta_box( 'sa_take_action_meta_box', 'Petition Details', array( $this, 'sa_take_action_meta_box' ), 'sa_take_action', 'normal', 'high' );   ;
 	}
-		function sa_take_action_meta_box() {
+		function sa_take_action_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
 
 			// Add a nonce field so we can check for it later.

@@ -299,9 +299,9 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 	 */
 	//Building the input form in the WordPress admin area
 	function add_meta_box() {
-		add_meta_box( 'sa_resource_meta_box', 'Resource Information (optional)', array( $this, 'sa_resource_meta_box' ), 'SA Resources', 'normal', 'high' );   ;
+		add_meta_box( 'sa_resource_meta_box', 'Resource Information (optional)', array( $this, 'sa_resource_meta_box' ), $this->post_type, 'normal', 'high' );   ;
 	}
-		function sa_resource_meta_box() {
+		function sa_resource_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
 			$saresource_date = $custom["saresource_date"][0];
 			$saresource_policy = $custom["saresource_policy"][0];
