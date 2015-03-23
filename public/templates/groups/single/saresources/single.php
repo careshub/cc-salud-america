@@ -56,8 +56,6 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
             <!-- Finding and listing related resources. -->
 
         </div><!-- .entry-content -->
-        <footer class="entry-meta">
-            <?php edit_post_link( __( 'Edit', 'twentytwelve' ), '<span class="edit-link">', '</span>' ); ?>
-        </footer><!-- .entry-meta -->
+        <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
     </article><!-- #post -->
 <?php endwhile; // end of the loop. ?>

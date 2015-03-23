@@ -17,4 +17,5 @@ $custom_fields = get_post_meta( get_the_ID() );
         }
         ?>
     </div><!-- .entry-content -->
+    <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
 </article><!-- #post -->
