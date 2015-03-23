@@ -91,9 +91,7 @@ add_shortcode( 'sa_recent_heroes', 'sa_recent_heroes_shortcode' );
  *
  * @since   1.0.0
  *
- * @param   int $columns Number of columns the posts should be displayed in.
- * @param   int $numposts How many posts to fetch.
- * @return  html The blocks and their contents.
+ * @return  html The video.
  */
 function sa_random_hero_video_shortcode() {
     ob_start();
@@ -101,3 +99,38 @@ function sa_random_hero_video_shortcode() {
     return ob_get_clean();
 }
 add_shortcode( 'sa_random_hero_video', 'sa_random_hero_video_shortcode' );
+
+/**
+ * Output html for an upcoming tweetchats loop.
+ *
+ * @since   1.0.0
+ *
+ * @param   int $posts How many posts to fetch.
+ * @return  html The unordered list.
+ */
+function sa_upcoming_tweetchats_list_shortcode( $atts ) {
+    $a = shortcode_atts( array(
+        'posts' => 3
+        ), $atts );
+    ob_start();
+    sa_tweetchats_list( $a['posts'], 'upcoming' );
+    return ob_get_clean();
+}
+add_shortcode( 'sa_upcoming_tweetchats', 'sa_upcoming_tweetchats_list_shortcode' );
+/**
+ * Output html for a past tweetchats loop.
+ *
+ * @since   1.0.0
+ *
+ * @param   int $posts How many posts to fetch.
+ * @return  html The unordered list.
+ */
+function sa_past_tweetchats_list_shortcode( $atts ) {
+    $a = shortcode_atts( array(
+        'posts' => 3
+        ), $atts );
+    ob_start();
+    sa_tweetchats_list( $a['posts'], 'past' );
+    return ob_get_clean();
+}
+add_shortcode( 'sa_past_tweetchats', 'sa_past_tweetchats_list_shortcode' );

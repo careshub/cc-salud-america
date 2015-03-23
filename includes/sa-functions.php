@@ -87,19 +87,22 @@ function sa_get_tab_slug( $section = 'policies' ){
             break;
         case 'heroes':
         case 'sa_success_story':
-            $slug = "heroes"; //old value = sa_success_story
+            $slug = 'heroes'; //old value = sa_success_story
             break;
         case 'take_action':
-            $slug = "take-action"; //old value = take-action-list
+            $slug = 'take-action'; //old value = take-action-list
             break;
         case 'video-contest':
-            $slug = "video-contest";
+            $slug = 'video-contest';
+            break;
+        case 'tweetchats':
+            $slug = 'tweetchats';
             break;
         case 'changes':
         case 'policies':
         case 'sapolicies':
         default:
-            $slug = "changes"; //old value = sapolicies
+            $slug = 'changes'; //old value = sapolicies
             break;
     }
 
@@ -128,6 +131,9 @@ function sa_get_tab_label( $section = 'policies' ){
             break;
         case 'video-contest':
             $label = "Video Contest";
+            break;
+        case 'tweetchats':
+            $label = "Tweetchats";
             break;
         case 'policies':
         case 'changes':
@@ -163,6 +169,9 @@ function sa_get_cpt_by_section( $section = 'policies' ){
         case 'video-contest':
             $cpt = 'sa_video_contest';
             break;
+        case 'tweetchats':
+            $cpt = 'sa_tweetchats';
+            break;
         case 'policies':
         case 'changes':
         default:
@@ -194,6 +203,9 @@ function sa_get_section_by_cpt( $cpt = 'sapolicies' ){
             break;
         case 'sa_video_contest':
             $section = 'video-contest';
+            break;
+        case 'sa_tweetchats':
+            $section = 'tweetchats';
             break;
         default:
             $section = "policies";
@@ -543,4 +555,28 @@ function sa_get_classname_from_columns( $columns ) {
             break;
     }
     return apply_filters( 'sa_get_classname_from_columns', $class );
+}
+
+/**
+* Date format converters
+* For comparison purposes, dates are stored in the db like "20150417"
+* These helper functions act as converters to produce human readable dates.
+*
+* @param $date string date in human- or computer-readable format
+*
+*/
+function sa_convert_to_computer_date( $date ){
+    // Goal format is "Ymd"
+    $shuffle = date_create_from_format( 'F j, Y', $date );
+    return date_format( $shuffle, 'Ymd' );
+}
+function sa_convert_to_human_date( $date ){
+    // Goal format is "F j, Y"
+    $shuffle = date_create_from_format( 'Ymd', $date );
+    return date_format( $shuffle, 'F j, Y' );
+}
+function sa_convert_to_short_human_date( $date ){
+    // Goal format is 3/25
+    $shuffle = date_create_from_format( 'Ymd', $date );
+    return date_format( $shuffle, 'n/j' );
 }

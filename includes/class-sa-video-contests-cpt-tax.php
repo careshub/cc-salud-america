@@ -208,9 +208,9 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	 */
 	//Building the input form in the WordPress admin area
 	function add_meta_box() {
-		add_meta_box( 'sa_video_contest_meta_box', 'Video Contest Details', array( $this, 'sa_video_contest_meta_box' ), 'sa_video_contest', 'normal', 'high' );   ;
+		add_meta_box( 'sa_video_contest_meta_box', 'Video Contest Details', array( $this, 'sa_video_contest_meta_box' ), $this->post_type, 'normal', 'high' );   ;
 	}
-		function sa_video_contest_meta_box() {
+		function sa_video_contest_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
 			$end_date = maybe_unserialize( $custom[ 'sa_video_contest_end_date' ][0] );
 			$stem_sentence = $custom[ 'sa_video_contest_notice_stem' ][0];
@@ -611,16 +611,4 @@ function sa_has_current_video_contest() {
 		$retval = false;
 	}
 	return $retval;
-}
-
-function sa_convert_to_human_date( $date ){
-	// Goal format is "F j, Y"
-	$shuffle = date_create_from_format( 'Ymd', $date );
-	return date_format( $shuffle, 'F j, Y' );
-}
-function sa_convert_to_computer_date( $date ){
-	// Goal format is "Ymd"
-	$shuffle = date_create_from_format( 'F j, Y', $date );
-	return date_format( $shuffle, 'Ymd' );
-
 }
