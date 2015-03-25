@@ -1091,25 +1091,6 @@ function sa_searchpolicies() {
 	}
 }
 
-/*
-function sa_highlight_search_results($saps,$text) {
-	$keys2 = explode(" ",$saps);
-	$text2 = preg_replace('/('.implode('|', $keys2) .')/iu', '<strong style="color:#EF403B;">'.$saps.'</strong>', $text);
-	return $text2;
-}
-
-	function sa_searchpolicies_single() {
-	?>     <div id="cc-adv-search" class="clear">
-			<form action="search-results" method="POST" enctype="multipart/form-data" name="sa_ps_single">
-							<div class="row">
-					<input type="text" id="saps" name="saps" Placeholder="Enter search terms here" value="" />
-
-							<input id="searchsubmit" type="submit" alt="Search" value="Search" />
-				</div>
-
-	<?php }
-*/
-
 /**
  * Output location search form.
  *
@@ -1122,10 +1103,10 @@ function sa_location_search() {
 	<h3 class="screamer sapurple">Search for Changes in Progress by Location</h3>
 	<div>
 		<form method="GET" action="http://maps.communitycommons.org/policymap/" name="sa_ls" enctype="multipart/form-data">
-				<input type="text" id="address" size="70" Placeholder="e.g. Mosinee, Wisconsin" name="address" />
+				<input type="text" id="address" placeholder="Mosinee, Wisconsin" name="address" />
 				<input type="submit" name="submit" value="Search"/>
 		</form>
-		<a href="http://maps.communitycommons.org/policymap/"><img src="<?php echo get_stylesheet_directory_uri(); ?>/img/salud_america/policy-map.jpg" class="alignnone" alt="Use the maproom to find changes in your area." style="margin:1.4em 0;"></a>
+		<a href="http://maps.communitycommons.org/policymap/"><img src="<?php echo sa_get_plugin_base_uri(); ?>public/images/policy-map-2015x960.png" class="alignnone" alt="Use the maproom to find changes in your area." style="margin:1.4em 0;"></a>
 	</div>
 <?php
 }

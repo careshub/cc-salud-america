@@ -304,7 +304,7 @@ function sa_tweetchats_list( $numposts, $period = 'upcoming' ) {
 		);
 	// Not looking forward? We've got something for that.
 	if ( $period == 'past' ) {
-		$args[ 'ORDER' ] = 'DESC';
+		$args[ 'order' ] = 'DESC';
 		$args[ 'meta_query' ][0][ 'compare' ] = '<=';
 	}
 	$tweetchat = new WP_Query( $args );
