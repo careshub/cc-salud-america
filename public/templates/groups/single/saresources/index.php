@@ -67,21 +67,19 @@ if ( sa_is_section_front() ) {
 } elseif ( sa_is_archive_taxonomy() ) {
 
 	$tax_term = sa_get_requested_tax_term();
-	// Special case: we're looking at an advocacy target
-	if ( $tax_term->taxonomy == 'sa_advocacy_targets' ) {
-	   bp_get_template_part( 'groups/single/saresources/advocacy-targets' );
-	} else {
-		//Taxonomy term is set, but not an advocacy target
-		?>
-	    <div class="taxonomy-policies">
-	        <h3 class="screamer <?php sa_the_topic_color( $tax_term->slug ); ?>">Resources in the <?php
-	        echo $tax_term->name;
-	        echo ( $tax_term->taxonomy == 'sa_policy_tags' ? ' tag' : ' topic' )
-	        ?></h3>
-			<?php bp_get_template_part( 'groups/single/saresources/resource-loop' ); ?>
-	    </div>
-	    <?php
-	}
+    // Special case: Advocacy targets get a special introductory block
+    if ( $tax_term->taxonomy == 'sa_advocacy_targets' ) {
+        bp_get_template_part( 'groups/single/satermintros/advocacy-target' );
+    } ?>
+
+    <div class="taxonomy-policies">
+        <h3 class="screamer <?php sa_the_topic_color( $tax_term->slug ); ?>">Resources in the <?php
+        echo $tax_term->name;
+        echo ( $tax_term->taxonomy == 'sa_policy_tags' ? ' tag' : ' topic' )
+        ?></h3>
+		<?php bp_get_template_part( 'groups/single/saresources/resource-loop' ); ?>
+    </div>
+    <?php
 
 } elseif ( sa_is_single_post() ) {
 

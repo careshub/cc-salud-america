@@ -54,6 +54,7 @@ function sa_class_init() {
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-video-contests-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-take-action-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-tweetchats-cpt-tax.php' );
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-term-intros-cpt-tax.php' );
 
     // add_action( 'bp_include', array( 'CC_SA_Policies_CPT_Tax', 'get_instance' ), 21 );
     // new CC_SA_Policies_CPT_Tax();
