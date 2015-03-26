@@ -47,6 +47,12 @@ class CC_Salud_America {
 	protected $plugin_slug = 'cc-salud-america';
 
 	/**
+	* An array of the post types that should generate an activity item when published.
+	*
+	*/
+	public $activity_post_types = array( 'sapolicies', 'saresources', 'sa_success_story', 'sa_take_action', 'sa_video_contest' );
+
+	/**
 	 * Initialize the plugin by setting localization and loading public scripts
 	 * and styles.
 	 *
@@ -79,6 +85,10 @@ class CC_Salud_America {
 		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
 
 		add_action( 'cc_group_home_page_before_content', array( $this, 'build_home_page_notices' ) );
+
+		// Add activity stream items when policies are published
+		add_action( 'transition_post_status', array( $this, 'create_post_activity' ), 10, 3 );
+		add_action( 'transition_post_status', array( $this, 'delete_post_activity' ), 10, 3 );
 
 	}
 
@@ -459,6 +469,107 @@ class CC_Salud_America {
 				<?php echo $notices; ?>
 			</div>
 			<?php
+		}
+	}
+
+	/**
+	 * Post an activity item on publishing a new policy.
+	 *
+	 * @package BuddyPress Docs
+	 * @since 1.0-beta
+	 *
+	 * @param obj $query The query object created in BP_Docs_Query and passed to the
+	 *        bp_docs_doc_saved filter
+	 * @return int $activity_id The id number of the activity created
+	 */
+	function create_post_activity( $new_status, $old_status, $post ) {
+		// Only work on salud america-related post types
+		if ( ! in_array( $post->post_type, $this->activity_post_types ) ) {
+			return;
+		}
+
+		// Only when they change to publish. Don't show updates, drafts.
+		if ( ! ( $new_status == 'publish' && $old_status != 'publish' ) ) {
+			return;
+		}
+
+		$bp = buddypress();
+
+		// The action hook we're using will only run when a post is changed to "publish" status
+		$post_id = $post->ID;
+		$author_id = (int) $post->post_author;
+		$user_link = bp_core_get_userlink( $author_id );
+
+		$post_type_object = get_post_type_object( $post->post_type );
+		$post_type_label = strtolower( $post_type_object->labels->singular_name );
+
+		$post_url = get_permalink( $post_id );
+		$post_link = sprintf( '<a href="%s">%s</a>', $post_url, get_the_title( $post_id ) );
+
+		$group_id = sa_get_group_id();
+		$group = groups_get_group( array( 'group_id' => $group_id ) );
+		$group_url  = bp_get_group_permalink( $group );
+		$group_link = '<a href="' . $group_url . '">' . $group->name . '</a>';
+
+		$action = sprintf( __( '%1$s published the %2$s %3$s in the Hub %4$s', $this->plugin_slug ), $user_link, $post_type_label, $post_link, $group_link );
+
+		$type = $post->post_type . '_created';
+
+		$excerpt = cc_ellipsis( $post->post_content, $max=100, $append='&hellip;' );
+
+		$args = array(
+			'user_id'		=> $author_id,
+			'action'		=> $action,
+			'primary_link'	=> $post_link,
+			'component'		=> $bp->groups->id,
+			'type'			=> $type,
+			'item_id'		=> $group_id, // Set to the group/user/etc id, for better consistency with other BP components
+			'secondary_item_id'	=> $post_id, // The id of the doc itself
+			'recorded_time'		=> bp_core_current_time(),
+			'hide_sitewide'		=> false, // Filtered to allow plugins and integration pieces to dictate
+			'content'			=> $excerpt
+		);
+
+		do_action( $post->post_type . '_before_activity_save', $args );
+
+		$activity_id = bp_activity_add( apply_filters( $post->post_type . '_activity_args', $args, $post_id ) );
+
+		return $activity_id;
+	}
+
+	/**
+	 * Delete activity associated with a post
+	 *
+	 * Run on transition_post_status, to catch deletes from all locations
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $new_status
+	 * @param string $old_status
+	 * @param obj WP_Post object
+	 */
+	public function delete_post_activity( $new_status, $old_status, $post ) {
+		// Only work on salud america-related post types
+		if ( ! in_array( $post->post_type, $this->activity_post_types ) ) {
+			return;
+		}
+
+		// Only when they change from publish. Fire on change to trash, draft.
+		if ( ! ( $new_status != 'publish' && $old_status == 'publish' ) ) {
+			return;
+		}
+
+		$activities = bp_activity_get(
+			array(
+				'filter' => array(
+					'secondary_id' => $post->ID,
+					'component' => $bp->groups->id,
+				),
+			)
+		);
+
+		foreach ( (array) $activities['activities'] as $activity ) {
+			bp_activity_delete( array( 'id' => $activity->id ) );
 		}
 	}
 
