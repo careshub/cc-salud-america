@@ -71,18 +71,18 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	public function register_cpt() {
 
 	    $labels = array(
-	        'name' => _x( 'SA Take Action', 'sa_take_action' ),
-	        'singular_name' => _x( 'SA Take Action', 'sa_take_action' ),
-	        'add_new' => _x( 'Add New', 'sa_take_action' ),
-	        'add_new_item' => _x( 'Add New Petition', 'sa_take_action' ),
-	        'edit_item' => _x( 'Edit Petition', 'sa_take_action' ),
-	        'new_item' => _x( 'New Petitions', 'sa_take_action' ),
-	        'view_item' => _x( 'View Petitions', 'sa_take_action' ),
-	        'search_items' => _x( 'Search SA Take Action', 'sa_take_action' ),
-	        'not_found' => _x( 'No petitions found', 'sa_take_action' ),
-	        'not_found_in_trash' => _x( 'No petitions found in Trash', 'sa_take_action' ),
-	        'parent_item_colon' => _x( 'Parent Petition:', 'sa_take_action' ),
-	        'menu_name' => _x( 'SA Take Action', 'sa_take_action' ),
+	        'name' => __( 'Petitions', $this->plugin_slug ),
+	        'singular_name' => __( 'Petition', $this->plugin_slug ),
+	        'add_new' => __( 'Add New', $this->plugin_slug ),
+	        'add_new_item' => __( 'Add New Petition', $this->plugin_slug ),
+	        'edit_item' => __( 'Edit Petition', $this->plugin_slug ),
+	        'new_item' => __( 'New Petitions', $this->plugin_slug ),
+	        'view_item' => __( 'View Petitions', $this->plugin_slug ),
+	        'search_items' => __( 'Search Petitions', $this->plugin_slug ),
+	        'not_found' => __( 'No petitions found', $this->plugin_slug ),
+	        'not_found_in_trash' => __( 'No petitions found in Trash', $this->plugin_slug ),
+	        'parent_item_colon' => __( 'Parent Petition:', $this->plugin_slug ),
+	        'menu_name' => __( 'Petitions', $this->plugin_slug ),
 	    );
 
 	    $args = array(

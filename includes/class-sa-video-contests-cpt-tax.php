@@ -72,18 +72,18 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	public function register_cpt_sa_video_contest() {
 
 	    $labels = array(
-	        'name' => _x( 'SA Video Contests', 'sa_video_contest' ),
-	        'singular_name' => _x( 'SA Video Contest', 'sa_video_contest' ),
-	        'add_new' => _x( 'Add New', 'sa_video_contest' ),
-	        'add_new_item' => _x( 'Add New SA Video Contest', 'sa_video_contest' ),
-	        'edit_item' => _x( 'Edit SA Video Contest', 'sa_video_contest' ),
-	        'new_item' => _x( 'New SA Video Contest', 'sa_video_contest' ),
-	        'view_item' => _x( 'View SA Video Contest', 'sa_video_contest' ),
-	        'search_items' => _x( 'Search SA Video Contests', 'sa_video_contest' ),
-	        'not_found' => _x( 'No sa video contests found', 'sa_video_contest' ),
-	        'not_found_in_trash' => _x( 'No sa video contests found in Trash', 'sa_video_contest' ),
-	        'parent_item_colon' => _x( 'Parent SA Video Contest:', 'sa_video_contest' ),
-	        'menu_name' => _x( 'SA Video Contests', 'sa_video_contest' ),
+	        'name' => __( 'Video Contests', $this->plugin_slug ),
+	        'singular_name' => __( 'Video Contest', $this->plugin_slug ),
+	        'add_new' => __( 'Add New', $this->plugin_slug ),
+	        'add_new_item' => __( 'Add New Video Contest', $this->plugin_slug ),
+	        'edit_item' => __( 'Edit Video Contest', $this->plugin_slug ),
+	        'new_item' => __( 'New Video Contest', $this->plugin_slug ),
+	        'view_item' => __( 'View Video Contest', $this->plugin_slug ),
+	        'search_items' => __( 'Search Video Contests', $this->plugin_slug ),
+	        'not_found' => __( 'No video contests found', $this->plugin_slug ),
+	        'not_found_in_trash' => __( 'No video contests found in Trash', $this->plugin_slug ),
+	        'parent_item_colon' => __( 'Parent Video Contest:', $this->plugin_slug ),
+	        'menu_name' => __( 'Video Contests', $this->plugin_slug ),
 	    );
 
 	    $args = array(

@@ -60,18 +60,18 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 	public function register_cpt() {
 
 	    $labels = array(
-	        'name' => _x( 'SA Tweetchats', 'cc-salud-america' ),
-	        'singular_name' => _x( 'SA Tweetchat', 'cc-salud-america' ),
-	        'add_new' => _x( 'Add New', 'cc-salud-america' ),
-	        'add_new_item' => _x( 'Add New Tweetchat', 'cc-salud-america' ),
-	        'edit_item' => _x( 'Edit Tweetchat', 'cc-salud-america' ),
-	        'new_item' => _x( 'New Tweetchat', 'cc-salud-america' ),
-	        'view_item' => _x( 'View Tweetchat', 'cc-salud-america' ),
-	        'search_items' => _x( 'Search Tweetchats', 'cc-salud-america' ),
-	        'not_found' => _x( 'No tweetchats found', 'cc-salud-america' ),
-	        'not_found_in_trash' => _x( 'No tweetchats found in Trash', 'cc-salud-america' ),
-	        'parent_item_colon' => _x( 'Parent Tweetchat:', 'cc-salud-america' ),
-	        'menu_name' => _x( 'Tweetchats', 'cc-salud-america' ),
+	        'name' => __( 'Tweetchats', $this->plugin_slug ),
+	        'singular_name' => __( 'Tweetchat', $this->plugin_slug ),
+	        'add_new' => __( 'Add New', $this->plugin_slug ),
+	        'add_new_item' => __( 'Add New Tweetchat', $this->plugin_slug ),
+	        'edit_item' => __( 'Edit Tweetchat', $this->plugin_slug ),
+	        'new_item' => __( 'New Tweetchat', $this->plugin_slug ),
+	        'view_item' => __( 'View Tweetchat', $this->plugin_slug ),
+	        'search_items' => __( 'Search Tweetchats', $this->plugin_slug ),
+	        'not_found' => __( 'No tweetchats found', $this->plugin_slug ),
+	        'not_found_in_trash' => __( 'No tweetchats found in Trash', $this->plugin_slug ),
+	        'parent_item_colon' => __( 'Parent Tweetchat:', $this->plugin_slug ),
+	        'menu_name' => __( 'Tweetchats', $this->plugin_slug ),
 	    );
 
 	    $args = array(

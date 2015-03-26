@@ -66,18 +66,18 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 	public function register_cpt_sa_success_story() {
 
 	    $labels = array(
-	        'name' => _x( 'Salud Heroes', 'sa_success_story' ),
-	        'singular_name' => _x( 'Salud Hero', 'sa_success_story' ),
-	        'add_new' => _x( 'Add New', 'sa_success_story' ),
-	        'add_new_item' => _x( 'Add New SA Success Story', 'sa_success_story' ),
-	        'edit_item' => _x( 'Edit SA Success Story', 'sa_success_story' ),
-	        'new_item' => _x( 'New SA Success Story', 'sa_success_story' ),
-	        'view_item' => _x( 'View SA Success Story', 'sa_success_story' ),
-	        'search_items' => _x( 'Search SA Success Stories', 'sa_success_story' ),
-	        'not_found' => _x( 'No sa success stories found', 'sa_success_story' ),
-	        'not_found_in_trash' => _x( 'No sa success stories found in Trash', 'sa_success_story' ),
-	        'parent_item_colon' => _x( 'Parent SA Success Story:', 'sa_success_story' ),
-	        'menu_name' => _x( 'SA Success Stories', 'sa_success_story' ),
+	        'name' => __( 'Salud Heroes', 'sa_success_story' ),
+	        'singular_name' => __( 'Salud Hero', 'sa_success_story' ),
+	        'add_new' => __( 'Add New', 'sa_success_story' ),
+	        'add_new_item' => __( 'Add New Salud Hero', 'sa_success_story' ),
+	        'edit_item' => __( 'Edit Salud Hero', 'sa_success_story' ),
+	        'new_item' => __( 'New Salud Hero', 'sa_success_story' ),
+	        'view_item' => __( 'View Salud Hero', 'sa_success_story' ),
+	        'search_items' => __( 'Search Salud Heros', 'sa_success_story' ),
+	        'not_found' => __( 'No salud heroes found', 'sa_success_story' ),
+	        'not_found_in_trash' => __( 'No salud heroes found in Trash', 'sa_success_story' ),
+	        'parent_item_colon' => __( 'Parent Salud Hero:', 'sa_success_story' ),
+	        'menu_name' => __( 'Salud Heroes', 'sa_success_story' ),
 	    );
 
 	    $args = array(

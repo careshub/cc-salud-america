@@ -54,6 +54,9 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
+		// Let BP know that policies have activity items
+		// add_action( 'bp_register_activity_actions', array( $this, 'sapolicies_register_activity_actions' ) );
+
 	}
 
 	/**
@@ -66,18 +69,20 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 */
 	public function register_policies_cpt() {
 			$policy_labels = array(
-					'name' => _x('SA Policies', 'post type general name'),
-					'singular_name' => _x('SA Policy', 'post type singular name'),
-					'all_items' => __('All SA Policies'),
-					'add_new' => _x('Add SA Policy', 'SA policies'),
-					'add_new_item' => __('Add new SA Policy'),
-					'edit_item' => __('Edit SA Policy'),
-					'new_item' => __('New SA Policy'),
-					'view_item' => __('View SA Policy'),
-					'search_items' => __('Search in SA Policies'),
-					'not_found' =>  __('No SA Policies found'),
-					'not_found_in_trash' => __('No SA Policies found in trash'),
-					'parent_item_colon' => ''
+					'name' => __( 'Changes', $this->plugin_slug ),
+					'singular_name' => __( 'Change', $this->plugin_slug ),
+					// 'all_items' => __( 'All Changes', $this->plugin_slug),
+					'add_new' => __( 'Add Change', $this->plugin_slug ),
+					'add_new_item' => __( 'Add New Change', $this->plugin_slug ),
+					'edit_item' => __( 'Edit Change', $this->plugin_slug ),
+					'new_item' => __( 'New Change', $this->plugin_slug ),
+					'view_item' => __( 'View Change', $this->plugin_slug ),
+					'search_items' => __( 'Search in Changes', $this->plugin_slug ),
+					'not_found' =>  __( 'No Changes found', $this->plugin_slug ),
+					'not_found_in_trash' => __( 'No changes found in trash', $this->plugin_slug ),
+					'parent_item_colon' => __( 'Parent Change:', $this->plugin_slug ),
+			        'menu_name' => __( 'Changes', $this->plugin_slug ),
+
 			);
 			$args = array(
 					'labels' => $policy_labels,
@@ -88,7 +93,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					'hierarchical' => false,
 					'show_ui' => true,
 					'show_in_menu' =>  'salud_america',//true,
-					// 'menu_position' => 22,
+					'menu_position' => 1,
 					'taxonomies' => array('sa_advocacy_targets', 'sa_policy_tags'),
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,
@@ -103,21 +108,21 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	public function register_sa_advocacy_targets() {
 
 		$labels = array(
-				'name' => _x( 'Advocacy Targets', 'sa_advocacy_targets' ),
-				'singular_name' => _x( 'Advocacy Target', 'sa_advocacy_target' ),
-				'search_items' => _x( 'Search Advocacy Targets', 'sa_advocacy_targets' ),
-				'popular_items' => _x( 'Popular Advocacy Targets', 'sa_advocacy_targets' ),
-				'all_items' => _x( 'All Advocacy Targets', 'sa_advocacy_targets' ),
-				'parent_item' => _x( 'Parent Advocacy Target', 'sa_advocacy_targets' ),
-				'parent_item_colon' => _x( 'Parent Advocacy Target:', 'sa_advocacy_targets' ),
-				'edit_item' => _x( 'Edit Advocacy Target', 'sa_advocacy_targets' ),
-				'update_item' => _x( 'Update Advocacy Target', 'sa_advocacy_targets' ),
-				'add_new_item' => _x( 'Add New Advocacy Target', 'sa_advocacy_targets' ),
-				'new_item_name' => _x( 'New Advocacy Target', 'sa_advocacy_targets' ),
-				'separate_items_with_commas' => _x( 'Separate advocacy targets with commas', 'sa_advocacy_targets' ),
-				'add_or_remove_items' => _x( 'Add or remove Advocacy Targets', 'sa_advocacy_targets' ),
-				'choose_from_most_used' => _x( 'Choose from most used Advocacy Targets', 'sa_advocacy_targets' ),
-				'menu_name' => _x( 'Advocacy Targets', 'sa_advocacy_targets' ),
+				'name' => __( 'Advocacy Targets', $this->plugin_slug ),
+				'singular_name' => __( 'Advocacy Target', $this->plugin_slug  ),
+				'search_items' => __( 'Search Advocacy Targets', $this->plugin_slug ),
+				'popular_items' => __( 'Popular Advocacy Targets', $this->plugin_slug ),
+				'all_items' => __( 'All Advocacy Targets', $this->plugin_slug ),
+				'parent_item' => __( 'Parent Advocacy Target', $this->plugin_slug ),
+				'parent_item_colon' => __( 'Parent Advocacy Target:', $this->plugin_slug ),
+				'edit_item' => __( 'Edit Advocacy Target', $this->plugin_slug ),
+				'update_item' => __( 'Update Advocacy Target', $this->plugin_slug ),
+				'add_new_item' => __( 'Add New Advocacy Target', $this->plugin_slug ),
+				'new_item_name' => __( 'New Advocacy Target', $this->plugin_slug ),
+				'separate_items_with_commas' => __( 'Separate advocacy targets with commas', $this->plugin_slug ),
+				'add_or_remove_items' => __( 'Add or remove Advocacy Targets', $this->plugin_slug ),
+				'choose_from_most_used' => __( 'Choose from most used Advocacy Targets', $this->plugin_slug ),
+				'menu_name' => __( 'Advocacy Targets', $this->plugin_slug ),
 		);
 
 		$args = array(
@@ -147,21 +152,21 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	public function register_sa_policy_tags() {
 
 		$labels = array(
-				'name' => _x( 'SA Tags', 'sa_policy_tags' ),
-				'singular_name' => _x( 'SA Tag', 'sa_policy_tags' ),
-				'search_items' => _x( 'Search SA Tags', 'sa_policy_tags' ),
-				'popular_items' => _x( 'Popular SA Tags', 'sa_policy_tags' ),
-				'all_items' => _x( 'All SA Tags', 'sa_policy_tags' ),
-				'parent_item' => _x( 'Parent SA Tag', 'sa_policy_tags' ),
-				'parent_item_colon' => _x( 'Parent SA Tag:', 'sa_policy_tags' ),
-				'edit_item' => _x( 'Edit SA Tag', 'sa_policy_tags' ),
-				'update_item' => _x( 'Update SA Tag', 'sa_policy_tags' ),
-				'add_new_item' => _x( 'Add New SA Tag', 'sa_policy_tags' ),
-				'new_item_name' => _x( 'New SA Tag', 'sa_policy_tags' ),
-				'separate_items_with_commas' => _x( 'Separate SA tags with commas', 'sa_policy_tags' ),
-				'add_or_remove_items' => _x( 'Add or remove SA Tags', 'sa_policy_tags' ),
-				'choose_from_most_used' => _x( 'Choose from most used SA Tags', 'sa_policy_tags' ),
-				'menu_name' => _x( 'SA Tags', 'sa_policy_tags' ),
+				'name' => __( 'SA Tags', $this->plugin_slug ),
+				'singular_name' => __( 'SA Tag', $this->plugin_slug ),
+				'search_items' => __( 'Search SA Tags', $this->plugin_slug ),
+				'popular_items' => __( 'Popular SA Tags', $this->plugin_slug ),
+				'all_items' => __( 'All SA Tags', $this->plugin_slug ),
+				'parent_item' => __( 'Parent SA Tag', $this->plugin_slug ),
+				'parent_item_colon' => __( 'Parent SA Tag:', $this->plugin_slug ),
+				'edit_item' => __( 'Edit SA Tag', $this->plugin_slug ),
+				'update_item' => __( 'Update SA Tag', $this->plugin_slug ),
+				'add_new_item' => __( 'Add New SA Tag', $this->plugin_slug ),
+				'new_item_name' => __( 'New SA Tag', $this->plugin_slug ),
+				'separate_items_with_commas' => __( 'Separate SA tags with commas', $this->plugin_slug ),
+				'add_or_remove_items' => __( 'Add or remove SA Tags', $this->plugin_slug ),
+				'choose_from_most_used' => __( 'Choose from most used SA Tags', $this->plugin_slug ),
+				'menu_name' => __( 'SA Tags', $this->plugin_slug ),
 		);
 
 		$args = array(
@@ -189,17 +194,17 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		// Add new "Geographies" taxonomy to Salud America Policies
 
 		$labels = array(
-					'name' => _x( 'Geographies', 'taxonomy general name' ),
-					'singular_name' => _x( 'Geography', 'taxonomy singular name' ),
-					'search_items' =>  __( 'Search Geographies' ),
-					'all_items' => __( 'All Geographies' ),
-					'parent_item' => __( 'Parent Geographies' ),
-					'parent_item_colon' => __( 'Parent Geography:' ),
-					'edit_item' => __( 'Edit Geography' ),
-					'update_item' => __( 'Update Geography' ),
-					'add_new_item' => __( 'Add New Geography' ),
-					'new_item_name' => __( 'New Geography Name' ),
-					'menu_name' => __( 'Geographies' ),
+					'name' => __( 'Geographies', $this->plugin_slug ),
+					'singular_name' => __( 'Geography', $this->plugin_slug ),
+					'search_items' =>  __( 'Search Geographies', $this->plugin_slug ),
+					'all_items' => __( 'All Geographies', $this->plugin_slug ),
+					'parent_item' => __( 'Parent Geographies', $this->plugin_slug ),
+					'parent_item_colon' => __( 'Parent Geography:', $this->plugin_slug ),
+					'edit_item' => __( 'Edit Geography', $this->plugin_slug ),
+					'update_item' => __( 'Update Geography', $this->plugin_slug ),
+					'add_new_item' => __( 'Add New Geography', $this->plugin_slug ),
+					'new_item_name' => __( 'New Geography Name', $this->plugin_slug ),
+					'menu_name' => __( 'Geographies', $this->plugin_slug ),
 				);
 
 		$args = array(
@@ -797,6 +802,46 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 			$term_ids = array( intval( get_geo_tax_top_level_term_id() ) );
 			wp_set_object_terms( $post_id, $term_ids, 'geographies' );
 		}
+
+		do_action( 'sapolicies_after_save', $post_id );
+	}
+
+	/**
+	 * Register SA Policies activity actions.
+	 *
+	 * @since 1.0.0
+	 */
+	function sapolicies_register_activity_actions() {
+		bp_activity_set_action(
+			$this->post_type,
+			'sapolicy_created',
+			__( 'Published a Change', $this->post_type ),
+			array( $this, 'format_activity_action_sapolicy_created' )
+		);
+	}
+	/**
+	 * Format 'sapolicies_created' activity actions.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $action Activity action.
+	 * @param object $activity Activity object.
+	 * @return string
+	 */
+	function format_activity_action_sapolicy_created( $action, $activity ) {
+		$user_link = bp_core_get_userlink( $activity->user_id );
+		$post_id = $activity->secondary_item_id;
+
+		$group = groups_get_group( array( 'group_id' => sa_get_group_id() ) );
+		$group_url  = bp_get_group_permalink( $group );
+		$group_link = '<a href="' . $group_url . '">' . $group->name . '</a>';
+
+		$post_url = get_permalink( $post_id );
+		$post_link = sprintf( '<a href="%s">%s</a>', $post_url, get_the_title( $post_id ) );
+
+		$action = sprintf( __( '%1$s published the change %2$s in the Hub %3$s', $this->plugin_slug ), $user_link, $post_link, $group_link );
+
+		return $action;
 	}
 
 } //End class CC_SA_Policies_CPT_Tax

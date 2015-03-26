@@ -102,18 +102,18 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 	public function register_cpt_sa_term_introduction() {
 
 	    $labels = array(
-	        'name' => _x( 'SA Term Introductions', 'cc-salud-america' ),
-	        'singular_name' => _x( 'SA Term Introduction', 'cc-salud-america' ),
-	        'add_new' => _x( 'Add New', 'cc-salud-america' ),
-	        'add_new_item' => _x( 'Add New Introduction', 'cc-salud-america' ),
-	        'edit_item' => _x( 'Edit Introduction', 'cc-salud-america' ),
-	        'new_item' => _x( 'New Introduction', 'cc-salud-america' ),
-	        'view_item' => _x( 'View Introduction', 'cc-salud-america' ),
-	        'search_items' => _x( 'Search Introductions', 'cc-salud-america' ),
-	        'not_found' => _x( 'No introductions found', 'cc-salud-america' ),
-	        'not_found_in_trash' => _x( 'No introductions found in Trash', 'cc-salud-america' ),
-	        'parent_item_colon' => _x( 'Parent Introduction:', 'cc-salud-america' ),
-	        'menu_name' => _x( 'Term Introductions', 'cc-salud-america' ),
+	        'name' => __( 'Term Introductions', $this->plugin_slug ),
+	        'singular_name' => __( 'Term Introduction', $this->plugin_slug ),
+	        'add_new' => __( 'Add New', $this->plugin_slug ),
+	        'add_new_item' => __( 'Add New Introduction', $this->plugin_slug ),
+	        'edit_item' => __( 'Edit Introduction', $this->plugin_slug ),
+	        'new_item' => __( 'New Introduction', $this->plugin_slug ),
+	        'view_item' => __( 'View Introduction', $this->plugin_slug ),
+	        'search_items' => __( 'Search Introductions', $this->plugin_slug ),
+	        'not_found' => __( 'No introductions found', $this->plugin_slug ),
+	        'not_found_in_trash' => __( 'No introductions found in Trash', $this->plugin_slug ),
+	        'parent_item_colon' => __( 'Parent Introduction:', $this->plugin_slug ),
+	        'menu_name' => __( 'Term Introductions', $this->plugin_slug ),
 	    );
 
 	    $args = array(

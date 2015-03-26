@@ -66,18 +66,20 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 	public function register_resources_cpt() {
 
 		$resource_labels = array(
-			'name' => _x('SA Resources', 'post type general name'),
-			'singular_name' => _x('SA Resource', 'post type singular name'),
-			'all_items' => __('All SA Resources'),
-			'add_new' => _x('Add SA Resource', 'SA resources'),
-			'add_new_item' => __('Add new SA Resource'),
-			'edit_item' => __('Edit SA Resource'),
-			'new_item' => __('New SA Resource'),
-			'view_item' => __('View SA Resource'),
-			'search_items' => __('Search in SA Resources'),
-			'not_found' =>  __('No SA Resources found'),
-			'not_found_in_trash' => __('No SA Resources found in trash'),
-			'parent_item_colon' => ''
+			'name' => __('Resources', $this->plugin_slug ),
+			'singular_name' => __('Resource', $this->plugin_slug ),
+			// 'all_items' => __('All Resources', $this->plugin_slug ),
+			'add_new' => __('Add Resource', $this->plugin_slug ),
+			'add_new_item' => __('Add New Resource', $this->plugin_slug ),
+			'edit_item' => __('Edit Resource', $this->plugin_slug ),
+			'new_item' => __('New Resource', $this->plugin_slug ),
+			'view_item' => __('View Resource', $this->plugin_slug ),
+			'search_items' => __('Search in Resources', $this->plugin_slug ),
+			'not_found' =>  __('No Resources found', $this->plugin_slug ),
+			'not_found_in_trash' => __('No resources found in trash', $this->plugin_slug ),
+			'parent_item_colon' => __( 'Parent Resource:', $this->plugin_slug ),
+	        'menu_name' => __( 'Resources', $this->plugin_slug ),
+
 		);
 		$args = array(
 			'labels' => $resource_labels,
@@ -104,17 +106,17 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 		// Add new "Resource Type" taxonomy to Salud America Resources
 
 		$labels = array(
-				'name' => _x( 'Resource Type', 'taxonomy general name' ),
-				'singular_name' => _x( 'Resource Type', 'taxonomy singular name' ),
-				'search_items' =>  __( 'Search Resource Types' ),
-				'all_items' => __( 'All Resource Types' ),
-				'parent_item' => __( 'Parent Resource Types' ),
-				'parent_item_colon' => __( 'Parent Resource Type:' ),
-				'edit_item' => __( 'Edit Resource Type' ),
-				'update_item' => __( 'Update Resource Type' ),
-				'add_new_item' => __( 'Add New Resource Type' ),
-				'new_item_name' => __( 'New Resource Type Name' ),
-				'menu_name' => __( 'Resource Types' )
+				'name' => __( 'Resource Type', $this->plugin_slug  ),
+				'singular_name' => __( 'Resource Type', $this->plugin_slug  ),
+				'search_items' =>  __( 'Search Resource Types', $this->plugin_slug ),
+				'all_items' => __( 'All Resource Types', $this->plugin_slug ),
+				'parent_item' => __( 'Parent Resource Types', $this->plugin_slug ),
+				'parent_item_colon' => __( 'Parent Resource Type:', $this->plugin_slug ),
+				'edit_item' => __( 'Edit Resource Type', $this->plugin_slug ),
+				'update_item' => __( 'Update Resource Type', $this->plugin_slug ),
+				'add_new_item' => __( 'Add New Resource Type', $this->plugin_slug ),
+				'new_item_name' => __( 'New Resource Type Name', $this->plugin_slug ),
+				'menu_name' => __( 'Resource Types', $this->plugin_slug )
 			);
 
 
@@ -139,17 +141,17 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 	public function register_resource_cats_taxonomy() {
 		// Add new "Resource Category" taxonomy to Salud America Resources
 		$labels = array(
-			'name' => _x( 'Resource Category', 'taxonomy general name' ),
-			'singular_name' => _x( 'Resource Category', 'taxonomy singular name' ),
-			'search_items' =>  __( 'Search Resource Categories' ),
-			'all_items' => __( 'All Resource Categories' ),
-			'parent_item' => __( 'Parent Resource Categories' ),
-			'parent_item_colon' => __( 'Parent Resource Category:' ),
-			'edit_item' => __( 'Edit Resource Category' ),
-			'update_item' => __( 'Update Resource Category' ),
-			'add_new_item' => __( 'Add New Resource Category' ),
-			'new_item_name' => __( 'New Resource Category Name' ),
-			'menu_name' => __( 'Resource Categories' )
+			'name' => __( 'Resource Category', $this->plugin_slug  ),
+			'singular_name' => __( 'Resource Category', $this->plugin_slug  ),
+			'search_items' =>  __( 'Search Resource Categories', $this->plugin_slug  ),
+			'all_items' => __( 'All Resource Categories', $this->plugin_slug  ),
+			'parent_item' => __( 'Parent Resource Categories', $this->plugin_slug  ),
+			'parent_item_colon' => __( 'Parent Resource Category:', $this->plugin_slug  ),
+			'edit_item' => __( 'Edit Resource Category', $this->plugin_slug  ),
+			'update_item' => __( 'Update Resource Category', $this->plugin_slug  ),
+			'add_new_item' => __( 'Add New Resource Category', $this->plugin_slug  ),
+			'new_item_name' => __( 'New Resource Category Name', $this->plugin_slug  ),
+			'menu_name' => __( 'Resource Categories', $this->plugin_slug  )
 		);
 
 		$args = array(
