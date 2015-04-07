@@ -31,7 +31,7 @@
 			margin-bottom: 24px;
 			margin-bottom: 1.71429rem;
 			padding-bottom: 0;
-			overflow: auto;
+			// overflow: auto;
 		&:last-child {
 			border-bottom: none;
 		}
@@ -74,46 +74,35 @@
 		width:100%;
 		position: relative;
 		.logo {
-			img {
-				display: none;
-			}
+			display: none;
+			z-index: 50;
 		}
 		.sa-kids-photo {
-			img {
-				display: none;
-			}
+			display: none;
+			z-index: 10;
 		}
-		h1, h3 {
-			float: left;
-			clear:none;
+		.sa-group-header-title {
+			// float: left;
+			clear: none;
 			// margin-left: 2%;
 		    font-style: italic;
 		    position: relative;
-		    z-index: 10;
-		}
-		h1 {
+   		    z-index: 30;
 			.font-size(2.4);
 			color: @sared;
-			margin-top: .6em;
+			margin-top: 0;
+			margin-bottom: 0.5em;
+			line-height: 1;
 			.salud-tagline {
 				.font-size(2);
 			}
 		}
-		h3 {
-			.font-size(1.2);
-			padding: 2%;
-			width: 96%;
+		.sa-social-icon-wrapper {
 			background-color: @saorange;
-			// width:83%;
-			display: block;
-			line-height:1.4;
-			margin-top: 1em;
-			color:#FFF;
-			font-weight: 400;
-		    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-
+		    clear: left;
+		    height: 2px;
+		    z-index: 30;
 		}
-
 	}
 	.salud-footer {
 		border-top:1px solid @saorange;
@@ -203,7 +192,8 @@
 		} //End browse topics
 		.salud-topic .topic-header-link {
 			display: block;
-			overflow: auto;
+			// overflow: auto;
+			margin-bottom: 1em;
 		}
 	.policy-search {
 		// border-bottom: 1px solid @saorange;
@@ -331,7 +321,7 @@
 		  color: white;
 		  // bottom: 15px;
 		  // text-align: center;
-		  width: 92%;
+		  // width: 92%;
 		  // font-weight: bold;
 		  line-height: 2;
 		  .font-size(1.2);

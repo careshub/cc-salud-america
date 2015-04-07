@@ -78,6 +78,7 @@ class CC_Salud_America {
 
 		// Add our templates to BuddyPress' template stack.
 		add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack'), 10, 1 );
+		add_filter( 'bp_get_template_part', array( $this, 'replace_group_header' ), 10, 3 );
 
 		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
 		add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
@@ -317,6 +318,13 @@ class CC_Salud_America {
 	   // fwrite($fp, $towrite);
 	   // fclose($fp);
 	    return $templates;
+	}
+
+	public function replace_group_header( $templates, $slug, $name ) {
+		if ( $slug == 'groups/single/group-header' && sa_is_sa_group() ) {
+			$templates = array( 'groups/single/group-header-slug-salud-america.php' );
+		}
+		return $templates;
 	}
 
 	/**
