@@ -1,4 +1,7 @@
 <?php
+// BuddyPress forces comments closed on BP pages. Override that.
+remove_filter( 'comments_open', 'bp_comments_open', 10, 2 );
+
 $custom_fields = get_post_meta( get_the_ID() );
 // echo '<pre>'; print_r( $custom_fields ); echo '</pre>';
 $is_active = sa_video_contest_is_active( get_the_ID() );
@@ -147,3 +150,7 @@ if ( $is_active ) {
     </div><!-- .entry-content -->
     <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
 </article><!-- #post -->
+<?php
+comments_template();
+// BuddyPress forces comments closed on BP pages. Put the filter back.
+add_filter( 'comments_open', 'bp_comments_open', 10, 2 );

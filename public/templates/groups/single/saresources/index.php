@@ -82,7 +82,13 @@ if ( sa_is_section_front() ) {
     <?php
 
 } elseif ( sa_is_single_post() ) {
+    // BuddyPress forces comments closed on BP pages. Override that.
+    remove_filter( 'comments_open', 'bp_comments_open', 10, 2 );
 
 	bp_get_template_part( 'groups/single/saresources/single' );
+    comments_template();
+
+    // BuddyPress forces comments closed on BP pages. Put the filter back.
+    add_filter( 'comments_open', 'bp_comments_open', 10, 2 );
 
 }

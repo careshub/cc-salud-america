@@ -5,11 +5,18 @@
 $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 
 if ( sa_is_single_post() ){
+    // BuddyPress forces comments closed on BP pages. Override that.
+    remove_filter( 'comments_open', 'bp_comments_open', 10, 2 );
+
     $petition = new WP_Query( sa_get_query() );
 
     while ( $petition->have_posts() ) : $petition->the_post();
         bp_get_template_part( 'groups/single/satakeaction/single' );
+        comments_template();
     endwhile;
+
+    // BuddyPress forces comments closed on BP pages. Put the filter back.
+    add_filter( 'comments_open', 'bp_comments_open', 10, 2 );
 
 } else {
     // Anything else is basically the same: Show any active contests, then show links to past contests.
