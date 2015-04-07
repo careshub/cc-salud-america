@@ -262,6 +262,9 @@ class CC_Salud_America {
 	public function enqueue_styles() {
 		if ( sa_is_sa_group() ) {
 			wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'css/public.css', __FILE__ ), array(), self::VERSION );
+			    global $wp_styles;
+		    wp_enqueue_style( $this->plugin_slug . '-ie-plugin-styles', plugins_url( 'css/public-ie.css', __FILE__ ), array(), self::VERSION );
+		    $wp_styles->add_data( $this->plugin_slug . '-ie-plugin-styles', 'conditional', 'lt IE 9' );
 		}
 	}
 

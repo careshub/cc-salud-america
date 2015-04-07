@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 
         // watch for changes and trigger sass, jshint, uglify and livereload
         watch: {
-            options: { 
+            options: {
                 livereload: true,
             },
             scripts: {
@@ -41,11 +41,12 @@ module.exports = function(grunt) {
 			  cleancss: true,
 			},
 			files: {
-				"public/css/public.css": "public/less/public.less"
+				"public/css/public.css": "public/less/public.less",
+                "public/css/public-ie.css": "public/less/public-ie.less"
 			}
 		  }
 		},
-		
+
         // autoprefixer
         autoprefixer: {
             options: {
@@ -92,7 +93,7 @@ module.exports = function(grunt) {
 			options: {
 				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
 						'<%= grunt.template.today("yyyy-mm-dd") %> */'
-			}, 
+			},
 			common: {
 				files: {
 					'public/js/public.min.js': 'public/js/public.js'
@@ -121,7 +122,7 @@ module.exports = function(grunt) {
 
 
     // Register tasks
-	// Typical run, cleans up css and js 
+	// Typical run, cleans up css and js
     grunt.registerTask('default', ['less:cleancss', 'autoprefixer', 'uglify:common', 'watch']);
     // Before releasing a build, do above plus minimize all images
 	grunt.registerTask('build', ['less:cleancss', 'autoprefixer',  'uglify:common', 'imagemin']);
