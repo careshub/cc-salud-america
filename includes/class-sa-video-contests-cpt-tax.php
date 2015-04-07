@@ -471,10 +471,10 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
         		$post_meta = get_post_meta( get_the_ID() );
         		$end_date = $post_meta['sa_video_contest_end_date'][0];
         		$teaser = $post_meta['sa_video_contest_notice_stem'][0];
-		 		$notices .= PHP_EOL . '<h4 style="color:black"><a style="text-decoration:none;color:black" href="' . get_the_permalink() . '"><span style="text-transform:uppercase; color:red;" class="uppercase">Vote &amp; Win:</span>&ensp;';
+		 		$notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . get_the_permalink() . '"><span class="sa-action-phrase">Vote &amp; Win:</span>&ensp;';
 		 		$notices .= apply_filters( 'the_title', $teaser );
 		 		$notices .= '</a></h4>';
-		 		$notices .= '<a class="button" href="' . get_the_permalink() . '">Vote Now</a>';
+		 		$notices .= '<a class="button" href="' . get_the_permalink() . '">Vote Now</a></div>';
 			endwhile;
 			wp_reset_query();
 		}

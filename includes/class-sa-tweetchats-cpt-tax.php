@@ -271,10 +271,10 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
         		$tweetchat->the_post();
         		$date = get_post_meta( get_the_ID(), 'sa_tweetchat_date', true );
         		$date = sa_convert_to_short_human_date( $date );
-		 		$notices .= PHP_EOL . '<h4 style="color:black"><a style="text-decoration:none;color:black" href="' . sa_get_group_permalink() . 'pages/tweetchats"><span style="text-transform:uppercase; color:red;" class="uppercase">Tweetchat ' . $date . ':</span>&ensp;';
+		 		$notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . sa_get_group_permalink() . 'pages/tweetchats"><span class="sa-action-phrase">Tweetchat ' . $date . ':</span>&ensp;';
 		 		$notices .= get_the_title();
 		 		$notices .= '</a></h4>';
-		 		$notices .= '<a class="button" target="_blank" href="https://twitter.com/SaludToday">Follow the Conversation</a> <a class="button" href="' . sa_get_group_permalink() . 'pages/tweetchats">Learn More</a>';
+		 		$notices .= '<a class="button" target="_blank" href="https://twitter.com/SaludToday">Follow the Conversation</a> <a class="button" href="' . sa_get_group_permalink() . 'pages/tweetchats">Learn More</a></div>';
 			endwhile;
 			wp_reset_query();
 		}

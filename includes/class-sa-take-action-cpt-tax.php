@@ -280,10 +280,10 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
         	while ( $petition->have_posts() ):
         		$petition->the_post();
         		$petition_url = get_post_meta( get_the_ID(), 'sa_take_action_url', true );
-		 		$notices .= PHP_EOL . '<h4 style="color:black"><a style="text-decoration:none;color:black" href="' . get_the_permalink() . '"><span style="text-transform:uppercase; color:red;" class="uppercase">Take Action:</span>&ensp;';
+		 		$notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . get_the_permalink() . '"><span class="sa-action-phrase">Take Action:</span>&ensp;';
 		 		$notices .= get_the_title();
 		 		$notices .= '</a></h4>';
-		 		$notices .= '<a class="button" target="_blank" href="' . $petition_url . '">Sign the Petition</a>';
+		 		$notices .= '<a class="button" target="_blank" href="' . $petition_url . '">Sign the Petition</a></div>';
 			endwhile;
 			wp_reset_query();
 		}

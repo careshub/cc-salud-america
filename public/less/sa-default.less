@@ -380,6 +380,28 @@
 	&.post-type-archive-sa_success_story .salud-topic .entry-title {
 		.font-size(1);
 	}
+
+	#message.error {
+		border-left: 4px solid @sared;
+	}
+	.sa-notice-item {
+		margin-top: 1.2em;
+		&:first-of-type {
+			margin-top: 0;
+		}
+		.sa-notice-title{
+			margin-top: 0;
+			margin-bottom: .4em;
+			a {
+				color: @black;
+				text-decoration: none;
+			}
+		}
+		.sa-action-phrase {
+			color: @sared;
+			text-transform: uppercase;
+		}
+	}
 }
 
 .tax-sa_advocacy_targets {
