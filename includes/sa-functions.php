@@ -32,7 +32,7 @@ function sa_get_group_id(){
             $group_id = 583;
             break;
         case 'http://www.communitycommons.org':
-            $group_id = 42;
+            $group_id = 678;
             break;
         default:
             $group_id = 42;

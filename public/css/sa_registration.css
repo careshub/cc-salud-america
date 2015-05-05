@@ -1,0 +1,10 @@
+.standard-form #sa-interest-opt-in .registration-logo {
+	margin-right: 1em;
+	vertical-align: middle; /*Only works because element is display: inline;*/
+}
+
+.standard-form #sa-interest-opt-in .registration-headline {
+	display: inline-block;
+	vertical-align: middle; /*Only works because element is display: inline;*/
+	width: 75%;
+}
