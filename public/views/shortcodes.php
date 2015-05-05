@@ -117,6 +117,7 @@ function sa_upcoming_tweetchats_list_shortcode( $atts ) {
     return ob_get_clean();
 }
 add_shortcode( 'sa_upcoming_tweetchats', 'sa_upcoming_tweetchats_list_shortcode' );
+
 /**
  * Output html for a past tweetchats loop.
  *
@@ -134,3 +135,17 @@ function sa_past_tweetchats_list_shortcode( $atts ) {
     return ob_get_clean();
 }
 add_shortcode( 'sa_past_tweetchats', 'sa_past_tweetchats_list_shortcode' );
+
+/**
+ * Output html for the what is change tag list.
+ *
+ * @since   1.0.0
+ *
+ * @return  html
+ */
+function sa_what_is_change_tag_list_shortcode() {
+    ob_start();
+    sa_what_is_change_tag_list();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_what_is_change_tag_list', 'sa_what_is_change_tag_list_shortcode' );

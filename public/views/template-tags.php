@@ -394,3 +394,58 @@ function sa_the_advocacy_target_thumbnail( $post_id = null, &$possible_targets =
     <img src="<?php echo sa_get_plugin_base_uri() . 'public/images/advocacy_targets/' . $advo_target . 'x' . $width; ?>.jpg" >
     <?php
 }
+
+/**
+ * Output html for a tag list by advocacy target for changes.
+ *
+ * @since   1.0.0
+ *
+ * @return  html The blocks and their contents.
+ */
+function sa_what_is_change_tag_list() {
+    $tag_list = array(
+        'Active Play' => array( 'Recess', 'PE', 'After School Programs', 'Safe Routes to School', 'Brain Breaks'  ),
+        'Active Spaces' => array( 'Parks','Shared Use','Playgrounds', 'Complete Streets', 'Sidewalks' ),
+        'Better Food in Neighborhoods' => array( 'Corner Stores', 'Farmers\' Markets', 'Community Gardens' ),
+        'Healthier Marketing' => array( 'Healthy Ad Campaigns', 'Unhealthy Ad Campaigns', 'Digital Advertising', 'TV Advertising', 'Neighborhood Advertising' ),
+        'Healthier School Snacks' => array( 'Healthy Lunches', 'Fundraising', 'School Wellness Policies' ),
+        'Sugary Drinks' => array( 'Sugar-Sweetened Beverages', 'Soda Tax', 'Water' )
+        );
+
+    $i = 1;
+
+    foreach ($tag_list as $advo_target => $tags) {
+
+        //Start the row on i=1 and i=4
+        if ( $i%3 == 1 )
+            echo '<div class="row clear">';
+
+        $advo_clean = sanitize_title( $advo_target );
+        ?>
+
+        <div class="third-block">
+          <h4 class="clear"><span class="sa-<?php echo $advo_clean; ?>x60"></span><?php echo $advo_target; ?></h4>
+          <ul class="no-bullets clear">
+            <?php //Loop through the tags.
+            foreach ($tags as $tag_candidate) {
+                //Need to search for the correct term
+                $tag = get_term_by( 'name', $tag_candidate, 'sa_policy_tags' );
+                if ( $tag ) {
+                ?>
+                    <li><a href="<?php sa_the_cpt_tax_intersection_link( 'sapolicies', 'sa_policy_tags', $tag->slug ); ?>" title="Link to <?php echo $tag->name; ?> topic archive"><?php echo $tag->name; ?></a></li>
+                <?php
+                } // End check for $tag match
+            }
+            ?>
+          </ul>
+        </div>
+
+        <?php
+        //End the row on i=3 and i=6
+        if ( $i%3 == 0 )
+            echo '</div> <!-- end .row -->';
+
+        $i++;
+
+    } // END foreach ($tag_list as $advo_target => $tags)
+}
