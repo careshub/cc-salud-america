@@ -20,7 +20,7 @@ while ( $heroes->have_posts() ) : $heroes->the_post();
     $advocacy_targets = '';
     if ( ! empty( $terms ) ) {
         foreach ( $terms as $term ) {
-        $advocacy_targets[] = '<a href="' . cc_get_the_cpt_tax_intersection_link( 'sa_success_story', 'sa_advocacy_targets', $term->slug ) .'">'.$term->name.'</a>';
+        $advocacy_targets[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( 'sa_success_story', 'sa_advocacy_targets', $term->slug ) .'">'.$term->name.'</a>';
         }
         $advocacy_targets = join( ', ', $advocacy_targets );
         $first_advo_target = current( $terms )->slug;

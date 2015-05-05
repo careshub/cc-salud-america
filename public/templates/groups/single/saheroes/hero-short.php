@@ -17,7 +17,7 @@ if ( !empty( $video_url ) ) {
 $terms = get_the_terms( $post->ID, 'sa_advocacy_targets' );
 if ( !empty($terms) ) {
     foreach ( $terms as $term ) {
-    $advocacy_targets[] = '<a href="' . cc_get_the_cpt_tax_intersection_link( 'sa_success_story', 'sa_advocacy_targets', $term->slug ) .'">'.$term->name.'</a>';
+    $advocacy_targets[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( 'sa_success_story', 'sa_advocacy_targets', $term->slug ) .'">'.$term->name.'</a>';
     }
     $advocacy_targets = join( ', ', $advocacy_targets );
     $plain_index = reset($terms);
