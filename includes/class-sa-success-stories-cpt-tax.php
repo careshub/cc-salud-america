@@ -88,7 +88,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 	        'taxonomies' => array( 'sa_advocacy_targets' ),
 	        'public' => true,
 	        'show_ui' => true,
-	        'show_in_menu' => 'salud_america', //true,
+	        'show_in_menu' => true,
 	        'show_in_nav_menus' => true,
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => false,

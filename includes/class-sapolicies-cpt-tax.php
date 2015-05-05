@@ -42,7 +42,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 
 		// Add submenus to handle the edit screens for our custom taxonomies
 		add_action( 'admin_menu', array( $this, 'create_taxonomy_management_menu_items' ) );
-		add_action( 'parent_file', array( $this, 'sa_tax_menu_highlighting' ) );
+		add_filter( 'parent_file', array( $this, 'sa_tax_menu_highlighting' ) );
 
 		// Handle saving policies
 		add_action( 'save_post', array( $this, 'save' ) );
@@ -81,7 +81,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					'not_found' =>  __( 'No Changes found', $this->plugin_slug ),
 					'not_found_in_trash' => __( 'No changes found in trash', $this->plugin_slug ),
 					'parent_item_colon' => __( 'Parent Change:', $this->plugin_slug ),
-			        'menu_name' => __( 'Changes', $this->plugin_slug ),
+			        'menu_name' => __( 'Salud Changes', $this->plugin_slug ),
 
 			);
 			$args = array(
@@ -92,8 +92,8 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					'rewrite' => true,
 					'hierarchical' => false,
 					'show_ui' => true,
-					'show_in_menu' =>  'salud_america',//true,
-					'menu_position' => 1,
+					'show_in_menu' => true,
+					// 'menu_position' => 1,
 					'taxonomies' => array('sa_advocacy_targets', 'sa_policy_tags'),
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,

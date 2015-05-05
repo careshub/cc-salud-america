@@ -78,7 +78,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			'not_found' =>  __('No Resources found', $this->plugin_slug ),
 			'not_found_in_trash' => __('No resources found in trash', $this->plugin_slug ),
 			'parent_item_colon' => __( 'Parent Resource:', $this->plugin_slug ),
-	        'menu_name' => __( 'Resources', $this->plugin_slug ),
+	        'menu_name' => __( 'Salud Resources', $this->plugin_slug ),
 
 		);
 		$args = array(
@@ -89,7 +89,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			'query_var' => true,
 			'rewrite' => true,
 			'hierarchical' => false,
-			'show_in_menu' => 'salud_america',
+			'show_in_menu' => true,
 			// 'menu_position' => 22,
 			'taxonomies' => array('sa_advocacy_targets', 'sa_resource_cat', 'sa_resource_type'),
 			// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
