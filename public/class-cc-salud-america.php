@@ -91,6 +91,13 @@ class CC_Salud_America {
 		add_action( 'transition_post_status', array( $this, 'create_post_activity' ), 10, 3 );
 		add_action( 'transition_post_status', array( $this, 'delete_post_activity' ), 10, 3 );
 
+		// Add SA section to registration page
+		add_action( 'bp_before_registration_submit_buttons', array( $this, 'salud_interest_section_registration' ), 71 );
+		add_action( 'bp_core_signup_user', array( $this, 'sa_newsletter_opt_in_fields' ), 1, 71 );
+
+		// Add the Salud America interest query string to the register link on SA pages
+		add_filter( 'registration_form_interest_query_string', array( $this, 'add_registration_interest_parameter' ), 12, 1 );
+
 	}
 
 
@@ -266,6 +273,11 @@ class CC_Salud_America {
 		    wp_enqueue_style( $this->plugin_slug . '-ie-plugin-styles', plugins_url( 'css/public-ie.css', __FILE__ ), array(), self::VERSION );
 		    $wp_styles->add_data( $this->plugin_slug . '-ie-plugin-styles', 'conditional', 'lt IE 9' );
 		}
+
+	    if ( bp_is_register_page() && isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) {
+			wp_enqueue_style( 'salud-section-register-css', plugins_url( 'css/sa_registration.css', __FILE__ ), array(), '0.1', 'screen' );
+		}
+
 	}
 
 	/**
@@ -582,6 +594,73 @@ class CC_Salud_America {
 		foreach ( (array) $activities['activities'] as $activity ) {
 			bp_activity_delete( array( 'id' => $activity->id ) );
 		}
+	}
+
+	/**
+	 * Add SA newsletter opt-in checkbox on register page
+	 * @since 0.1
+	 */
+	function salud_interest_section_registration() {
+	  if ( isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) :
+	  ?>
+	    <div id="sa-interest-opt-in" class="alignright register-section checkbox">
+		    <?php $avatar = bp_core_fetch_avatar( array(
+				'item_id' => sa_get_group_id(),
+				'object'  => 'group',
+				'type'    => 'thumb',
+				'class'   => 'registration-logo',
+
+			) );
+			echo $avatar; ?>
+	      <h4 class="registration-headline">Join the Hub: <em>Salud America!</em> <br />Growing Healthy Change</h4>
+
+	      <label><input type="checkbox" name="salud_interest_group" id="salud_interest_group" value="agreed" <?php $this->determine_checked_status_default_is_checked( 'salud_interest_group' ); ?> /> Yes, I’m interested in work by Salud America! to reduce Latino childhood obesity.</label>
+
+	      <label><input type="checkbox" name="salud_newsletter" id="salud_newsletter" value="agreed" <?php $this->determine_checked_status_default_is_checked( 'salud_newsletter' ); ?> /> I would like to receive email updates on this topic.</label>
+
+	      <p class="description">Periodically, Salud America! sends out news updates and brief surveys.</p>
+
+	    </div>
+	    <?php
+	    endif;
+	}
+
+	/**
+	* Update usermeta with custom registration data
+	* @since 0.1
+	*/
+	function sa_newsletter_opt_in_fields( $user_id ) {
+
+		if ( isset( $_POST['salud_interest_group'] ) ) {
+			// Create the group request
+			$request = groups_join_group( sa_get_group_id(), $user_id );
+			// $request = groups_send_membership_request( $user_id, sa_get_group_id() );
+		}
+
+		if ( isset( $_POST['salud_newsletter'] ) ) {
+		    update_usermeta( $user_id, 'salud_newsletter', $_POST['salud_newsletter'] );
+		}
+
+	  return $user_id;
+	}
+
+	public function add_registration_interest_parameter( $interests ) {
+
+	    if ( bp_is_groups_component() && sa_is_sa_group() ) {
+	    	$interests[] = 'salud-america';
+		}
+
+	    return $interests;
+	}
+
+	function determine_checked_status_default_is_checked( $field_name ){
+	  // In its default state, no $_POST should exist. If this is a resubmit effort, $_POST['signup_submit'] will be set, then we can trust the value of the checkboxes.
+	  if ( isset( $_POST['signup_submit'] ) && !isset( $_POST[ $field_name ] ) ) {
+	    // If the user specifically unchecked the box, don't make them do it again.
+	  } else {
+	    // Default state, $_POST['signup_submit'] isn't set. Or, it is set and the checkbox is also set.
+	    echo 'checked="checked"';
+	  }
 	}
 
 }
