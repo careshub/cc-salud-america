@@ -284,11 +284,15 @@ function sa_get_query(){
 
     // For a single post, get the post by the slug
     if ( sa_is_single_post() ){
+        $request = bp_action_variable( 0 );
         $query = array(
-            'name' => bp_action_variable( 0 ),
             'post_type' => $cpt,
-            // 'post_status' => array( 'publish', 'draft'),
         );
+        if ( isset( $_GET['preview'] ) && ( $_GET['preview'] ) && is_numeric( $request ) ) {
+            $query['p']  = $request;
+        } else {
+            $query['name'] = $request;
+        }
     } else {
         // This is a taxonomy term view
         $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;

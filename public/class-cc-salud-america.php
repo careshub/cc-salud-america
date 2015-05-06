@@ -353,7 +353,12 @@ class CC_Salud_America {
 		if ( in_array( $post_type, array( 'saresources', 'sa_success_story', 'sa_take_action', 'sapolicies', 'sa_video_contest' ) ) ) {
 			$section = sa_get_section_by_cpt( $post_type );
 			$section_permalink = sa_get_section_permalink( $section );
-			$permalink = $section_permalink . $post->post_name;
+			// If the post is published, a post name will exist
+			if ( ! empty( $post->post_name ) ) {
+				$permalink = $section_permalink . $post->post_name;
+			} else {
+				$permalink = $section_permalink . $post->ID;
+			}
 		}
 
 	    return $permalink;
