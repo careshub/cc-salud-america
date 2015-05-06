@@ -58,4 +58,5 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
         </div><!-- .entry-content -->
         <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
     </article><!-- #post -->
+    <?php comments_template(); ?>
 <?php endwhile; // end of the loop. ?>

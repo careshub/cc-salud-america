@@ -1,8 +1,9 @@
 <?php
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
-    $custom_fields = get_post_custom($post->ID);
-    $terms = get_the_terms( get_the_ID(), 'sa_advocacy_targets' );
+    $main_post_id = $post->ID;
+    $custom_fields = get_post_custom( $main_post_id );
+    $terms = get_the_terms( $main_post_id, 'sa_advocacy_targets' );
     $advocacy_targets = array();
     if ( ! empty( $terms ) ) {
         foreach ( $terms as $term ) {
@@ -11,7 +12,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
         $advocacy_targets = join( ', ', $advocacy_targets );
     }
 
-    $tags = get_the_terms( $post->ID, 'sa_policy_tags' );
+    $tags = get_the_terms( $main_post_id, 'sa_policy_tags' );
     $policy_tags = array();
     if ( ! empty( $tags ) ) {
         foreach ( $tags as $tag ) {
@@ -146,6 +147,9 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
 
                         </li>
                     <?php endwhile; ?>
+                    <?php
+                    wp_reset_postdata();
+                    ?>
                         </ul>
                 <?php } //if ( $associated_docs ) : ?>
 
@@ -155,6 +159,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
         <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
     </article><!-- #post -->
 <?php
+comments_template();
 endwhile; // end of the loop. ?>
 
 <div class="policy-meta">
@@ -235,6 +240,7 @@ if( ! empty( $geogterm ) && ! is_wp_error( $geogterm ) ){
                 <?php
                 $exclude_posts[] = $post->ID;
             endwhile; // end of the loop.
+            wp_reset_postdata();
         ?>
         </div> <!-- #related-by-topic -->
     <?php
@@ -306,6 +312,7 @@ if ( $related_policies->have_posts() ) {
                 </div>
             <?php
             endwhile; // end of the loop.
+            wp_reset_postdata();
             ?>
     </div>
 <?php
