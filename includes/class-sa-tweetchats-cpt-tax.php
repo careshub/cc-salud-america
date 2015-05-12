@@ -248,6 +248,10 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 	 * @return   html
 	 */
 	public function add_notices( $notices ) {
+		// Let's store the old global post, because wp_reset_postdata() goes way back, to the page that theme compat is using.
+		global $post;
+		$stored_post = $post;
+
 		// We'll only get one upcoming tweetchat for this
 		$args = array(
 		'post_type' => $this->post_type,
@@ -276,7 +280,8 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 		 		$notices .= '</a></h4>';
 		 		$notices .= '<a class="button" target="_blank" href="https://twitter.com/SaludToday">Follow the Conversation</a> <a class="button" href="' . sa_get_group_permalink() . 'tweetchats">Learn More</a></div>';
 			endwhile;
-			wp_reset_query();
+			// Put the post data back.
+		   	$post = $stored_post;
 		}
 
 		return $notices;
@@ -286,6 +291,10 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 $sa_tweetchats_cpt_tax = new CC_SA_Tweetchats_CPT_Tax();
 
 function sa_tweetchats_list( $numposts, $period = 'upcoming' ) {
+	// Let's store the old global post, because wp_reset_postdata() goes way back, to the page that theme compat is using.
+	global $post;
+	$stored_post = $post;
+
 	$numposts = is_numeric( $numposts ) ? intval( $numposts ): 4;
 	$args = array(
 		'post_type' => 'sa_tweetchats',
@@ -320,6 +329,7 @@ function sa_tweetchats_list( $numposts, $period = 'upcoming' ) {
     		<?php
 		endwhile;
     	echo '</ul>';
-		wp_reset_query();
 	}
+	// Put the post data back.
+   	$post = $stored_post;
 }

@@ -72,6 +72,10 @@ function sa_section_content_nav( $html_id, $paged = 1, $total_pages = 1 ) {
  * @return  string The html for the block
  */
 function saresources_get_featured_blocks( $resource_cats = array() ) {
+    // Let's store the old global post, because wp_reset_postdata() goes way back, to the page that theme compat is using.
+    global $post;
+    $stored_post = $post;
+
     //We'll loop through the entries of the array to build the queries and display the content
     //Count the dimension of the resource_cats array to determine proper class to apply to top blocks.
     $count = count( $resource_cats );
@@ -143,7 +147,8 @@ function saresources_get_featured_blocks( $resource_cats = array() ) {
             <?php
         endif;
     } // Ends foreach for four top blocks
-    wp_reset_query();
+    // Put the post global back.
+    $post = $stored_post;
 }
 /**
  * Generate list of top resources in each topic.
@@ -308,6 +313,9 @@ function salud_get_taxonomy_images( $category, $taxonomy ){
  * @return  html The blocks and their contents.
  */
 function sa_recent_posts_loop( $section = 'policies', $columns = 3, $numposts = 3 ){
+    global $post;
+    $stored_post = $post;
+
     //Grab the possible advocacy targets
     $advocacy_targets = get_terms( 'sa_advocacy_targets' );
     $possible_targets = array();
@@ -349,7 +357,7 @@ function sa_recent_posts_loop( $section = 'policies', $columns = 3, $numposts = 
             <?php
         } // endwhile $recent_policies->have_posts()
     } // endif $recent_policies->have_posts()
-    wp_reset_postdata();
+    $post = $stored_post;
 }
 
 /**
