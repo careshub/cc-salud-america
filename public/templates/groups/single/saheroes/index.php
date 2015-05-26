@@ -107,6 +107,10 @@ if ( sa_is_section_front() ) {
     }
 
 } elseif ( sa_is_single_post() ){
+    // Store BP's dummy post data temporarily.
+    global $post;
+    $dummy_post = $post;
+
     // BuddyPress forces comments closed on BP pages. Override that.
     remove_filter( 'comments_open', 'bp_comments_open', 10, 2 );
 
@@ -115,5 +119,9 @@ if ( sa_is_section_front() ) {
 
     // BuddyPress forces comments closed on BP pages. Put the filter back.
     add_filter( 'comments_open', 'bp_comments_open', 10, 2 );
+
+    // Put BP's dummy post data back.
+    $post = $dummy_post;
+
 
 } // if ( sa_is_section_front() ) :

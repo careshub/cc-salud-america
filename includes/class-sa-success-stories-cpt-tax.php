@@ -53,6 +53,9 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		// Add an AJAX listener for removing the related PDF via the admin meta box.
 		add_action( 'wp_ajax_delete_success_story_pdf', array( $this, 'ajax_delete_success_story_pdf' ) );
 
+		// Add action buttons, including "download PDF" button, after first paragraph
+		add_filter( 'the_content', array( $this, 'insert_actions_in_success_stories' ) );
+
 	}
 
 	/**
@@ -219,6 +222,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 	 * @param WP_Post $post The post object.
 	 */
 	public function render_meta_box_content( $post ) {
+		// @TODO: drop the file-input-type pdf uploader for the WP media uploader.
 
 		// Add an nonce field so we can check for it later.
 		wp_nonce_field( $this->nonce_name, $this->nonce_value );
@@ -389,31 +393,33 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 			die('-1');
 		}
 	}
+	//Insert ads after lead in paragraph of single success story.
+	function insert_actions_in_success_stories( $content ) {
+
+		if ( ! is_admin() ) {
+			global $post;
+			if ( $post->post_type == $this->post_type ) {
+				$insertion = '<p>';
+				$pdf_url = get_post_meta( $post->ID, 'sa_success_story_pdf', true );
+				if ( $pdf_url ) {
+					$insertion .= '<a href="' . $pdf_url . '" class="button">Download the PDF</a> <a class="button add-comment-link" href="#respond"><span class="comment-icon"></span>Comment</a> ';
+				}
+				if ( function_exists( 'bp_get_share_post_button' ) ) {
+					$insertion .= bp_get_share_post_button();
+				}
+				$insertion .= '</p>';
+				$content = sa_insert_random_content_after_paragraph( $insertion, 1, $content );
+			}
+		}
+
+		return $content;
+	}
 
 } //End class CC_SA_Policies_CPT_Tax
 $sa_success_stories_cpt_tax = new CC_SA_Success_Stories_CPT_Tax();
 
-//Insert ads after lead in paragraph of single success story.
-
-add_filter( 'the_content', 'insert_actions_in_success_stories' );
-function insert_actions_in_success_stories( $content ) {
-
-	if ( is_singular( 'sa_success_story' ) && ! is_admin() ) {
-		global $post;
-		$pdf_url = get_post_meta( $post->ID, 'sa_success_story_pdf', true );
-		$insertion = '<p><a href="' . $pdf_url . '" class="button">Download the PDF</a> <a class="button add-comment-link" href="#respond"><span class="comment-icon"></span>Comment</a> ';
-		if ( function_exists( 'bp_get_share_post_button' ) ) {
-			$insertion .= bp_get_share_post_button();
-		}
-		$insertion .= '</p>';
-		return insert_random_content_after_paragraph( $insertion, 1, $content );
-	}
-
-	return $content;
-}
-
 // Parent Function that makes the magic happen
-function insert_random_content_after_paragraph( $insertion, $paragraph_id, $content ) {
+function sa_insert_random_content_after_paragraph( $insertion, $paragraph_id, $content ) {
 	$closing_p = '</p>';
 	$paragraphs = explode( $closing_p, $content );
 	foreach ($paragraphs as $index => $paragraph) {

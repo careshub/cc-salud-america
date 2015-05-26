@@ -1,6 +1,12 @@
 <?php
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
+    global $post;
+    setup_postdata( $post );
+    // Show the whole post, not just the excerpt.
+    global $more;
+    $more = 1;
+
     $video_url = get_post_meta( get_the_ID(), 'sa_success_story_video_url', true );
     $video_embed_code = '';
     if ( ! empty( $video_url ) ) {
@@ -46,14 +52,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
             <?php } ?>
 
             <?php
-                if ( function_exists('cc_add_comment_button') ) {
-                    cc_add_comment_button();
-                }
-            ?>
-            <?php
-                if ( function_exists('bp_share_post_button') ) {
-                    bp_share_post_button();
-                }
+                // Comments and share buttons are added along with the PDF button
             ?>
 
             <div class="clear"></div>
