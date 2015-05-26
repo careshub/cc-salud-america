@@ -517,27 +517,6 @@ function sa_get_youtube_video_metadata( $url ) {
 					'count' => $view_count
 					);
 }
-// Allow for another archive style that only shows the video posts.
-add_filter('pre_get_posts', 'sa_heroes_video_post_archive');
-function sa_heroes_video_post_archive( $query ) {
-	// If the "style" flag is set to video, only show stories with videos
-    if( is_archive( 'sa_success_story' )
-    	&& !is_admin()
-    	&& $query->is_main_query()
-    	&& ( isset( $_GET['style'] ) && ( $_GET['style'] == 'videos' ) )
-    	) {
-
-        $meta_query = 	array(
-					        array(
-					           'key' => 'sa_success_story_video_url',
-					           'compare' => 'EXISTS',
-					        )
-					    );
-		$query->set( 'meta_query', $meta_query );
-		// Only load 6 at a time, since these pages are ridiculously huge.
-		$query->set( 'posts_per_page', 12 );
-    }
-}
 
 function sa_get_random_hero_video() {
 	$args = array(
