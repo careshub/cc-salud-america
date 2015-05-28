@@ -93,7 +93,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					'hierarchical' => false,
 					'show_ui' => true,
 					'show_in_menu' => true,
-					// 'menu_position' => 1,
+					'menu_position' => 55,
 					'taxonomies' => array('sa_advocacy_targets', 'sa_policy_tags'),
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,

@@ -90,7 +90,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			'rewrite' => true,
 			'hierarchical' => false,
 			'show_in_menu' => true,
-			// 'menu_position' => 22,
+			'menu_position' => 56,
 			'taxonomies' => array('sa_advocacy_targets', 'sa_resource_cat', 'sa_resource_type'),
 			// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 			'supports' => array('title','editor','comments', 'thumbnail'),
