@@ -49,16 +49,14 @@ function sa_append_rwjf_logo_to_group_description( $description ) {
  * @param   int $paged The total number of pages of results
  * @return  string The html for the nav block
  */
-function sa_section_content_nav( $html_id, $paged = 1, $total_pages = 1 ) {
+function sa_section_content_nav( $html_id, $total_pages = 1 ) {
     $html_id = esc_attr( $html_id );
 
     if ( $total_pages > 1 ) : ?>
         <nav id="<?php echo $html_id; ?>" class="sa-archive-navigation" role="navigation">
             <h3 class="assistive-text"><?php _e( 'Post navigation', 'twentytwelve' ); ?></h3>
-            <div class="nav-previous"><a href="?paged=<?php echo $paged + 1; ?>">Older Posts</a></div>
-            <?php if ( $paged > 1 ) : ?>
-                <div class="nav-next"><a href="?paged=<?php echo $paged - 1; ?>">Newer Posts</a></div>
-            <?php endif; ?>
+            <div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'cc-salud-america' ), $total_pages ); ?></div>
+            <div class="nav-next"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'cc-salud-america' ), $total_pages ); ?></div>
         </nav><!-- #<?php echo $html_id; ?> .navigation -->
     <?php endif;
 }

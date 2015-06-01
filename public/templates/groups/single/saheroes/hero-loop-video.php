@@ -60,4 +60,4 @@ while ( $heroes->have_posts() ) : $heroes->the_post();
     </article><!-- #post -->
 <?php
 endwhile;
-sa_section_content_nav( 'nav-below', $paged, $total_pages );
+sa_section_content_nav( 'nav-below', $total_pages );

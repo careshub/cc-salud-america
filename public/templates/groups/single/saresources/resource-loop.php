@@ -7,4 +7,4 @@ while ( $resources->have_posts() ) : $resources->the_post();
     bp_get_template_part( 'groups/single/saresources/resource-short' );
 endwhile; // end of the loop.
 
-sa_section_content_nav( 'nav-below', $paged, $total_pages );
+sa_section_content_nav( 'nav-below', $total_pages );

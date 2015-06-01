@@ -32,6 +32,6 @@ if ( sa_is_single_post() ){
         }
     endwhile;
 
-    sa_section_content_nav( 'nav-below', $paged, $total_pages );
+    sa_section_content_nav( 'nav-below', $total_pages );
 
 }

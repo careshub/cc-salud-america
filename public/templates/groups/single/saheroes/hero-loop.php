@@ -7,4 +7,4 @@ while ( $heroes->have_posts() ) : $heroes->the_post();
     bp_get_template_part( 'groups/single/saheroes/hero-short' );
 endwhile;
 
-sa_section_content_nav( 'nav-below', $paged, $total_pages );
+sa_section_content_nav( 'nav-below', $total_pages );

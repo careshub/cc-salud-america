@@ -7,4 +7,4 @@ while ( $policies->have_posts() ) : $policies->the_post();
     bp_get_template_part( 'groups/single/sapolicies/policy-short' );
 endwhile;
 
-sa_section_content_nav( 'nav-below', $paged, $total_pages );
+sa_section_content_nav( 'nav-below', $total_pages );
