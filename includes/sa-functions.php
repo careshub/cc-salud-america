@@ -485,9 +485,13 @@ function sa_is_archive_search(){
  * @return  array WP_Query-ready query arguments
  */
 function sa_build_search_query( $post_type, $taxonomies = array(), $metas = array() ){
+    $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+
     $filter_args = array(
         'post_type' => $post_type,
-        'posts_per_page' => -1,
+        'posts_per_page' => 20,
+        'suppress_filters' => true,
+        'paged' => $paged,
     );
     // Parse the search query
     // Begin by handling any combination of advanced search checkboxes selected.
@@ -527,8 +531,8 @@ function sa_build_search_query( $post_type, $taxonomies = array(), $metas = arra
     }
 
     // Add the text search term if necessary
-    if ( ! empty( $_POST['keyword'] ) ) {
-        $filter_args['s'] = $_POST['keyword'];
+    if ( ! empty( $_REQUEST['keyword'] ) ) {
+        $filter_args['s'] = esc_attr( $_REQUEST['keyword'] );
     }
 
     return $filter_args;

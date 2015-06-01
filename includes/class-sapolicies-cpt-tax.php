@@ -1032,17 +1032,15 @@ function cc_get_the_geo_tax_state(){
 function sa_searchpolicies() {
 	?>
 	<div id="cc-adv-search" class="clear">
-		<form action="<?php echo sa_get_section_permalink( $section = 'policies' ) . 'search'; ?>" method="POST" enctype="multipart/form-data" name="sa_ps">
+		<form action="<?php echo sa_get_section_permalink( $section = 'policies' ) . 'search'; ?>" method="GET" enctype="multipart/form-data" name="sa_ps">
 			<div class="row">
 				<input type="text" id="saps" name="keyword" Placeholder="Enter search terms here" value="<?php
-					if ( isset($_POST['keyword'] ) ) {
-						echo $_POST['keyword'];
+					if ( isset( $_REQUEST['keyword'] ) ) {
+						echo $_REQUEST['keyword'];
 					} elseif ( isset($_GET['qs'] ) ) {
 						echo $_GET['qs'];
 					}
 				?>" />
-				<!-- Hidden input to set post type for search-->
-				<input type="hidden" name="requested_content" value="sapolicies" />
 				<input id="searchsubmit" type="submit" alt="Search" value="Search" />
 			</div>
 
@@ -1130,6 +1128,7 @@ function sa_searchpolicies() {
 				bp_get_template_part( 'groups/single/sapolicies/policy-short' );
 			endwhile;
 			echo '</div>';
+			sa_section_content_nav( 'nav-below', $policy_search->max_num_pages );
 		} else {
 			echo "No Results - Search criteria too specific";
 		}
