@@ -11,8 +11,13 @@ $custom_fields = get_post_meta( get_the_ID() );
         the_post_thumbnail( $size, array('class' => "attachment-$size alignright" ) );
         the_content();
         if ( ! empty( $custom_fields['sa_take_action_url'][0] ) ) {
+            if ( isset( $custom_fields['sa_take_action_button_text'][0] ) ) {
+                $button_text = wptexturize( $custom_fields['sa_take_action_button_text'][0] );
+            } else {
+                $button_text = 'Take Action Now!';
+            }
             ?>
-            <a href="<?php echo $custom_fields['sa_take_action_url'][0]; ?>" class="button">Take Action Now!</a>
+            <a href="<?php echo $custom_fields['sa_take_action_url'][0]; ?>" class="button"><?php echo $button_text; ?></a>
             <?php
         }
         ?>

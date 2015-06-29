@@ -217,14 +217,24 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 			?>
 			<div>
 				<p>
-					<label for='sa_take_action_url'>Petition URL</label>
+					<label for='sa_take_action_url'>Petition URL</label><br />
 					<input type='text' name='sa_take_action_url' value='<?php
 						if ( ! empty( $custom[ 'sa_take_action_url' ][0] ) ) {
 							echo $custom[ 'sa_take_action_url' ][0];
 						}
-						?>' size="90"/>
+						?>' style="width:98%"/><br />
+					<span class="info">Note: Petition URLs should take the form <em>http://www.thepetitionsite.com/takeaction/702/787/135/?z00m=21258369</em></span>
 				</p>
-				<p class="info">Note: Petition URLs should take the form <em>http://www.thepetitionsite.com/takeaction/702/787/135/?z00m=21258369</em></p>
+
+				<p>
+					<label for='sa_take_action_button_text'>Button Text</label>
+					<input type='text' name='sa_take_action_button_text' value='<?php
+						if ( ! empty( $custom[ 'sa_take_action_button_text' ][0] ) ) {
+							echo $custom[ 'sa_take_action_button_text' ][0];
+						}
+						?>' style="width:98%"/><br />
+					<span class="info">Note: If left empty, the button will read "Take Action Now!"</span>
+				</p>
 				<p>
 					<input type="checkbox" id="sa_take_action_highlight" name="sa_take_action_highlight" value='1' <?php checked( $custom[ 'sa_take_action_highlight' ][0] ); ?> > <label for="sa_take_action_highlight">Highlight this campaign at the top of the hub home page.</label>
 				</p>
@@ -254,7 +264,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 			return false;
 		}
 		// Create array of fields to save
-		$meta_fields_to_save = array( 'sa_take_action_highlight', 'sa_take_action_url' );
+		$meta_fields_to_save = array( 'sa_take_action_highlight', 'sa_take_action_url', 'sa_take_action_button_text' );
 
 		// Save meta
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields_to_save );
@@ -279,11 +289,18 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
         if ( $petition->have_posts() ) {
         	while ( $petition->have_posts() ):
         		$petition->the_post();
-        		$petition_url = get_post_meta( get_the_ID(), 'sa_take_action_url', true );
+        		$post_meta = get_post_meta( get_the_ID() );
+        		$petition_url = $post_meta['sa_take_action_url'][0];
+        		if ( isset( $post_meta['sa_take_action_button_text'][0] ) ) {
+        			$button_text = wptexturize( $post_meta['sa_take_action_button_text'][0] );
+        		} else {
+        			$button_text = 'Take Action Now!';
+        		}
+
 		 		$notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . get_the_permalink() . '"><span class="sa-action-phrase">Take Action:</span>&ensp;';
 		 		$notices .= get_the_title();
 		 		$notices .= '</a></h4>';
-		 		$notices .= '<a class="button" target="_blank" href="' . $petition_url . '">Sign the Petition</a></div>';
+		 		$notices .= '<a class="button" target="_blank" href="' . $petition_url . '">' . $button_text . '</a></div>';
 			endwhile;
 			wp_reset_query();
 		}
