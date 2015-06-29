@@ -1070,7 +1070,7 @@ function sa_searchpolicies() {
 
 					<div class="cc-adv-search-option-pane third-block">
 						<h4>Tags</h4>
-						<?php $sat_args = array('orderby' => count, 'order' => DESC);
+						<?php $sat_args = array('orderby' => 'count', 'order' => 'DESC');
 						$sapolicytags = get_terms('sa_policy_tags', $sat_args);
 						?>
 						<div class="cc-adv-search-scroll-container">
