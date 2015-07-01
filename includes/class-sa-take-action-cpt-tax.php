@@ -281,7 +281,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	public function add_notices( $notices ) {
 		$args = array(
             'post_type' 		=> $this->post_type,
-            'posts_per_page' 	=> 1,
+            // 'posts_per_page' 	=> 1,
             'meta_key'			=> 'sa_take_action_highlight'
         );
         $petition = new WP_Query( $args );
