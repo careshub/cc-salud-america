@@ -543,7 +543,9 @@ class CC_Salud_America {
 
 		$type = $post->post_type . '_created';
 
-		$excerpt = cc_ellipsis( $post->post_content, $max=100, $append='&hellip;' );
+		// $excerpt = cc_ellipsis( $post->post_content, $max=100, $append='&hellip;' );
+
+		$excerpt = bp_create_excerpt( $post->post_content, 358 );
 
 		$args = array(
 			'user_id'		=> $author_id,
@@ -586,6 +588,8 @@ class CC_Salud_America {
 		if ( ! ( $new_status != 'publish' && $old_status == 'publish' ) ) {
 			return;
 		}
+
+		$bp = buddypress();
 
 		$activities = bp_activity_get(
 			array(
@@ -658,7 +662,7 @@ class CC_Salud_America {
 	    return $interests;
 	}
 
-	function determine_checked_status_default_is_checked( $field_name ){
+	public function determine_checked_status_default_is_checked( $field_name ){
 	  // In its default state, no $_POST should exist. If this is a resubmit effort, $_POST['signup_submit'] will be set, then we can trust the value of the checkboxes.
 	  if ( isset( $_POST['signup_submit'] ) && !isset( $_POST[ $field_name ] ) ) {
 	    // If the user specifically unchecked the box, don't make them do it again.
