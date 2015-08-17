@@ -57,6 +57,9 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		// Let BP know that policies have activity items
 		// add_action( 'bp_register_activity_actions', array( $this, 'sapolicies_register_activity_actions' ) );
 
+		// Add the autosuggest handler on this post_type's edit screen.
+		add_action( 'save_post', array( $this, 'sa_related_leaders_meta_box_save' ) );
+
 	}
 
 	/**
@@ -358,6 +361,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	function add_meta_box() {
 			 add_meta_box( 'sa_policy_meta_box', 'Policy Information', array( $this, 'sa_policy_meta_box' ), $this->post_type, 'normal', 'high');
 			 add_meta_box( 'sa_geog_meta_box', 'Geography',  array( $this, 'sa_geog_meta_box' ), $this->post_type, 'normal', 'high' );
+			 add_meta_box( 'sa_related_leaders_meta_box', 'Associated Leaders',  array( $this, 'sa_related_leaders_meta_box' ), $this->post_type, 'side', 'default' );
 	}
 
 	/**

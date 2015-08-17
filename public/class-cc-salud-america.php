@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.1.0';
+	const VERSION = '0.2.0';
 
 	/**
 	 *
@@ -97,6 +97,10 @@ class CC_Salud_America {
 
 		// Add the Salud America interest query string to the register link on SA pages
 		add_filter( 'registration_form_interest_query_string', array( $this, 'add_registration_interest_parameter' ), 12, 1 );
+
+		// If a user is deleted, we'll need to clean up any post associations.
+		// @TODO: We may want to do this when a member is removed/leaves the group. Not sure.
+		add_action( 'deleted_user', array( $this, 'cleanup_sa_related_leaders' ) );
 
 	}
 
@@ -672,5 +676,204 @@ class CC_Salud_America {
 	  }
 	}
 
+	/**
+	 * Code for "Related Hub Members" Meta Box for WP Dashboard area
+	 * Post types that want this functionality can include it from their definition files.
+	 *
+	 * @since 0.2.0
+	 */
+	public function sa_related_leaders_meta_box( $post ) {
+		// Prime the list of leaders.
+		$salud_group_id = sa_get_group_id();
+		$leaders = get_post_meta( $post->ID, 'sa_associated_leader', false );
+		$hub_args = array(
+			'group_id' => $salud_group_id,
+			'exclude_admins_mods' => false,
+			'per_page' => false,
+		);
+		// We exclude members that are already associated with this post.
+		// Only add the exclude argument if it isn't empty--
+		// an empty exclude will cause an empty results set.
+		if ( ! empty ( $leaders ) ) {
+			$hub_args['exclude'] = $leaders;
+		}
+		$hub_members_raw = groups_get_group_members( $hub_args );
+		$hub_members = array();
+		foreach ($hub_members_raw['members'] as $user) {
+			$result        = new stdClass();
+			$result->ID    = $user->user_nicename;
+			$result->image = bp_core_fetch_avatar( array( 'html' => false, 'item_id' => $user->ID ) );
+			$result->name  = $user->display_name;
+
+			$hub_members[] = $result;
+		}
+
+		// Prepare the list of already-associated leaders to display in the input box.
+		$leaders_usernames = array();
+		if ( ! empty( $leaders ) ) {
+			foreach( $leaders as $leader ) {
+				$user = get_user_by( 'id', $leader );
+				if ( $user !== false ) {
+					$leaders_usernames[] = '@' . $user->user_login;
+				}
+			}
+			sort( $leaders_usernames );
+		}
+
+		?>
+		<div>
+			<!-- <h4>Associated Leaders (Hub Members)</h4> -->
+			<p>
+				<textarea name='sa-associated-leaders' id='sa-associated-leaders' class='bp-suggest-user' data-suggestions-group-id="<?php echo $salud_group_id; ?>" style="width:100%;"><?php
+					if ( ! empty( $leaders_usernames ) ) {
+						echo implode(', ', $leaders_usernames ) . ',';
+					}
+				?></textarea>
+				<span class="howto">Enter a comma-separated list of usernames. Start the suggest tool by typing <code>@</code>.</span>
+			</p>
+			<?php //print_r( json_encode( $hub_members ) ); ?>
+		</div>
+		<script type="text/javascript">
+			var sa_group_id = <?php echo sa_get_group_id(); ?>,
+				sa_hub_members = <?php echo json_encode( $hub_members ); ?>;
+		</script>
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery( '#sa-associated-leaders' ).bp_mentions({
+					data: <?php echo json_encode( $hub_members ); ?>,
+					// tpl:        '<li data-value="@${ID}"><img src="${image}" />Whoa now.<span class="username">@${ID}</span><small>${name}</small></li>'
+				});
+			});
+		</script>
+		<?php
+
+	}
+
+	/**
+	 * Save "Related Hub Members" extra meta.
+	 *
+	 * @since    0.2.0
+	 *
+	 * @return   void
+	 */
+	public function sa_related_leaders_meta_box_save( $post_id ) {
+
+		if ( ! $this->user_can_save( $post_id, 'sa_related_hub_members_meta', 'sa_add_related_hub_members'  ) ) {
+			return false;
+		}
+
+		// Get existing values.
+		$old_leader_ids = get_post_meta( $post_id, 'sa_associated_leader', false );
+
+		// Get submitted values.
+		$new_leaders = array();
+		if ( isset( $_POST['sa-associated-leaders'] ) && ! empty( $_POST['sa-associated-leaders'] ) ) {
+			$new_leaders = preg_split( '/[\ \n\,]+/', $_POST['sa-associated-leaders'] );
+		}
+
+		// Preemptively remove dupes.
+		$new_leaders = array_unique( $new_leaders );
+
+		$new_leader_ids = array();
+		foreach ( $new_leaders as $leader ) {
+			if ( ! empty( $leader ) ) {
+				// Strip the @ symbol form the username
+				$leader = str_replace( '@', '', $leader );
+				// Get the user ID from the username
+				$user = get_user_by( 'login', $leader );
+				if ( $user !== false ) {
+					$new_leader_ids[] = $user->ID;
+				}
+			}
+		}
+
+		// Remove dupes, in case any slipped through.
+		$new_leader_ids = array_unique( $new_leader_ids );
+
+		$users_to_remove = array_diff( $old_leader_ids, $new_leader_ids );
+		if ( ! empty( $users_to_remove ) ) {
+			foreach ( $users_to_remove as $remove ) {
+				delete_post_meta( $post_id, 'sa_associated_leader', $remove );
+			}
+		}
+		$users_to_add = array_diff( $new_leader_ids, $old_leader_ids );
+		if ( ! empty( $users_to_add ) ) {
+			foreach ( $users_to_add as $add ) {
+				add_post_meta( $post_id, 'sa_associated_leader', $add );
+			}
+		}
+
+		// $towrite = PHP_EOL . '$old_leader_ids: ' . print_r($old_leader_ids, TRUE);
+		// $towrite .= PHP_EOL . '$new_leaders: ' . print_r($new_leaders, TRUE);
+		// $towrite .= PHP_EOL . '$new_leader_ids: ' . print_r($new_leader_ids, TRUE);
+		// $towrite .= PHP_EOL . '$users_to_add: ' . print_r($users_to_add, TRUE);
+		// $towrite .= PHP_EOL . '$users_to_remove: ' . print_r($users_to_remove, TRUE);
+		// $fp = fopen('sa_leaders.txt', 'a');
+		// fwrite($fp, $towrite);
+		// fclose($fp);
+
+	}
+
+	/**
+	 * When a user is deleted, we'll need to clean up any post associations
+	 *
+	 * @since    0.2.0
+	 *
+	 * @return   void
+	 */
+	public function cleanup_sa_related_leaders( $user_id ) {
+		$posts = $this->get_related_post_ids_for_user( $user_id, true, true );
+		if ( ! empty( $posts ) ) {
+		 	foreach ( $posts as $post_id ) {
+		 		delete_post_meta( $post_id, 'sa_associated_leader', $user_id );
+		 	}
+		}
+	}
+
+	/**
+	 * Get related post ids based on the user ID.
+	 *
+	 * @since    0.2.0
+	 *
+	 * @return   void
+	 */
+	public function get_related_post_ids_for_user( $user_id, $ids_only = true, $get_private = false ) {
+		global $wpdb;
+		$retval = array();
+
+		if ( ! $user_id ) {
+			return $retval;
+		}
+
+		$args = array(
+			'post_type' => array( 'sapolicies', 'sa_success_story' ),
+			'posts_per_page' => -1,
+			'nopaging' => true,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'no_found_rows' => 1,
+			'meta_query' => array(
+				array(
+					'key'     => 'sa_associated_leader',
+					'value'   => $user_id,
+					'compare' => '=',
+				),
+			),
+		);
+
+		if ( $ids_only ) {
+			$args['fields'] = 'ids';
+		}
+
+		if ( $get_private ) {
+			$args['post_status'] = 'any';
+		}
+
+		$related_posts = new WP_Query( $args );
+
+		$retval = $related_posts->posts;
+
+		return $retval;
+	}
 }
 $cc_salud_america = new CC_Salud_America();

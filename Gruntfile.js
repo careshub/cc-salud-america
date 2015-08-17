@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                 livereload: true,
             },
             scripts: {
-                files: 'public/js/public.js',
+                files: ['public/js/public.js'],
                 tasks: ['uglify']
             },
             styles: {
@@ -41,8 +41,8 @@ module.exports = function(grunt) {
 			  cleancss: true,
 			},
 			files: {
-				"public/css/public.css": "public/less/public.less",
-                "public/css/public-ie.css": "public/less/public-ie.less"
+				'public/css/public.css': 'public/less/public.less',
+                'public/css/public-ie.css': 'public/less/public-ie.less'
 			}
 		  }
 		},
@@ -84,7 +84,8 @@ module.exports = function(grunt) {
             },
             all: [
                 'Gruntfile.js',
-                'public/js/*.js'
+                'public/js/*.js',
+                'admin/assets/js/*.js'
                 ]
         },
 
@@ -97,7 +98,7 @@ module.exports = function(grunt) {
 			common: {
 				files: {
 					'public/js/public.min.js': 'public/js/public.js'
-				}
+                }
 			}
         },
         // image optimization

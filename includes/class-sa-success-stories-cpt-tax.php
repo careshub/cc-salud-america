@@ -49,6 +49,8 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		// add_filter( 'manage_edit-sapolicies_sortable_columns', array( $this, 'register_sortable_columns' ) );
 		// add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
+		// Handle autosuggest input from this post_type's edit screen.
+		add_action( 'save_post', array( $this, 'sa_related_leaders_meta_box_save' ) );
 
 		// Add an AJAX listener for removing the related PDF via the admin meta box.
 		add_action( 'wp_ajax_delete_success_story_pdf', array( $this, 'ajax_delete_success_story_pdf' ) );
@@ -215,6 +217,14 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 			'normal',
 			'high'
 			);
+		 add_meta_box(
+		 	'sa_related_leaders_meta_box',
+		 	'Associated Leaders',
+		 	array( $this, 'sa_related_leaders_meta_box' ),
+		 	$this->post_type,
+		 	'side',
+		 	'default'
+		 	);
 	}
 
 	/**
