@@ -72,6 +72,15 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 					),
 			 ),
 		),
+		'fallback_image' => array(
+			'label' => 'Term Fallback Image',
+			'fields' => array(
+				'fallback_image' => array(
+					'label' => 'Used when no post thumbnail exists.',
+					'type'	=> 'image'
+					),
+			 ),
+		),
 	);
 
 	/**
@@ -352,3 +361,54 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 
 } //End class
 $sa_term_intros_cpt_tax = new CC_SA_Term_Intros_CPT_Tax();
+
+
+// Functions in the global scope
+
+/**
+ * Return the html for a fallback image, given the terms of a post.
+ *
+ * @param string $size ONe of the WP-defined sizes.
+ *
+ */
+function sa_get_advo_target_fallback_image( $term, $size = 'feature-front-sub', $class = 'alignleft' ) {
+	if ( empty( $term ) ) {
+		// We'll grab one at random.
+		$args = array(
+		    'post_type' => 'sa_term_introduction',
+		    'fields' => 'ids',
+		    'order_by' => 'rand',
+		    );
+	} else {
+		// Find the advo target intro for the requested term.
+		$args = array(
+		    'post_type' => 'sa_term_introduction',
+		    'posts_per_page' => 1,
+		    'fields' => 'ids',
+		    'tax_query' => array(
+		        array(
+		            'taxonomy' => $term->taxonomy,
+		            'field'    => 'term_id',
+		            'terms'    => $term->term_id,
+		        ),
+		    ),
+		);
+	}
+
+	$term_intros = new WP_Query( $args );
+	if ( ! empty( $term_intros ) ) {
+		$intro_id = current( $term_intros->posts );
+	}
+
+	$fallback_image_post_id = get_post_meta( $intro_id, 'sa_term_intro_fallback_image', true );
+
+	// Get the html:
+	if ( ! empty( $fallback_image_post_id ) ) {
+		$args = array( 'class' => "attachment-{$size} {$class} wp-post-image" );
+
+        // If there's no video, we use the fullsize fallback image for the term.
+        $retval = wp_get_attachment_image( $fallback_image_post_id, $size, false, $args );
+    }
+
+    return $retval;
+}
