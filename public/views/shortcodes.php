@@ -149,3 +149,17 @@ function sa_what_is_change_tag_list_shortcode() {
     return ob_get_clean();
 }
 add_shortcode( 'sa_what_is_change_tag_list', 'sa_what_is_change_tag_list_shortcode' );
+
+/**
+ * Output html for the content-by-advocacy-target area on the group's home page.
+ *
+ * @since   1.0.0
+ *
+ * @return  html
+ */
+function sa_tabbed_content_by_adv_target_shortcode() {
+    ob_start();
+    sa_tabbed_content_by_adv_target();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_tabbed_content_by_adv_target', 'sa_tabbed_content_by_adv_target_shortcode' );

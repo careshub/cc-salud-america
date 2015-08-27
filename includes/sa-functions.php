@@ -98,6 +98,9 @@ function sa_get_tab_slug( $section = 'policies' ){
         case 'tweetchats':
             $slug = 'tweetchats';
             break;
+        case 'big_bets':
+            $slug = 'big-bets';
+            break;
         case 'changes':
         case 'policies':
         case 'sapolicies':
@@ -135,6 +138,9 @@ function sa_get_tab_label( $section = 'policies' ){
         case 'tweetchats':
             $label = "Tweetchats";
             break;
+        case 'big_bets':
+            $slug = 'Big Bets';
+            break;
         case 'policies':
         case 'changes':
         default:
@@ -171,6 +177,10 @@ function sa_get_cpt_by_section( $section = 'policies' ){
             break;
         case 'tweetchats':
             $cpt = 'sa_tweetchats';
+            break;
+        case 'big_bets':
+        case 'big-bets':
+            $cpt = array( 'saresources', 'sa_success_story', 'sapolicies' );
             break;
         case 'policies':
         case 'changes':
@@ -263,7 +273,12 @@ function sa_the_cpt_tax_intersection_link( $section = false, $taxonomy = false, 
  */
 function sa_get_requested_tax_term(){
     $term = false;
-    if ( sa_is_archive_taxonomy() ) {
+    if ( sa_is_big_bets_tab() ) {
+        $action_variables = bp_action_variables();
+        //URLs take the form salud-america/big-bets/term-slug
+        // So we get the advocacy_target terms:
+        $term = get_term_by( 'slug', $action_variables[0], 'sa_advocacy_targets' );
+    } else if ( sa_is_archive_taxonomy() ) {
         $action_variables = bp_action_variables();
         $term = get_term_by( 'slug', $action_variables[1], $action_variables[0] );
     }
@@ -320,6 +335,11 @@ function sa_get_query(){
 
     }
 
+        $towrite = PHP_EOL . 'sa_get_query: ' . print_r($query, TRUE);
+        $fp = fopen('sa_get_query.txt', 'a');
+        fwrite($fp, $towrite);
+        fclose($fp);
+
     return apply_filters( "sa_get_query", $query );
 }
 
@@ -362,17 +382,22 @@ function sa_is_single_post(){
 
         // Which section are we looking at?
         $section = bp_current_action();
-        $cpt = sa_get_cpt_by_section( $section );
-        // What taxonomies are associated with that cpt?
-        $taxonomy_names = get_object_taxonomies( $cpt );
-        $other_names = array( 'page', 'paged', 'search' );
 
-        $action_variables = bp_action_variables();
+        if ( sa_is_big_bets_tab() ) {
+            $single = false;
+        } else {
+            $cpt = sa_get_cpt_by_section( $section );
+            // What taxonomies are associated with that cpt?
+            $taxonomy_names = get_object_taxonomies( $cpt );
+            $other_names = array( 'page', 'paged', 'search' );
 
-        $reserved_names = array_merge( $taxonomy_names, $other_names );
+            $action_variables = bp_action_variables();
 
-        if ( ! empty( $action_variables ) && ! in_array( $action_variables[0], $reserved_names ) ) {
-            $single = true;
+            $reserved_names = array_merge( $taxonomy_names, $other_names );
+
+            if ( ! empty( $action_variables ) && ! in_array( $action_variables[0], $reserved_names ) ) {
+                $single = true;
+            }
         }
     }
 
@@ -392,15 +417,28 @@ function sa_is_archive_taxonomy(){
     if ( sa_is_sa_group() ) {
         // Which section are we looking at?
         $section = bp_current_action();
-        $cpt = sa_get_cpt_by_section( $section );
-        // What taxonomies are associated with that cpt?
-        $taxonomy_names = get_object_taxonomies( $cpt );
-
         $action_variables = bp_action_variables();
 
-        // If $action_variables is populated, and the first entry is the slug of a related taxonomy, this must be a taxonomy term filter.
-        if ( ! empty( $action_variables ) && in_array( $action_variables[0], $taxonomy_names ) ) {
-            $is_tax = true;
+        if ( sa_is_big_bets_tab() ) {
+            //URLs take the form salud-america/big-bets/term-slug
+            // So we get the advocacy_target terms:
+            $terms = get_terms( 'sa_advocacy_targets', array(
+                'hide_empty' => 0,
+                'fields' => 'id=>slug'
+             ) );
+            // The advocacy target slug will be the action variable if we're looking at a term archive.
+            if ( ! empty( $action_variables ) && in_array( $action_variables[0], $terms ) ) {
+                $is_tax = true;
+            }
+        } else {
+            $cpt = sa_get_cpt_by_section( $section );
+            // What taxonomies are associated with that cpt?
+            $taxonomy_names = get_object_taxonomies( $cpt );
+
+            // If $action_variables is populated, and the first entry is the slug of a related taxonomy, this must be a taxonomy term filter.
+            if ( ! empty( $action_variables ) && in_array( $action_variables[0], $taxonomy_names ) ) {
+                $is_tax = true;
+            }
         }
     }
 
@@ -564,6 +602,23 @@ function sa_get_classname_from_columns( $columns ) {
     }
     return apply_filters( 'sa_get_classname_from_columns', $class );
 }
+
+/**
+ * Are we viewing the new "big bets" tab?
+ * URLs are structured differently here.
+ *
+ * @since   1.2.0
+ *
+ * @return  bool
+ */
+function sa_is_big_bets_tab(){
+    $retval = false;
+    if ( bp_current_action() == sa_get_tab_slug( 'big_bets' ) ) {
+        $retval = true;
+    }
+    return $retval;
+}
+
 
 /**
 * Date format converters

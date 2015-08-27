@@ -23,37 +23,6 @@
     //     line-height: 1.4;
     // }
 
-	.site-content {
-		// float: right;
-		width: 100%;
-		article {
-			border-bottom: 1px solid @saorange;
-			margin-bottom: 24px;
-			margin-bottom: 1.71429rem;
-			padding-bottom: 0;
-			// overflow: auto;
-		&:last-child {
-			border-bottom: none;
-		}
-		&.sa_archive_introduction, &.page {
-			// border-bottom: none;
-			// margin-bottom: 0;
-		}
-		&.no-border {
-			border-bottom: none;
-		}
-		}
-		.main-article {
-			// padding-bottom: 3.4em;
-			// margin-bottom: 3.4em;
-			border-bottom: none;
-		}
-		.comments-area {
-			padding-bottom: 1em;
-			margin-bottom: 1em;
-			// border-bottom: 1px solid @saorange;
-		}
-	}
 	h2 {
 			color:@sared;
 			.font-size(2);
@@ -122,6 +91,35 @@
 
 	}
 	.site-content {
+		// float: right;
+		width: 100%;
+		article {
+			border-bottom: 1px solid @saorange;
+			margin-bottom: 24px;
+			margin-bottom: 1.71429rem;
+			padding-bottom: 0;
+			// overflow: auto;
+		&:last-child {
+			border-bottom: none;
+		}
+		&.sa_archive_introduction, &.page {
+			// border-bottom: none;
+			// margin-bottom: 0;
+		}
+		&.no-border {
+			border-bottom: none;
+		}
+		}
+		.main-article {
+			// padding-bottom: 3.4em;
+			// margin-bottom: 3.4em;
+			border-bottom: none;
+		}
+		.comments-area {
+			padding-bottom: 1em;
+			margin-bottom: 1em;
+			// border-bottom: 1px solid @saorange;
+		}
 		.salud-banner {
 			border-bottom:1px solid @saorange;
 			margin-bottom: 2em;
@@ -195,110 +193,114 @@
 			// overflow: auto;
 			margin-bottom: 1em;
 		}
-	.policy-search {
-		// border-bottom: 1px solid @saorange;
-	    margin-bottom: 1em;
-	    // padding-bottom: 2em;
-	 //    h3 {
-		// 		color:@sared;
-		// 		.font-size(1.4);
-		// 	}
-		// h4 {
-		// 		color:@sared;
-		// 		.font-size(1.2);
-		// 	}
-	}
-	.policy-search-home {
-		// border-bottom: 1px solid @saorange;
-	    margin-bottom: 1em;
-	    // padding-bottom: 2em;
-	    // display: inline-block;
-	    h4 {
-				color:@sared;
-				.font-size(1.2);
+		.policy-search {
+			// border-bottom: 1px solid @saorange;
+		    margin-bottom: 1em;
+		    // padding-bottom: 2em;
+		 //    h3 {
+			// 		color:@sared;
+			// 		.font-size(1.4);
+			// 	}
+			// h4 {
+			// 		color:@sared;
+			// 		.font-size(1.2);
+			// 	}
 		}
-	}
-	.sa-page-intro p {
-		padding: 12px;
-		background-color: lighten(@graylight,11);
-		color: @black;
-		.font-size(1.1);
-		line-height: 1.6;
-		// font-style: italic;
-	}
-	.sapolicies, .saresources {
-		.icon { margin-right: 2%; }
-		// h1, h2, h4, p {
-		// 	clear: none;
-		// 	margin: 0 0 .5em 0;
-		// }
-		.entry-header .header-meta {
-			background-color: lighten( @graylight, 7%);
-			padding: 1em;
-			margin-top: -1.4em;
-			// border-bottom: 1px solid @sapurple;
+		.policy-search-home {
+			// border-bottom: 1px solid @saorange;
+		    margin-bottom: 1em;
+		    // padding-bottom: 2em;
+		    // display: inline-block;
+		    h4 {
+					color:@sared;
+					.font-size(1.2);
+			}
 		}
+		.sa-page-intro p {
+			padding: 12px;
+			background-color: lighten(@graylight,11);
+			color: @black;
+			.font-size(1.1);
+			line-height: 1.6;
+			// font-style: italic;
+		}
+		.sapolicies, .saresources {
+			.icon { margin-right: 2%; }
+			// h1, h2, h4, p {
+			// 	clear: none;
+			// 	margin: 0 0 .5em 0;
+			// }
+			.entry-header .header-meta {
+				background-color: lighten( @graylight, 7%);
+				padding: 1em;
+				margin-top: -1.4em;
+				// border-bottom: 1px solid @sapurple;
+			}
 
-		.sa-policy-meta {
-			.font-size(0.9);
-			margin-bottom: .4em;
-		}
-		.sa-policy-date {
-			color: #777;
-			margin-left: 2em;
-		}
-		#sa_associated_resources {
-			list-style: none;
-			li{
-				margin: 0 0 .2em 0;
-				padding: 2px 4px;
-				&:nth-child(even) {
-					background-color: desaturate( lighten(@saorange, 44), 15);
-				}
-				p {
-					margin: .2em 0;
-				}
-			}
-			.sa_assoc_resource_title {
-				// .font-size(1.1);
-			}
-			.sa_assoc_resource_title p {
+			.sa-policy-meta {
 				.font-size(0.9);
+				margin-bottom: .4em;
+			}
+			.sa-policy-date {
+				color: #777;
+				margin-left: 2em;
+			}
+			#sa_associated_resources {
+				list-style: none;
+				li{
+					margin: 0 0 .2em 0;
+					padding: 2px 4px;
+					&:nth-child(even) {
+						background-color: desaturate( lighten(@saorange, 44), 15);
+					}
+					p {
+						margin: .2em 0;
+					}
+				}
+				.sa_assoc_resource_title {
+					// .font-size(1.1);
+				}
+				.sa_assoc_resource_title p {
+					.font-size(0.9);
+				}
 			}
 		}
-	}
-	.related-policies, .taxonomy-policies {
-		h3 {
-			margin-top: 0;
-			margin-bottom: .7em !important;
-		}
-		.related-by-topic, .related-by-tag {
-			article:last-child {
-				// border-bottom: none;
+		.related-policies, .taxonomy-policies {
+			h3 {
+				margin-top: 0;
+				margin-bottom: .7em !important;
 			}
-		}
-		.third-block {
-			margin-bottom: .5em;
-			padding-bottom: 0;
-
-			article {
-				margin-bottom: 0;
+			.related-by-topic, .related-by-tag {
+				article:last-child {
+					// border-bottom: none;
+				}
+			}
+			.third-block {
+				margin-bottom: .5em;
 				padding-bottom: 0;
+
+				article {
+					margin-bottom: 0;
+					padding-bottom: 0;
+				}
 			}
 		}
-	}
-	.related-what-can-you-do {
-		margin-bottom: 24px;
-		margin-bottom: 1.71429rem;
-		padding-bottom: 24px;
-		padding-bottom: 1.71429rem;
-		.column1of3.aligncenter > img {
-		    margin: 1em;
+		.related-what-can-you-do {
+			margin-bottom: 24px;
+			margin-bottom: 1.71429rem;
+			padding-bottom: 24px;
+			padding-bottom: 1.71429rem;
+			.column1of3.aligncenter > img {
+			    margin: 1em;
+			}
 		}
-	}
-	.sa-item-short-form {
+		// Special cases for the short form articles
+		.sa-item-short-form {
 			.entry-content {
 				.entry-header {
+					.entry-title {
+						margin-bottom: 1em;
+					}
 					// margin-bottom: 0;
 					h2 {
 						margin-bottom: .7em
@@ -306,58 +308,61 @@
 					.location {
 						margin-bottom: .7em;
 					}
+					img.wp-post-image {
+						margin-top: 0;
+					}
 				}
 			}
 		}
 
-	// .related-items-sidebar {
-	// 	display: none;
-	// }
+		// .related-items-sidebar {
+		// 	display: none;
+		// }
 
-	.sa-resource-header-icon {
-		position: relative;
-		span {
-		  // position: absolute;
-		  color: white;
-		  // bottom: 15px;
-		  // text-align: center;
-		  // width: 92%;
-		  // font-weight: bold;
-		  line-height: 2;
-		  .font-size(1.2);
-		  padding-left: 2%;
-		  background-color: fade(@black, 80%);
-		  display: block;
-		}
-		img {
-			display: none;
-		}
-	}
-	.entry-header  {
-		// margin-bottom: 0;
-		// background-color: #AAA;
-		// border: 1px solid @sagreen;
-		img.wp-post-image {
-		    margin-top: 18px;
-		    margin-top: 1.285714286rem;
-		    margin-bottom: 14px;
-		    margin-bottom: 1rem;
+		.sa-resource-header-icon {
+			position: relative;
+			span {
+			  // position: absolute;
+			  color: white;
+			  // bottom: 15px;
+			  // text-align: center;
+			  // width: 92%;
+			  // font-weight: bold;
+			  line-height: 2;
+			  .font-size(1.2);
+			  padding-left: 2%;
+			  background-color: fade(@black, 80%);
+			  display: block;
 			}
-			h1 {
-				margin-top: 0;
-				margin-bottom: 1em !important;
+			img {
+				display: none;
 			}
 		}
-		.learn-from-success-stories, .find-changes, .examples-of-change {
-			.third-block, .half-block {
-				margin-bottom: 1em;
-				padding-bottom: 1em;
-				border-bottom: none;
+		.entry-header  {
+			// margin-bottom: 0;
+			// background-color: #AAA;
+			// border: 1px solid @sagreen;
+			img.wp-post-image {
+			    margin-top: 18px;
+			    margin-top: 1.285714286rem;
+			    margin-bottom: 14px;
+			    margin-bottom: 1rem;
+				}
+				h1 {
+					margin-top: 0;
+					margin-bottom: 1em !important;
+				}
 			}
+			.learn-from-success-stories, .find-changes, .examples-of-change {
+				.third-block, .half-block {
+					margin-bottom: 1em;
+					padding-bottom: 1em;
+					border-bottom: none;
+				}
+			}
+		.salud-hero-video-summary h3 {
+			margin-top:0;
 		}
-	.salud-hero-video-summary h3 {
-		margin-top:0;
-	}
 	} //End #content
 	.salud-success-stories-sidebar {
 		width:90%;
@@ -456,16 +461,8 @@
 		font-weight: bold;
 	}
 }
-.sa-active-playx60, .sa-active-spacesx60, .sa-better-food-in-neighborhoodsx60, .sa-healthier-marketingx60, .sa-healthier-school-snacksx60, .sa-sugary-drinksx60{
-	background: url(../images/sa-sprites.png) no-repeat;
-	display: block;
-	float: left;
-	margin-right: 4%;
-	height: 60px;
-	width: 60px;
-}
 
-.sa-active-playx30, .sa-active-spacesx30, .sa-better-food-in-neighborhoodsx30, .sa-healthier-marketingx30, .sa-healthier-school-snacksx30, .sa-sugary-drinksx30{
+.sa-active-playx30, .sa-active-spacesx30, .sa-better-food-in-neighborhoodsx30, .sa-healthier-school-snacksx30, .sa-healthier-marketingx30, .sa-sugary-drinksx30, .sa-healthy-weightx30, .sa-healthier-schoolsx30 {
 	background: url(../images/sa-sprites.png) no-repeat;
 	display: block;
 	float: left;
@@ -474,7 +471,17 @@
 	width: 30px;
 }
 
-.sa-active-playx90, .sa-active-spacesx90, .sa-better-food-in-neighborhoodsx90, .sa-healthier-marketingx90, .sa-healthier-school-snacksx90, .sa-sugary-drinksx90, .sa-active-play-whx90, .sa-active-spaces-whx90, .sa-better-food-in-neighborhoods-whx90, .sa-healthier-marketing-whx90, .sa-healthier-school-snacks-whx90, .sa-sugary-drinks-whx90{
+.sa-active-playx60, .sa-active-spacesx60, .sa-better-food-in-neighborhoodsx60, .sa-healthier-school-snacksx60,
+.sa-sugary-drinksx60, .sa-healthy-weightx60, .sa-healthier-schoolsx60, .sa-health-equityx60, .sa-healthier-marketingx60 {
+	background: url(../images/sa-sprites.png) no-repeat;
+	display: block;
+	float: left;
+	margin-right: 4%;
+	height: 60px;
+	width: 60px;
+}
+
+.sa-active-playx90, .sa-active-spacesx90, .sa-better-food-in-neighborhoodsx90, .sa-healthier-marketingx90, .sa-healthier-school-snacksx90, .sa-sugary-drinksx90, .sa-healthier-schoolsx90, .sa-health-equityx90, .sa-healthy-weightx90, .sa-active-play-whx90, .sa-active-spaces-whx90, .sa-better-food-in-neighborhoods-whx90, .sa-healthier-marketing-whx90, .sa-healthier-school-snacks-whx90, .sa-sugary-drinks-whx90 {
 	background: url(../images/sa-sprites.png) no-repeat;
 	display: inline-block;
 	vertical-align: middle;
@@ -484,7 +491,7 @@
 	width: 90px;
 }
 
-.facebook-whx26, .sa-blog-wh-26x54, .twitter-whx26, .youtube-whx26{
+.facebook-whx26, .twitter-whx26, .youtube-whx26, .sa-blog-wh-26x54, .sa-health-equityx30 {
 	background: url(../images/sa-sprites.png) no-repeat;
 	display: inline-block;
 	vertical-align: middle;
@@ -504,16 +511,8 @@
 	background-position: 0 -70px ;
 }
 
-.sa-healthier-marketingx60{
-	background-position: -140px 0;
-}
-
 .sa-healthier-school-snacksx60{
 	background-position: -70px 0;
-}
-
-.sa-sugary-drinksx60{
-	background-position: 0 0;
 }
 
 .sa-active-playx30{
@@ -528,17 +527,18 @@
 	background-position: -120px -140px ;
 }
 
-.sa-healthier-marketingx30{
-	background-position: -80px -140px ;
-}
-
 .sa-healthier-school-snacksx30{
 	background-position: -40px -140px ;
 }
 
-.sa-sugary-drinksx30{
-	background-position: 0 -140px ;
+.sa-healthier-marketingx60{
+	background-position: -140px 0;
 }
+
+.sa-healthier-marketingx30{
+	background-position: -80px -140px ;
+}
+
 .sa-active-playx90{
 	background-position: -200px -280px ;
 }
@@ -557,10 +557,6 @@
 
 .sa-healthier-school-snacksx90{
 	background-position: -100px -180px ;
-}
-
-.sa-sugary-drinksx90{
-	background-position: 0 -180px ;
 }
 
 .sa-active-play-whx90{
@@ -585,6 +581,54 @@
 
 .sa-sugary-drinks-whx90{
 	background-position: 0 -380px ;
+}
+
+.sa-sugary-drinksx30{
+	background-position: 0 -140px ;
+}
+
+.sa-sugary-drinksx60{
+	background-position: 0 0;
+}
+
+.sa-sugary-drinksx90{
+	background-position: 0 -180px ;
+}
+
+.sa-healthy-weightx30{
+	background-position: -240px -140px ;
+}
+
+.sa-healthy-weightx90{
+	background-position: -300px -180px ;
+}
+
+.sa-healthy-weightx60{
+	background-position: -300px 0;
+}
+
+.sa-healthier-schoolsx30{
+	background-position: -280px -140px ;
+}
+
+.sa-healthier-schoolsx60{
+	background-position: -300px -70px ;
+}
+
+.sa-healthier-schoolsx90{
+	background-position: -300px -280px ;
+}
+
+.sa-health-equityx30{
+	background-position: -320px -140px ;
+}
+
+.sa-health-equityx60{
+	background-position: -370px 0;
+}
+
+.sa-health-equityx90{
+	background-position: -400px -180px ;
 }
 
 .facebook-whx26{
@@ -669,4 +713,26 @@
 	&.video-right {
 		float: none;
 	}
+}
+.post-type-flag.sapolicies {
+	background-color: @sablue;
+}
+.post-type-flag.saresources {
+	background-color: @sayellow;
+}
+.post-type-flag.sa_success_story, {
+	background-color: @sapurple;
+}
+
+.background-sapink,
+.background-saorange {
+	color: @white;
+	font-weight: 700;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.background-sapink {
+	background-color: @sapink;
+}
+.background-saorange {
+	background-color: @saorange;
 }

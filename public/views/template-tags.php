@@ -201,30 +201,38 @@ function saresources_get_related_resources($resource_cats) {
  *
  * @return  string human-readable name of geography
  */
-function salud_the_location() {
-  echo salud_get_the_location();
+function salud_the_location( $cpt = 'sapolicies' ) {
+  echo salud_get_the_location( $cpt );
 }
-    function salud_get_the_location() {
-        $geo_tax_type = cc_get_the_geo_tax_type();
+    function salud_get_the_location( $cpt = 'sapolicies' ) {
+        $location = '';
 
-        switch ($geo_tax_type) {
-            case 'State':
-                $geo_tax_location =  cc_get_the_geo_tax_state();
-            break;
-            case 'County':
-            case 'City':
-            case 'School District':
-            case 'US Congressional District':
-            case 'State House District':
-            case 'State Senate District':
-                $geo_tax_location = cc_get_the_geo_tax_name() . ', ' . cc_get_the_geo_tax_state();
-            break;
-            default:
-                $geo_tax_location = 'United States';
-            break;
+        if ( 'sapolicies' == $cpt ) {
+            // Policies use a very fine-grained location setup.
+            $geo_tax_type = cc_get_the_geo_tax_type();
+
+            switch ($geo_tax_type) {
+                case 'State':
+                    $location =  cc_get_the_geo_tax_state();
+                break;
+                case 'County':
+                case 'City':
+                case 'School District':
+                case 'US Congressional District':
+                case 'State House District':
+                case 'State Senate District':
+                    $location = cc_get_the_geo_tax_name() . ', ' . cc_get_the_geo_tax_state();
+                break;
+                default:
+                    $location = 'United States';
+                break;
+            }
+        } elseif ( 'sa_success_story' == $cpt ) {
+            // Heroes use a simple "Location" entry box.
+            $location = get_post_meta( get_the_ID(), 'sa_success_story_location', true );
         }
 
-         return $geo_tax_location;
+         return $location;
     }
 
 /**
@@ -454,4 +462,58 @@ function sa_what_is_change_tag_list() {
         $i++;
 
     } // END foreach ($tag_list as $advo_target => $tags)
+}
+
+/**
+ * Output html for the content-by-advocacy-target area on the group's home page.
+ *
+ * @since   1.0.0
+ *
+ * @return  html
+ */
+function sa_tabbed_content_by_adv_target() {
+    ?>
+    <div class="screamer sablue">Find changes, resources, and Salud Heroes&hellip;then START YOUR OWN CHANGE!</div>
+    <div class="content-row clear">
+    <div class="quarter-block">
+        <div class="entry-header">
+            <span class="icon sa-change"></span><h5>Topics</h5>
+            <span>Our Focal Areas</span>
+        </div>
+    <?php
+        $advocacy_targets = get_terms('sa_advocacy_targets');
+        $icon_size = 30;
+        echo '<div class="fill-height" id="topic-toggle">';
+        foreach ( $advocacy_targets as $target ) { ?>
+        <div><a href="#" title="<?php echo $target->description; ?>" class="toggle inactive" id="<?php echo $target->slug; ?>"><span class="<?php echo $target->slug . 'x' . $icon_size; ?>"></span><?php echo $target->name; ?></a></div>
+        <?php } //end foreach
+        echo '</div>';
+    ?>
+    </div>
+    <div class="quarter-block" id="most-recent-change">
+        <div class="entry-header">
+            <span class="icon sa-change"></span><h5>Changes</h5>
+            <span>New Healthy Policies</span>
+        </div>
+        <div class="entry-content">
+        </div>
+    </div>
+    <div class="quarter-block" id="most-recent-resource">
+        <div class="entry-header">
+            <span class="icon sa-change"></span><h5>Resources</h5>
+            <span>To Help You Make a Change</span>
+        </div>
+        <div class="entry-content">
+        </div>
+    </div>
+    <div class="quarter-block" id="most-recent-hero">
+        <div class="entry-header">
+            <span class="icon sa-change"></span><h5>Salud Heroes</h5>
+            <span>Follow the Steps of Change-makers</span>
+        </div>
+        <div class="entry-content">
+        </div>
+    </div>
+    </div> <!-- End .content-row -->
+    <?php
 }

@@ -8,53 +8,43 @@ if ( sa_is_section_front() ) {
     // Show the top section on the front page only.
     if ( $paged == 1 ) {
     ?>
-        <div class="policy-search">
-            <!--<form id="sa-policy-search" class="standard-form" method="get" action="/search-results">-->
-            <h3 class="screamer sagreen">Search for Changes by Keyword</h3>
-            <?php sa_searchpolicies(); ?>
+    <div class="content-row clear">
+        <div class="third-block spans-2">
+            <h2 class="screamer sablue no-top-margin">New Healthy Changes!</h2>
+
+            <p>Our team is curating the newest policy-based healthy changes popping up in Latino areas nationwide.</p>
+            <p>These are great examples of ways you can get involved, either joining these efforts or starting a similar change in your town!</p>
+            <?php
+            if ( function_exists('bp_share_post_button') ) {
+                bp_share_post_button();
+            }
+            ?>
         </div>
-
-        <?php sa_location_search(); ?>
-
-        <div class="browse-topics">
-            <h3 class="screamer sablue">Browse Changes by Topic</h3>
+        <div class="third-block fill-height">
+            <?php
+            //if ( ! is_user_logged_in() ) {
+                ?>
+                <div class="background-sapink" style="padding:0.8em;">
+                    <h4 class="aligncenter" style="color:white;margin:0;">Why be a Salud Leader?</h4>
+                    <p class="aligncenter" style="margin-bottom:0;">Get free stuff and join with others to reduce Latino obesity. <br />
+                        <a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em; color:">Register Now</a>
+                    </p>
+                </div>
                 <?php
-                $args = array(
-                    'taxonomy' => 'sa_advocacy_targets'
-                );
-                $categories = get_categories( $args );
-                echo '<div class="row clear">';
-                $i=0;
-
-                foreach ( $categories as $category ) {
-                    //Loop through each advocacy target
-                    // $cat_object = get_term_by('slug', $category->slug, 'sa_advocacy_targets');
-                    // print_r($cat_object);
-                    $cat_slug = $category->slug;
-                    $section_title = $category->name;
-                    $section_description = $category->description;
-                    ++$i;
-                    ?>
-                    <div class="half-block salud-topic <?php echo $cat_slug; ?>">
-                        <a href="<?php sa_the_cpt_tax_intersection_link( 'policies', 'sa_advocacy_targets', $cat_slug ) ?>" class="<?php echo $cat_slug; ?>  clear">
-                            <span class="<?php echo $cat_slug; ?>x90 alignleft"></span>
-                            <h4><?php echo $section_title; ?></h4>
-                        </a>
-                        <p><?php echo $section_description; ?></p>
-                    </div>
-                    <?php
-                    if ( $i%2 == 0 ) {
-                        echo '</div>
-                        <div class="row clear">';
-                    }
-                } // End advocacy target loop
-                echo '</div>';
-                 ?>
-
+            //}
+            ?>
+                <div class="background-saorange" style="padding:0.8em;">
+                    <h4 class="aligncenter" style="color:white;margin:0;">Map your town!</h4>
+                    <p class="aligncenter" style="margin-bottom:0;">See what’s happening, meet allies, and add your own healthy changes.
+                    </p>
+                </div>
         </div>
+    </div>
+
+    <hr />
+
     <?php } // end if ( $paged = 1 ) ?>
-        <div class="row">
-            <h3 class="screamer sapink">Newest Changes</h3>
+        <div class="content-row">
             <?php
                 bp_get_template_part( 'groups/single/sapolicies/policy-loop' );
             ?>

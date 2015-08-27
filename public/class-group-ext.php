@@ -130,4 +130,30 @@ class CC_Salud_America_Take_Action extends BP_Group_Extension {
 }
 bp_register_group_extension( 'CC_Salud_America_Take_Action' );
 
+class CC_Salud_America_Big_Bets extends BP_Group_Extension {
+    // Documentation: https://codex.buddypress.org/developer/group-extension-api/
+    function __construct() {
+        $args = array(
+            'slug' => 'big-bets', //sa_get_tab_slug( 'big_bets' ),
+            'name' => 'Big Bets', //sa_get_tab_label( 'big_bets' ),
+            // 'nav_item_position' => 13,
+            // Make this a publicly accessible tab in the SA group
+            // 'access' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
+            // 'show_tab' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
+        );
+        parent::init( $args );
+    }
+
+    function display( $group_id = null ) {
+        bp_get_template_part( 'groups/single/sabigbets/index' );
+    }
+
+    function enable_cc_sa_big_bets_tab() {
+        $setting = sa_is_sa_group();
+        return apply_filters( 'enable_cc_sa_big_bets_tab', $setting );
+    }
+
+}
+bp_register_group_extension( 'CC_Salud_America_Big_Bets' );
+
 endif;  // if ( class_exists( 'BP_Group_Extension' ) )

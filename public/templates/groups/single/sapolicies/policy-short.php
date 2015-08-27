@@ -41,7 +41,7 @@ $progress = $custom_fields['sa_policystage'][0];
             <a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
             </h3>
             <?php salud_the_target_icons(); ?>
-            <p class="location"><?php salud_the_location(); ?></p>
+            <p class="location"><?php salud_the_location( 'sapolicies' ); ?></p>
             <div class="meter-box clear">
                 <p>This change is <?php echo $progress_label; ?>.</p>
                 <!-- <div class="meter">

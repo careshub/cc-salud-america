@@ -29,7 +29,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                 <?php //echo "<br />"; ?>
                 <div class="header-meta clear">
                     <?php salud_the_target_icons() ?>
-                    <p class="location"><?php salud_the_location(); ?> <span class="sa-policy-date">Posted <?php echo get_the_date(); ?>.</span></p>
+                    <p class="location"><?php salud_the_location( 'sapolicies' ); ?> <span class="sa-policy-date">Posted <?php echo get_the_date(); ?>.</span></p>
 
                     <?php cc_the_policy_progress_tracker( $custom_fields['sa_policystage'][0] ); ?>
                 </div>

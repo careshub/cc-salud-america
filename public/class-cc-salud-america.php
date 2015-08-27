@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.2.0';
+	const VERSION = '1.2.0';
 
 	/**
 	 *
@@ -67,8 +67,7 @@ class CC_Salud_America {
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 
 		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		// add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
 
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
@@ -270,12 +269,17 @@ class CC_Salud_America {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles_scripts() {
 		if ( sa_is_sa_group() ) {
+			// Styles
 			wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'css/public.css', __FILE__ ), array(), self::VERSION );
 			    global $wp_styles;
 		    wp_enqueue_style( $this->plugin_slug . '-ie-plugin-styles', plugins_url( 'css/public-ie.css', __FILE__ ), array(), self::VERSION );
 		    $wp_styles->add_data( $this->plugin_slug . '-ie-plugin-styles', 'conditional', 'lt IE 9' );
+
+			// Scripts
+			// @TODO: Use the min version after dev is finished
+			wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery', 'wp-util' ), self::VERSION );
 		}
 
 	    if ( bp_is_register_page() && isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) {

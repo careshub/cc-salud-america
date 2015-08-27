@@ -1194,7 +1194,8 @@ function sa_the_topic_color ( $tax_term ) {
 }
 	function sa_get_topic_color( $tax_term ){
 		switch ( $tax_term ) {
-						case 'sa-active-play':
+					case 'sa-active-play':
+					case 'sa-healthier-schools':
 							$topic_color = 'sayellow';
 							break;
 					case 'sa-active-spaces':
@@ -1204,9 +1205,11 @@ function sa_the_topic_color ( $tax_term ) {
 							$topic_color = 'saorange';
 							break;
 					case 'sa-healthier-marketing':
+					case 'sa-healthy-weight':
 							$topic_color = 'sapink';
 							break;
 					case 'sa-healthier-school-snacks':
+					case 'sa-health-equity':
 							$topic_color = 'sagreen';
 							break;
 					case 'sa-sugary-drinks':

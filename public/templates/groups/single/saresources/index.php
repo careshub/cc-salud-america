@@ -5,51 +5,48 @@
 $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1 ;
 
 if ( sa_is_section_front() ) {
-	// Show the top section on the front page only.
-	if ( $paged == 1 ) {
-		?>
-		<h3 class="screamer sablue">Want to find resources to help make change in your area?</h3>
-		<?php
-		 //Display the page content before making the custom loop
-		  // while ( have_posts() ) : the_post();
-		  //    get_template_part( 'content', 'page-notitle' );
-		  //   // comments_template( '', true );
-		  // endwhile; // end of the loop.
-		  ?>
-		  <p>We&rsquo;ve collected a wide variety of the latest ways to get involved and find tool-kits, webinars and training opportunities to learn more.</p>
+	  // Show the top section on the front page only.
+    if ( $paged == 1 ) {
+    ?>
+    <div class="content-row clear">
+        <div class="third-block spans-2">
+            <h2 class="screamer sablue no-top-margin">New Resources for Change!</h2>
 
-		<div class="policy-search">
-			<?php sa_searchresources(); ?>
-		</div>
+            <p>Our team is curating the newest resources for change popping up in Latino areas nationwide.</p>
+            <p>These are great examples of ways you can get involved, either joining these efforts or starting a similar change in your town!</p>
+            <?php
+            if ( function_exists('bp_share_post_button') ) {
+                bp_share_post_button();
+            }
+            ?>
+        </div>
+        <div class="third-block fill-height">
+            <?php
+            //if ( ! is_user_logged_in() ) {
+                ?>
+                <div class="background-sapink" style="padding:0.8em;">
+                    <h4 class="aligncenter" style="color:white;margin:0;">Why be a Salud Leader?</h4>
+                    <p class="aligncenter" style="margin-bottom:0;">Get free stuff and join with others to reduce Latino obesity. <br />
+                        <a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em; color:">Register Now</a>
+                    </p>
+                </div>
+                <?php
+            //}
+            ?>
+                <div class="background-saorange" style="padding:0.8em;">
+                    <h4 class="aligncenter" style="color:white;margin:0;">Map your town!</h4>
+                    <p class="aligncenter" style="margin-bottom:0;">See what’s happening, meet allies, and add your own healthy changes.
+                    </p>
+                </div>
+        </div>
+    </div>
 
-		<h3 class="screamer sapurple">Browse Resources by Topic</h3>
-		<div>
+    <hr />
 
-			<?php
-			$advocacy_targets = get_terms('sa_advocacy_targets');
-			foreach ($advocacy_targets as $target) {
-				?>
-				<div class="sixth-block mini-text"><a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $target->slug ); ?>"><span class="<?php echo $target->slug; ?>x90"></span><br /><?php echo $target->name; ?></a></div>
-			<?php } //end foreach ?>
-		</div>
-
-		<?php
-		//Specify the saresourcecat slugs we want to show here
-		// If specifying more than one category, make them a comma-separated list
-		$resource_cats = array( 'report-2', 'toolkit', 'get-involved' );
-		?>
-
-		<div class="row">
-		  <h3 class="screamer sagreen">Browse Resources by Type</h3>
-		  <?php saresources_get_featured_blocks( $resource_cats );?>
-		</div>
-	<?php
-	} // end if $paged = 1
-	?>
+    <?php } // end if ( $paged = 1 ) ?>
 
 	<!-- Begin secondary loop for most recently added resources -->
-	<div class="row taxonomy-policies">
-		<h3 class="screamer sapink">Latest Resources Added</h3>
+	<div class="content-row taxonomy-policies">
 		<?php bp_get_template_part( 'groups/single/saresources/resource-loop' ); ?>
 	</div>
 <?php
