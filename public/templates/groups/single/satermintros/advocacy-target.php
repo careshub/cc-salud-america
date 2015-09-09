@@ -126,6 +126,13 @@ if ( $page_intro->have_posts() ) :
                         $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Better-Food-in-the-Neighborhood-Infographic-875.jpg') . '">Infographic in English</a>';
                         $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Salud_BetterFoods_Infographic_SPN_sml_0.jpg') . '">Infographic in Spanish</a>';
                         break;
+                    case 'sa-sugary-drinks':
+                        $links[] = '<strong>Better Food in Neighborhoods </strong><a href="' . site_url( '/wp-content/uploads/2014/02/Sugary-Drinks-research-review.pdf' ) . '">Research Review</a>';
+                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Sugary-Drinks-issue-brief.pdf') . '">Issue Brief in English</a>';
+                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/SpanishSugary-Drinks-Issue-Brief.pdf') . '">Issue Brief in Spanish</a>';
+                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Sugary-Drinks-Infographic-875.png') . '">Infographic in English</a>';
+                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Salud_SugaryDrinks_Infographic_SPN_sml.jpg') . '">Infographic in Spanish</a>';
+                        break;
                     case 'sa-health-equity':
                     case 'sa-healthy-weight':
                     default:
