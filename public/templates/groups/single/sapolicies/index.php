@@ -3,6 +3,8 @@
 * Template used for displaying the policies tab in the Salud America group
 */
 $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+$user_id = get_current_user_id();
+$is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
 
 if ( sa_is_section_front() ) {
     // Show the top section on the front page only.
@@ -22,21 +24,27 @@ if ( sa_is_section_front() ) {
         </div>
         <div class="third-block fill-height">
             <?php
-            //if ( ! is_user_logged_in() ) {
+            if ( ! $user_id || ! $is_sa_member ) {
                 ?>
                 <div class="background-sapink" style="padding:0.8em;">
                     <h4 class="aligncenter" style="color:white;margin:0;">Why be a Salud Leader?</h4>
-                    <p class="aligncenter" style="margin-bottom:0;">Get free stuff and join with others to reduce Latino obesity. <br />
-                        <a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em; color:">Register Now</a>
+                    <p class="aligncenter" style="margin-bottom:.5em;">Get free stuff and join with others to reduce Latino obesity.
                     </p>
+                    <?php if ( ! $user_id ) : ?>
+                        <div class="aligncenter"><a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em;text-shadow:none;">Register Now</a></div>
+                    <?php elseif ( ! $is_sa_member ) : ?>
+                        <div class="aligncenter" style="text-shadow:none;"><?php bp_group_join_button(); ?></div>
+                    <?php endif; ?>
                 </div>
                 <?php
-            //}
+            }
             ?>
                 <div class="background-saorange" style="padding:0.8em;">
                     <h4 class="aligncenter" style="color:white;margin:0;">Map your town!</h4>
-                    <p class="aligncenter" style="margin-bottom:0;">See what’s happening, meet allies, and add your own healthy changes.
+                    <p class="aligncenter" style="margin-bottom:.5em;">See what’s happening, meet allies, and add your own healthy changes.
                     </p>
+                    <a href="http://maps.communitycommons.org/policymap/"><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/us_map_w_policiesx525.jpg'; ?>" alt="Map of US showing location of changes."></a>
+
                 </div>
         </div>
     </div>
