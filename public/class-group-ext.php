@@ -138,8 +138,8 @@ class CC_Salud_America_Big_Bets extends BP_Group_Extension {
             'name' => 'Big Bets', //sa_get_tab_label( 'big_bets' ),
             // 'nav_item_position' => 13,
             // Make this a publicly accessible tab in the SA group
-            // 'access' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
-            // 'show_tab' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
+            'access' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
+            'show_tab' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
         );
         parent::init( $args );
     }

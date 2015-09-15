@@ -374,6 +374,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		// Saving the uploaded PDF
 		// If the user uploaded an image, let's upload it to the server
 		// $_FILES isn't enough, we need to see if there's something specific set, like the name
+		// @TODO: Use the WP Media Uploader for this..
 		if ( ! empty( $_FILES['sa_success_story_pdf']['name']) ) {
 
 			// Use the WordPress API to upload the file
@@ -407,7 +408,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 	//Insert ads after lead in paragraph of single success story.
 	function insert_actions_in_success_stories( $content ) {
 
-		if ( ! is_admin() ) {
+		if ( ! is_admin() && sa_is_single_post() ) {
 			global $post;
 			if ( $post->post_type == $this->post_type ) {
 				$insertion = '<p>';

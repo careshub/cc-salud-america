@@ -225,6 +225,39 @@ function sa_get_section_by_cpt( $cpt = 'sapolicies' ){
     return apply_filters( 'sa_get_section_by_cpt', $section );
 }
 
+/**
+ * Get the natural language label of a post type.
+ *
+ * @since   1.2.0
+ *
+ * @param   string $cpt The custom post type we want to find
+ * @return  string $section The shorthand name of the section
+ */
+function sa_get_label_by_cpt( $cpt = 'sapolicies' ) {
+    switch ( $cpt ) {
+        case 'saresources':
+            $section = "resources";
+            break;
+        case 'sa_success_story':
+            $section = "salud heroes";
+            break;
+        case 'sa_take_action':
+            $section = 'take_action';
+            break;
+        case 'sa_video_contest':
+            $section = 'video contests';
+            break;
+        case 'sa_tweetchats':
+            $section = 'tweetchats';
+            break;
+        default:
+            $section = "changes";
+            break;
+    }
+
+    return apply_filters( 'sa_get_label_by_cpt', $section );
+}
+
 /*
 * Call sa_get_the_cpt_tax_intersection_link and echo the result
 *
@@ -643,3 +676,22 @@ function sa_convert_to_short_human_date( $date ){
     $shuffle = date_create_from_format( 'Ymd', $date );
     return date_format( $shuffle, 'n/j' );
 }
+
+/**
+ * Build the URL to the policy map.
+ *
+ * @since   1.2.0
+ *
+ * @return  string
+ */
+function sa_policy_map_base_url( $append ) {
+    echo sa_get_policy_map_base_url( $append );
+}
+    function sa_get_policy_map_base_url( $append = '' ) {
+        $retval = 'http://maps.communitycommons.org/policymap/';
+        if ( ! empty( $append ) ) {
+            $retval = $retval . $append;
+        }
+
+        return $retval;
+    }

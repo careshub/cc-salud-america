@@ -205,7 +205,7 @@ function salud_the_location( $cpt = 'sapolicies' ) {
   echo salud_get_the_location( $cpt );
 }
     function salud_get_the_location( $cpt = 'sapolicies' ) {
-        $location = '';
+        $location = 'United States';
 
         if ( 'sapolicies' == $cpt ) {
             // Policies use a very fine-grained location setup.
@@ -224,12 +224,18 @@ function salud_the_location( $cpt = 'sapolicies' ) {
                     $location = cc_get_the_geo_tax_name() . ', ' . cc_get_the_geo_tax_state();
                 break;
                 default:
-                    $location = 'United States';
+                    // Leave the default value of united states.
                 break;
             }
         } elseif ( 'sa_success_story' == $cpt ) {
             // Heroes use a simple "Location" entry box.
-            $location = get_post_meta( get_the_ID(), 'sa_success_story_location', true );
+            $location_string = get_post_meta( get_the_ID(), 'sa_success_story_location', true );
+            if ( ! empty( $location_string ) ) {
+                $location = $location_string;
+            }
+        } elseif ( 'saresources' == $cpt ) {
+            // Resources don't have locations at all. @TODO: Should they?
+            // Leave the default value of united states.
         }
 
          return $location;
@@ -242,16 +248,61 @@ function salud_the_location( $cpt = 'sapolicies' ) {
  *
  * @return  html used to show icon
  */
-function salud_the_target_icons() {
-  echo salud_get_the_target_icons();
+function salud_the_target_icons( $post_id = 0, $size = '30', $include_name = false  ) {
+  echo salud_get_the_target_icons( $post_id, $size, $include_name );
 }
-    function salud_get_the_target_icons() {
-        $terms = get_the_terms( $post->ID, 'sa_advocacy_targets' );
+    function salud_get_the_target_icons( $post_id = 0, $size = '30', $include_name = false ) {
+        if ( empty( $post_id ) ) {
+            $post_id = get_the_ID();
+        }
+
+        $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
         $output = '';
         if ( ! empty( $terms ) ) {
             foreach ( $terms as $term ) {
-                $output .= '<span class="' . $term->slug . 'x30" title="' . $term->name . '"></span>';
+                $output .= '<span class="target-icon"><span class="' . $term->slug . 'x' . $size . '" title="' . $term->name . '"></span>';
+                if ( $include_name ) {
+                    $output .= $term->name;
+                }
+                $output .= '</span>';
             }
+        }
+        return $output;
+    }
+
+/**
+ * Create icons from the advocacy targets for a salud policy single view
+ *
+ * @since   1.2.0
+ *
+ * @return  html used to show icon(s)
+ */
+function salud_the_policy_target_icons( $post_id = 0 ) {
+  echo salud_get_the_policy_target_icons( $post_id );
+}
+    function salud_get_the_policy_target_icons( $post_id = 0 ) {
+        if ( empty( $post_id ) ) {
+            $post_id = get_the_ID();
+        }
+
+        $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
+        $num_terms = count( $terms );
+
+        // What we return depends on how many terms there are.
+        $output = '';
+        if ( $num_terms > 1 ) {
+            $items = array();
+            foreach ( $terms as $term ) {
+                $link = sa_get_section_permalink( 'big_bets' ) . $term->slug;
+                $items[] = '<a href="' . $link . '" class="target-icon alignleft" style="width:99%;"><span class="' . $term->slug . 'x30" title="' . $term->name . '"></span>' . $term->name . '</a>';
+                $output = implode( '<br />', $items );
+            }
+        } elseif ( $num_terms = 1 ) {
+            $term = current( $terms );
+            $link = sa_get_section_permalink( 'big_bets' ) . $term->slug;
+            $output .= '<div class="advo-target-thumbnail-link size90"><a href="' . $link . '" class="' . $term->slug . 'x90" title="' . $term->name . '"></a></div><p><strong>' . $term->name;
+            $output .= '</strong><br /><span class="policy-header-meta">See what else is happening in <a href="' . $link . '" title="Link to ' . $term->name . ' term archive">this topic!</a></span></p>';
+
         }
         return $output;
     }
@@ -463,6 +514,108 @@ function sa_what_is_change_tag_list() {
 
     } // END foreach ($tag_list as $advo_target => $tags)
 }
+
+/**
+ * Create a human readable list of tags and advocacy targets for a post
+ *
+ * @since 1.2.0
+ * @param int $post_id ID of post in question
+ *
+ * @return string HTML of term meta list
+ */
+function sa_post_terms_meta( $post_id, $post_type ) {
+    echo sa_get_post_terms_meta( $post_id, $post_type );
+}
+    function sa_get_post_terms_meta( $post_id, $post_type = 'sapolicies' ) {
+        if ( empty( $post_id ) ) {
+            $post_id = get_the_ID();
+        }
+        $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
+        $advocacy_targets = array();
+        if ( ! empty( $terms ) ) {
+            foreach ( $terms as $term ) {
+                $advocacy_targets[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( $post_type, $term->taxonomy, $term->slug ) . '" class="big-bet-link ' . sa_get_topic_color ( $term->slug ). '">' . $term->name . '</a>';
+            }
+            $advocacy_targets = join( ' ', $advocacy_targets );
+        }
+
+        $tags = get_the_terms( $post_id, 'sa_policy_tags' );
+        $policy_tags = array();
+        if ( ! empty( $tags ) ) {
+            foreach ( $tags as $tag ) {
+                $policy_tags[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( $post_type, $tag->taxonomy, $tag->slug ) . '">' . $tag->name . '</a>';
+            }
+            $policy_tags = join( ' ', $policy_tags );
+        }
+
+
+        if ( ! empty( $advocacy_targets ) || ! empty( $policy_tags ) ) {
+            $item_type = sa_get_label_by_cpt( $post_type );
+            ?>
+            <div class="taxonomy-links">
+                <h5 style="margin:0;">Browse similar <?php echo ucfirst( $item_type ); ?></h5>
+                <?php
+                if ( ! empty( $advocacy_targets ) ) {
+                    ?>
+                    <p class="sa-policy-meta">By Big Bet:
+                        <?php echo $advocacy_targets; ?>
+                    </p>
+                    <?php
+                }
+
+                if ( ! empty( $policy_tags ) ) {
+                    ?>
+                    <p class="sa-policy-meta">By Tag:
+                        <span class="tag-links"><?php echo $policy_tags; ?></span>
+                    </p>
+                    <?php
+                }
+                ?>
+            </div>
+            <?php
+        }
+
+    }
+
+/**
+ * Create a human readable "posted by" string
+ *
+ * @since 1.2.0
+ * @param int $post_id ID of post in question
+ * @param string $wrapper HTML element to wrap the output in.
+ *
+ * @return string HTML of when the article was posted and by whom.
+ */
+function sa_post_date_author( $post_id, $wrapper ) {
+    echo sa_get_post_date_author( $post_id );
+}
+    function sa_get_post_date_author( $post_id, $wrapper = 'p' ) {
+        if ( empty( $post_id ) ) {
+            $post_id = get_the_ID();
+        }
+        $output = '';
+
+        $date = sprintf( '<time class="entry-date" datetime="%1$s">%2$s</time>',
+        esc_attr( get_the_date( 'c', $post_id ) ),
+        esc_html( get_the_date( '', $post_id ) )
+        );
+
+        $author_id = get_the_author_meta( 'ID' );
+        $author_name = bp_core_get_user_displayname( $author_id );
+        $author = sprintf( '<span class="author vcard"><a class="url fn n" href="%1$s" title="%2$s" rel="author">%3$s</a></span>',
+        // esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+        //Use the BuddyPress profile instead
+        esc_url( bp_core_get_user_domain( $author_id ) ),
+        esc_attr( sprintf( __( 'View all posts by %s', 'twentytwelve' ), $author_name ) ),
+        $author_name
+        );
+
+        if ( $date && $author ) {
+            $output = '<' . $wrapper . ' class="sa-policy-date">Posted on ' . $date . '<span class="by-author"> by ' . $author . '</span>.' . '</' . $wrapper . '>';
+        }
+
+        return $output;
+    }
 
 /**
  * Output html for the content-by-advocacy-target area on the group's home page.

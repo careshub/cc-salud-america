@@ -4,7 +4,7 @@ $heroes = new WP_Query( sa_get_query() );
 $total_pages = $heroes->max_num_pages;
 
 while ( $heroes->have_posts() ) : $heroes->the_post();
-    bp_get_template_part( 'groups/single/saheroes/hero-short' );
+    bp_get_template_part( 'groups/single/saheroes/hero-short-general' );
 endwhile;
 
 sa_section_content_nav( 'nav-below', $total_pages );

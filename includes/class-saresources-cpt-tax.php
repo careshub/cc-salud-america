@@ -312,7 +312,10 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			// Add a nonce field so we can check for it later.
 			wp_nonce_field( $this->nonce_name, $this->nonce_value );
 			?>
+			<?php // This no longer makes sense because the Resources Archive now displays all resources in order of recency.
+			/* ?>
 			<p><input type="checkbox" id="saresource_promote" name="saresource_promote" <?php checked( $saresource_promote, 'on' ); ?> > <label for="saresource_promote">Promote to Resources <em>(visible independent of related policies)</em></label></input></p>
+			<?php */ ?>
 
 			<p><strong>Source Date</strong><br>
 				<input type='text' name='saresource_date' id='saresource_date' value='<?php

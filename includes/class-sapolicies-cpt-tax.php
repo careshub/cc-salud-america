@@ -1192,7 +1192,7 @@ function sa_taxonomy_filter_queries( $query ) {
 function sa_the_topic_color ( $tax_term ) {
 	echo sa_get_topic_color( $tax_term );
 }
-	function sa_get_topic_color( $tax_term ){
+	function sa_get_topic_color( $tax_term ) {
 		switch ( $tax_term ) {
 					case 'sa-active-play':
 					case 'sa-healthier-schools':
@@ -1320,18 +1320,21 @@ function cc_the_policy_progress_tracker( $progress ) {
 			$progress_label = 'in emergence';
 		 break;
 		}
-?>
-
-<div class="meter-box clear">
-	<p class="visible-mini">This change is <a href="/saresources/spectrum/" title="More information about policy development"><?php echo $progress_label; ?></a>.</p>
-	<ol class="progtrckr visible-maxi" data-progtrckr-steps="4">
-		<li class="<?php echo ( in_array($progress, array('emergence', 'development', 'enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Emergence</a></li><!--
-		--><li class="<?php echo ( in_array($progress, array('development', 'enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Development</a></li><!--
-		--><li class="<?php echo ( in_array($progress, array('enactment', 'implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Enactment</a></li><!--
-		--><li class="<?php echo ( in_array($progress, array('implementation')) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a clear="" href="/groups/salud-america/pages/the-science-behind-healthy-change/">Implementation</a></li>
-	</ol>
-</div> <!-- end .meter-box -->
-<?php
+	?>
+	<div class="meter-box clear">
+		<p class="visible-mini">This change is <a href="/groups/salud-america/pages/the-science-behind-healthy-change/" title="More information about policy development"><?php echo $progress_label; ?></a>.</p>
+		<div class="visible-maxi">
+			<h5 style="margin-bottom:0;">Where does this issue stand?</h5>
+			<p><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Learn more</a> about the steps behind healthy policy changes!</p>
+			<ol class="progtrckr" data-progtrckr-steps="4">
+				<li class="<?php echo ( in_array( $progress, array('emergence', 'development', 'enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Emergence</a></li><!--
+				--><li class="<?php echo ( in_array( $progress, array('development', 'enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Development</a></li><!--
+				--><li class="<?php echo ( in_array( $progress, array('enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Enactment</a></li><!--
+				--><li class="<?php echo ( in_array( $progress, array('implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Implementation</a></li>
+			</ol>
+		</div>
+	</div> <!-- end .meter-box -->
+	<?php
 }
 /* Filter the page title for certain Salud America page.
 *  filters value in wp_title

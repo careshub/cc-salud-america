@@ -1,12 +1,12 @@
 <?php
 $custom_fields = get_post_custom($post->ID);
 $terms = get_the_terms( $post->ID, 'sa_advocacy_targets' );
-if ( ! empty ($terms) ) :
-    foreach ( $terms as $term ) {
-        $advocacy_targets[] = '<a href="' .get_term_link($term->slug, 'sa_advocacy_targets') .'">'.$term->name.'</a>';
-    }
-    $advocacy_targets = join( ', ', $advocacy_targets );
-endif; //check for empty terms
+// if ( ! empty ($terms) ) :
+//     foreach ( $terms as $term ) {
+//         $advocacy_targets[] = '<a href="' .get_term_link($term->slug, 'sa_advocacy_targets') .'">'.$term->name.'</a>';
+//     }
+//     $advocacy_targets = join( ', ', $advocacy_targets );
+// endif; //check for empty terms
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class( array( 'hero-short-general', 'sa-item-short-form', 'clear' ) ); ?>>
@@ -28,14 +28,8 @@ endif; //check for empty terms
             <p class="location"><?php salud_the_location( 'sa_success_story' ); ?></p>
         </header>
 
-        <p><?php
-        $excerpt = get_the_excerpt();
-        if ( ! empty( $excerpt ) ) {
-            echo $excerpt;
-        } else {
-            the_content();
-        }
-        ?></p>
+        <?php the_excerpt(); ?>
+
         <?php twentytwelve_entry_meta(); ?>
     </div><!-- .entry-content -->
 </article><!-- #post -->
