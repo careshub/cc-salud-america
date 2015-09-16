@@ -84,6 +84,7 @@ class CC_Salud_America {
 
 		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
 
+		// Buid home page notices to show, we wrap them in the appropriate container.
 		add_action( 'cc_group_home_page_before_content', array( $this, 'build_home_page_notices' ) );
 
 		// Add activity stream items when policies are published
@@ -497,12 +498,31 @@ class CC_Salud_America {
 			return;
 		}
 
-		$notices = apply_filters( 'sa_group_home_page_notices', '' );
+		$notices = apply_filters( 'sa_group_home_page_notices', array() );
 
-		if ( ! empty( $notices ) ){
+		if ( ! empty( $notices ) ) {
 			?>
-			<div id="message" class="error">
-				<?php echo $notices; ?>
+			<div style="margin-top:1.4em;">
+				<div class="Grid Grid--gutters Grid--full large-Grid--fit Grid--flexCells">
+					<?php
+					// Sort the notices in descending order so the most recent is first.
+					krsort( $notices );
+					foreach ( $notices as $key => $notice ) {
+					?>
+						<div class="Grid-cell sa-notice-item notice-<?php echo $key; ?><?php
+						if ( count( $notices ) > 2 ) { echo ' three-or-more'; } ?>">
+							<div class="notice-inset background-light-gray">
+								<?php if ( has_post_thumbnail( $key ) ) : ?>
+						 			<a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>" class="notice-image-link"><?php echo get_the_post_thumbnail( $key, 'thumbnail' ); ?></a>
+					 			<?php endif; ?>
+					 			<span class="sa-action-phrase"><?php echo $notice['action-phrase']; ?></span><br />
+					 			<h4 class="sa-notice-title"><a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>"><?php echo apply_filters( 'the_title', $notice['title'] ); ?></h4></a>
+				 			</div>
+				 		</div>
+				 	<?php
+					}
+					?>
+				</div>
 			</div>
 			<?php
 		}

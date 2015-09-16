@@ -90,7 +90,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Current and past video contests held in the Salud America group.',
-	        'supports' => array( 'title', 'editor', 'author', 'comments' ),
+	        'supports' => array( 'title', 'editor', 'author', 'comments', 'thumbnail' ),
 	        'taxonomies' => array( 'sa_advocacy_targets', 'sa_policy_tags' ),
 	        'public' => true,
 	        'show_ui' => true,
@@ -213,7 +213,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		function sa_video_contest_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
 			$end_date = maybe_unserialize( $custom[ 'sa_video_contest_end_date' ][0] );
-			$stem_sentence = $custom[ 'sa_video_contest_notice_stem' ][0];
+			$stem_sentence = $custom[ 'sa_notice_box_stem' ][0];
 			$votes = sa_video_contest_count_votes( $post->ID );
 
 			// Add a nonce field so we can check for it later.
@@ -231,14 +231,15 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 				<p class="info">Set the start date by scheduling the publication date in the "Publish" box.</p>
 				<h4>Hub Home Page Notice Box Title</h4>
 				<p>
-					<input type='text' name='sa_video_contest_notice_stem' id='sa_video_contest_notice_stem' value='<?php
+					<input type='text' name='sa_notice_box_stem' id='sa_notice_box_stem' value='<?php
 						if ( ! empty( $stem_sentence) ) {
 							echo $stem_sentence;
 						}
 					 ?>'/>
 				</p>
 				<p class="info">This will be output in the notices box on the hub home page:<br />
-					VOTE &amp; WIN: <em>notice box title</em>
+					CONTEST ALERT <br />
+					<em>&laquo;notice box title&raquo;</em>
 				</p>
 
 			</div>
@@ -306,7 +307,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			return false;
 		}
 		// Create array of fields to save
-		$meta_fields_to_save = array( 'sa_video_contest_end_date', 'sa_video_contest_notice_stem' );
+		$meta_fields_to_save = array( 'sa_video_contest_end_date', 'sa_notice_box_stem' );
 		// Convert the end date for storage.
 		if ( ! empty( $_POST[ 'sa_video_contest_end_date' ] ) ) {
 			$_POST[ 'sa_video_contest_end_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_video_contest_end_date' ] );
@@ -468,13 +469,24 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		if ( $contest->have_posts() ) {
         	while ( $contest->have_posts() ):
         		$contest->the_post();
-        		$post_meta = get_post_meta( get_the_ID() );
-        		$end_date = $post_meta['sa_video_contest_end_date'][0];
-        		$teaser = $post_meta['sa_video_contest_notice_stem'][0];
-		 		$notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . get_the_permalink() . '"><span class="sa-action-phrase">Vote &amp; Win:</span>&ensp;';
-		 		$notices .= apply_filters( 'the_title', $teaser );
-		 		$notices .= '</a></h4>';
-		 		$notices .= '<a class="button" href="' . get_the_permalink() . '">Vote Now</a></div>';
+        		$post_id = get_the_ID();
+        		// $post_meta = get_post_meta( $post_id );
+        		// $end_date = $post_meta['sa_video_contest_end_date'][0];
+        		// $teaser = $post_meta['sa_video_contest_notice_stem'][0];
+		 		// $notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . get_the_permalink() . '"><span class="sa-action-phrase">Vote &amp; Win:</span>&ensp;';
+		 		// $notices .= apply_filters( 'the_title', $teaser );
+		 		// $notices .= '</a></h4>';
+		 		// $notices .= '<a class="button" href="' . get_the_permalink() . '">Vote Now</a></div>';
+        		$message = get_post_meta( $post_id, 'sa_notice_box_stem', true );
+        		if ( empty( $message ) ) {
+        			$message = get_the_title();
+        		}
+
+        		$notices[ $post_id ] = array(
+        			'action-phrase' => 'Contest Alert',
+        			'permalink'		=> get_the_permalink(),
+        			'title'			=> $message
+    			);
 			endwhile;
 			wp_reset_query();
 		}

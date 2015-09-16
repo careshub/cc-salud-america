@@ -78,7 +78,7 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Tweetchats sponsored by Salud America',
-	        'supports' => array( 'title' ),
+	        'supports' => array( 'title', 'thumbnail' ),
 	        'public' => true,
 	        'show_ui' => true,
 	        'show_in_menu' => 'salud_america',
@@ -185,7 +185,9 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 		add_meta_box( 'sa_tweetchat_meta_box', 'Tweetchat Details', array( $this, 'sa_tweetchat_meta_box' ), $this->post_type, 'normal', 'high' );   ;
 	}
 		function sa_tweetchat_meta_box( $post ) {
-			$date = get_post_meta( $post->ID, 'sa_tweetchat_date', true );
+			$custom = get_post_custom( $post->ID );
+			$date = $custom[ 'sa_tweetchat_date' ][0];
+			$stem_sentence = $custom[ 'sa_notice_box_stem' ][0];
 
 			// Add a nonce field so we can check for it later.
 			wp_nonce_field( $this->nonce_name, $this->nonce_value );
@@ -198,6 +200,18 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 							echo sa_convert_to_human_date( $date );
 						}
 					 ?>'/>
+				</p>
+				<h4>Hub Home Page Notice Box Title</h4>
+				<p>
+					<input type='text' name='sa_notice_box_stem' id='sa_notice_box_stem' value='<?php
+						if ( ! empty( $stem_sentence) ) {
+							echo $stem_sentence;
+						}
+					 ?>'/>
+				</p>
+				<p class="info">This will be output in the notices box on the hub home page:<br />
+					TWEETCHAT ALERT<br />
+					DATE: <em>&laquo;notice box title&raquo;</em>
 				</p>
 			</div>
 
@@ -229,7 +243,7 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 			return false;
 		}
 		// Create array of fields to save
-		$meta_fields_to_save = array( 'sa_tweetchat_date' );
+		$meta_fields_to_save = array( 'sa_tweetchat_date', 'sa_notice_box_stem' );
 		// Convert the end date for storage.
 		if ( ! empty( $_POST[ 'sa_tweetchat_date' ] ) ) {
 			$_POST[ 'sa_tweetchat_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_tweetchat_date' ] );
@@ -273,12 +287,19 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
         if ( $tweetchat->have_posts() ) {
         	while ( $tweetchat->have_posts() ):
         		$tweetchat->the_post();
-        		$date = get_post_meta( get_the_ID(), 'sa_tweetchat_date', true );
-        		$date = sa_convert_to_short_human_date( $date );
-		 		$notices .= PHP_EOL . '<div class="sa-notice-item"><h4 class="sa-notice-title"><a href="' . sa_get_group_permalink() . 'tweetchats"><span class="sa-action-phrase">Tweetchat ' . $date . ':</span>&ensp;';
-		 		$notices .= get_the_title();
-		 		$notices .= '</a></h4>';
-		 		$notices .= '<a class="button" target="_blank" href="https://twitter.com/SaludToday">Follow the Conversation</a> <a class="button" href="' . sa_get_group_permalink() . 'tweetchats">Learn More</a></div>';
+        		$post_id = get_the_ID();
+				$custom = get_post_custom( $post_id );
+        		$date = sa_convert_to_short_human_date( $custom[ 'sa_tweetchat_date' ][0] );
+				$message = $custom[ 'sa_notice_box_stem' ][0];
+        		if ( empty( $message ) ) {
+        			$message = get_the_title();
+        		}
+
+        		$notices[ $post_id ] = array(
+        			'action-phrase' => 'Tweetchat Alert',
+        			'permalink'		=> sa_get_group_permalink() . 'tweetchats',
+        			'title'			=> $date . ': ' . $message
+        			);
 			endwhile;
 			// Put the post data back.
 		   	$post = $stored_post;
