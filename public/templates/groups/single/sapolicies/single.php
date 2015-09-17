@@ -1,59 +1,70 @@
 <?php
+/**
+ * Used to display "Changes"--the sapolicies post type.
+ */
+$user_id = get_current_user_id();
+$is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
+
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
-    $main_post_id = $post->ID;
+    $main_post_id = get_the_ID();
     $custom_fields = get_post_custom( $main_post_id );
-    $terms = get_the_terms( $main_post_id, 'sa_advocacy_targets' );
-    $advocacy_targets = array();
-    if ( ! empty( $terms ) ) {
-        foreach ( $terms as $term ) {
-            $advocacy_targets[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( 'policies', $term->taxonomy, $term->slug ) . '">' . $term->name . '</a>';
-        }
-        $advocacy_targets = join( ', ', $advocacy_targets );
-    }
 
-    $tags = get_the_terms( $main_post_id, 'sa_policy_tags' );
-    $policy_tags = array();
-    if ( ! empty( $tags ) ) {
-        foreach ( $tags as $tag ) {
-            $policy_tags[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( 'policies', $tag->taxonomy, $tag->slug ) . '">' . $tag->name . '</a>';
-        }
-        $policy_tags = join( ', ', $policy_tags );
-    }
     ?>
-
-    <article id="post-<?php the_ID(); ?>" <?php post_class( 'main-article' ); ?>>
-        <div class="entry-content">
+    <article id="post-<?php echo $main_post_id; ?>" <?php post_class( 'clear main-article' ); ?>>
+        <div class="entry-content clear">
             <header class="entry-header clear">
-                <h1 class="entry-title screamer sapurple"><?php the_title(); ?></h1>
-                <?php //echo "<br />"; ?>
-                <div class="header-meta clear">
-                    <?php salud_the_target_icons() ?>
-                    <p class="location"><?php salud_the_location( 'sapolicies' ); ?> <span class="sa-policy-date">Posted <?php echo get_the_date(); ?>.</span></p>
-
-                    <?php cc_the_policy_progress_tracker( $custom_fields['sa_policystage'][0] ); ?>
-                </div>
+                <h1 class="entry-title screamer sablue"><?php the_title(); ?></h1>
+                <?php sa_single_post_header_meta( $main_post_id ); ?>
             </header>
 
+            <?php // Featured Image and indicator dials ?>
+            <div class="sa-featured-image-container">
+                <?php
+                //First, show the thumbnail or the fallback image.
+                if ( has_post_thumbnail() ) {
+                    $thumbnail_id = get_post_thumbnail_id();
+                    ?>
+                    <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
+                        <?php the_post_thumbnail( 'feature-front' ); ?>
+                        <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
+                    </div>
+                    <?php
+                } else {
+                    echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
+                }
+
+                // Next we show the dials for this region.
+                // @TODO: this could be deferred, pending some changes to the JSON requests/returns.
+                $geo_terms = get_the_terms( $main_post_id, 'geographies' );
+                // Get the GeoID if possible, else use the whole US
+                $geoid = ( ! empty( $geo_terms ) ) ? current( $geo_terms )->description : '01000US';
+
+                if ( $geoid ) : ?>
+                    <div class="indicator-dials horizontal aligncenter">
+                    <h5 style="margin-bottom:0;">Area at a glance</h5>
+                        <!-- Default dial -->
+                        <div id="dial-779" class="dial-container">
+                            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=779'></script>
+                        </div>
+                        <!-- Placeholders for other dials -->
+                        <div id="dial-781" class="dial-container" style="display: none;">
+                            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=781'></script>
+                        </div>
+                        <div id="dial-760" class="dial-container" style="display: none;">
+                            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=760'></script>
+                        </div>
+                        <!-- Dial display controls -->
+                        <input type="button" class="dial-controls" value="Poverty rate" data-indicator-id='779' />
+                        <input type="button" class="dial-controls" value="Children in Poverty" data-indicator-id='781' />
+                        <input type="button" class="dial-controls" value="Pop. With No HS Diploma" data-indicator-id='760' />
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php sa_post_date_author( $main_post_id, 'p' ); ?>
+
             <?php the_content(); ?>
-
-            <?php if ( ! empty( $advocacy_targets ) ) { ?>
-                <p class="sa-policy-meta">Advocacy targets:
-                    <?php echo $advocacy_targets; ?>
-                </p>
-            <?php } ?>
-
-            <?php if ( ! empty( $policy_tags ) ) { ?>
-                <p class="sa-policy-meta">Tags :
-                    <?php echo $policy_tags; ?>
-                </p>
-            <?php } ?>
-
-            <?php if ( ! empty( $custom_fields['sa_policytype'][0] ) ) { ?>
-                <p class="sa-policy-meta">This change is of the type:
-                    <?php echo $custom_fields['sa_policytype'][0]; ?>
-                </p>
-            <?php } ?>
 
             <?php
                 if ( function_exists('cc_add_comment_button') ) {
@@ -65,275 +76,99 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                 }
             ?>
 
-            <div class="clear"></div>
-            <!-- Finding and listing related resources. -->
-            <?php // args
+            <?php /* ?>
+            <?php if ( ! empty( $custom_fields['sa_policytype'][0] ) ) { ?>
+                <p class="sa-policy-meta">This change is of the type:
+                    <?php echo $custom_fields['sa_policytype'][0]; ?>
+                </p>
+            <?php } ?>
+            <?php */ ?>
 
-                // $looky = '%"' . $post->ID . '"%';
-                // $related_resource_results = $wpdb->get_results( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = 'sa_resource_policy' AND meta_value LIKE %s", $looky ) );
+         </div><!-- .entry-content -->
 
-                // wp_reset_postdata();
-                //@TODO This is broken, and unused. If we wish to enable this, we should do it better.
-                $related_resource_results = 0;
-                if ( $related_resource_results ) {
-                    //     //Build a 1-dimensional array of associated post IDs
-                    //     foreach ($related_resource_results as $relation) {
-                    //         $associated_resources[] = $relation->post_id;
-                    //     }
-                    // print_r($associated_resources);
+        <footer class="entry-meta clear">
+            <?php
+            sa_post_terms_meta( $main_post_id, 'sapolicies' );
+            cc_the_policy_progress_tracker( $custom_fields['sa_policystage'][0] );
+            edit_post_link( 'Edit This Post', '<span class="edit-link">', '</span>', $main_post_id );
+            ?>
+        </footer>
 
-                    $args = array(
-                        'post_type' => 'saresources',
-                        'meta_query' => array(
-                            array(
-                                'key'     => 'saresource_policy',
-                                'value'   => '\"%' . $post->ID . '%\"',
-                                'compare' => 'LIKE',
-                            ),
-                        ),
-
-                    );
-                    $associated_docs = new WP_Query( $args );
-
-                    // echo "<pre>";
-                    // var_dump($associated_docs);
-                    // echo "</pre>";
-
-                    if ( $associated_docs->have_posts() ) { ?>
-
-                    <h5>Associated Resources</h5>
-                    <ul id="sa_associated_resources">
-
-                    <?php while ( $associated_docs->have_posts() ) : $associated_docs->the_post();
-                    $assoc_tags = get_the_terms( $post->ID, 'sa_resource_cat' );
-                        if ($assoc_tags) {
-                            foreach ( $assoc_tags as $assoc_tag ) {
-                                $resource_tags[] = '<a href="' . get_term_link($assoc_tag->slug, 'sa_resource_cat') .'">'.$assoc_tag->name.'</a>';
-                            }
-                            $resource_tags = join( ', ', $resource_tags );
-                        }
-                ?>
-                        <li>
-                            <p class="sa_assoc_resource_title">
-                                <em>
-                                    <?php
-                                    // @TODO: What is "get_field"?
-                                    $resource_type = get_field( "sa_resource_type" ) ? get_field( "sa_resource_type" ) : '' ;
-                                    if ( $resource_type )  { ?>
-                                        <?php the_field( "sa_resource_type" ); ?>:
-                                    <?php } ?>
-                                </em>
-                                <?php if ( $resource_type == 'Link' ) {
-                                    $link_url = get_field( 'sa_resource_link' );
-                                    ?>
-
-                                    <a href="<?php echo $link_url ; ?>" title="<?php the_title(); ?>" ><?php the_title(); ?></a>
-
-                                <?php } else { ?>
-
-                                    <?php the_title(); ?>
-
-                                <?php } ?>
-
-                            </p>
-                            <div class="sa_assoc_resource_title">
-                                <?php the_content(); ?>
-                            </div>
-                        <?php if ( ! empty( $resource_tags ) ) { ?>
-                            <p class="resource-tags">Tags :
-                                <?php echo $resource_tags; ?>
-                            </a></p>
-                        <?php } ?>
-
-                        </li>
-                    <?php endwhile; ?>
-                    <?php
-                    wp_reset_postdata();
-                    ?>
-                        </ul>
-                <?php } //if ( $associated_docs ) : ?>
-
-            <?php } // End if ($related_resource_results) check ?>
-
-        </div><!-- .entry-content -->
-        <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
     </article><!-- #post -->
 <?php
 comments_template();
 endwhile; // end of the loop. ?>
 
-<div class="policy-meta">
-<?php
-$geogterm = wp_get_object_terms( $post->ID, 'geographies' );
-if( ! empty( $geogterm ) && ! is_wp_error( $geogterm ) ){
-    $geoid = current( $geogterm )->description;
-    $geoidstate = '04000' . substr($geoid, 5, 4);
-}
-?>
-    <h3 class="screamer sapink">Related Data for this Region</h3>
-
-    <div class="half-block">
-        <!-- @TODO: Use responsive version. -->
-        <h6 style="margin-top:0;">Percent Adults Age 18+ Obese (BMI >= 30)  by County</h6>
-        <script src='http://maps.communitycommons.org/jscripts/mapWidget.js?ids=348&vm=348&w=190&h=190&geoid=<?php echo $geoidstate; ?>&l=1'></script>
-    </div>
-
-    <div class="half-block">
-        <div id="dial">
-            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=779'></script>
-        </div>
-        <input type="button" id="btnSubmit1" value="Poverty rate" onclick="changeDial('779')" />
-        <input type="button" id="btnSubmit2" value="Children in Poverty " onclick="changeDial('781')" />
-        <input type="button" id="btnSubmit3" value="Pop. With No HS Diploma" onclick="changeDial('760')" />
-    </div>
-</div>
-
-<div class="related-policies">
-    <?php
-    // Get related policies by advocacy target =====================================
-    $source_post_id = $post->ID;
-    $exclude_posts = array( $source_post_id );
-    $advocacy_targets_id_array = array();
-    $terms = get_the_terms( $source_post_id, 'sa_advocacy_targets' );
-    if ( ! empty ( $terms ) ) {
-        foreach ( $terms as $term ) {
-            $advocacy_targets_id_array[] = $term->term_id;
-        }
-    }
-
-    $related_policies_args = array(
-        'post_type' => 'sapolicies',
-        'post__not_in' => $exclude_posts,
-        'posts_per_page' => 3,
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'sa_advocacy_targets',
-                'field' => 'id',
-                'terms' => $advocacy_targets_id_array,
-            )
-        )
-    );
-
-    $related_policies = new WP_Query( $related_policies_args );
-    if ( $related_policies->have_posts() ) {
-        ?>
-        <div class="related-by-topic">
-            <h3 class="screamer sagreen">Related Changes by Topic</h3>
-            <?php
-            while ( $related_policies->have_posts() ) : $related_policies->the_post();
-                // $body = apply_filters( 'the_content', get_the_content() );
-                // $body = ellipsis( $body );
-                ?>
-                <div class="third-block">
-                    <div id="post-<?php the_ID(); ?>" <?php post_class( 'sa-item-short-form' ); ?>>
-                        <div class="entry-content">
-                            <header class="entry-header clear">
-                                <h4 class="entry-title">
-                                <a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
-                                </h4>
-                                <?php the_excerpt(); ?>
-                            </header>
-
-                        </div> <!-- entry-content -->
-                    </div>
-                </div>
-                <?php
-                $exclude_posts[] = $post->ID;
-            endwhile; // end of the loop.
-            wp_reset_postdata();
-        ?>
-        </div> <!-- #related-by-topic -->
-    <?php
-    } // end if ( $related_policies->have_posts() )
-    ?>
-
-      <!-- @TODO: Fix these hardcoded links -->
-        <div class="related-what-can-you-do clear">
-            <h3 class="screamer sablue">What Can You Do?</h3>
-
-            <a href="/salud-america/share-your-own-stories/" class="column1of3 aligncenter">
-                <img alt="Health" src="/wp-content/themes/CommonsRetheme/img/salud_america/Salud_Platform_WebReady_files/BeaStar_icon.png" width="100px"/><br />Start your own change!
-            </a>
-
-    <!-- @TODO: This block is pointless -->
-                <span class="column1of3 aligncenter">
-                <img alt="Health" src="/wp-content/themes/CommonsRetheme/img/salud_america/Salud_Platform_WebReady_files/AddChange_icon.png" width="100px"/><br />Connect with members in your area!
-            </span>
-      <!-- @TODO: Fix these hardcoded links -->
-            <a href="/salud-america/what-is-change/" class="column1of3 aligncenter">
-                <img alt="Health" src="/wp-content/themes/CommonsRetheme/img/salud_america/Salud_Platform_WebReady_files/WhatsChange_icon.png" width="100px"/><br />See how a change is made
-            </a>
-        </div>
-
-<?php
-// Get related posts by tag ====================================================
-$tags = get_the_terms( $source_post_id, 'sa_policy_tags' );
-$policy_tags_array = array();
-if ( ! empty ( $tags ) ) {
-    foreach ( $tags as $tag ) {
-        $policy_tags_array[] = $tag->term_id;
-    }
-}
-
-$related_policies_args = array(
-    'post_type' => 'sapolicies',
-    'post__not_in' => $exclude_posts,
-    'posts_per_page' => 3,
-    'tax_query' => array(
-        array(
-            'taxonomy' => 'sa_policy_tags',
-            'field' => 'id',
-            'terms' => $policy_tags_array,
-            'operator' => 'IN'
-        )
-    )
-);
-
-$related_policies = new WP_Query( $related_policies_args );
-if ( $related_policies->have_posts() ) {
-?>
-    <div class="related-by-tag">
-        <h3 class="screamer saorange">Related Changes by Tag</h3>
-            <?php
-            while ( $related_policies->have_posts() ): $related_policies->the_post();
-            ?>
-                <div class="third-block">
-                    <div id="post-<?php the_ID(); ?>" <?php post_class( 'sa-item-short-form' ); ?>>
-                        <div class="entry-content">
-                            <header class="entry-header clear">
-                                <h4 class="entry-title">
-                                <a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
-                                </h4>
-                                <?php the_excerpt(); ?>
-                            </header>
-
-                        </div> <!-- entry-content -->
-                    </div>
-                </div>
-            <?php
-            endwhile; // end of the loop.
-            wp_reset_postdata();
-            ?>
-    </div>
-<?php
-} // if ( $related_policies->have_posts() )
-?>
-</div> <!-- .related-policies -->
-
 <script type="text/javascript">
-    function changeDial(id) {
     var geoid = '<?php echo $geoid; ?>';
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = "http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=" + geoid + "&id=" + id;
+    // var s = document.createElement("script");
+    // s.type = "text/javascript";
+    // s.src = "http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=" + geoid + "&id=" + id;
 
-    var dial = document.getElementById('dial');
-    if (!document._write) document._write = document.write;
-    document.write = function (str) {
-        dial.innerHTML += str;
-    };
 
-    while (dial.firstChild) {  dial.removeChild(dial.firstChild); }
-    dial.appendChild(s);
-    }
+    // function changeDial(id) {
+    //     var dial = document.getElementById('dial');
+    //     if (!document._write) document._write = document.write;
+    //     document.write = function (str) {
+    //         dial.innerHTML += str;
+    //     };
+
+    //     while (dial.firstChild) {  dial.removeChild(dial.firstChild); }
+    //     dial.appendChild(s);
+    // }
+
+    jQuery( document ).ready(function( $ ) {
+        $( '.dial-controls' ).click(function( e ) {
+            var indicator_id = jQuery( this ).data( 'indicator-id' );
+            var target_div_id = 'dial-' + indicator_id;
+            var target_div_empty = jQuery( '#' + target_div_id ).html() ? false : true;
+
+            console.log( "Handler for .click() called." );
+            console.log( "id is: " + indicator_id );
+            console.log( "target_div_empty is: " + target_div_empty );
+            console.log( "geoid is: " + geoid );
+
+            // This doesn't work as is.
+            // if ( target_div_empty ) {
+            //     // If the target div is empty, populate it.
+
+            //     // This is a hack. This widget should only be loaded at page load because it uses document.write().
+            //     // We're loading these widgets asynchronously, so we have to overload doc.write.
+            //     var dial_container = document.getElementById( target_div_id );
+            //     console.log( "dial_container is: " );
+            //     console.log( dial_container );
+
+            //     if ( ! document._write ) {
+            //         document._write = document.write;
+            //     }
+            //     document.write = function (str) {
+            //         dial_container.innerHTML += str;
+            //     };
+
+            //     console.log( "target url: http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=" + geoid + "&id=" + indicator_id );
+
+            //     // Fetch the widget
+            //     // var s = document.createElement("script");
+            //     // s.type = "text/javascript";
+            //     // s.src = "http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=" + geoid + "&id=" + indicator_id;
+            //     jQuery.ajax({
+            //           url: "http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=" + geoid + "&id=" + indicator_id,
+            //           dataType: "script",
+            //           cache: true,
+            //           crossDomain: true
+            //     }).success(function( data, textStatus, jqxhr ) {
+            //         // console.log( data ); // Data returned
+            //         // console.log( textStatus ); // Success
+            //         // console.log( jqxhr.status );
+            //     });
+
+            // }
+
+            // Next, hide all of the dial containers then show the requested div.
+            $( '.dial-container' ).hide();
+            $( '#' + target_div_id ).show();
+
+        });
+    });
 </script>
+

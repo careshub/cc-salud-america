@@ -94,10 +94,10 @@
 		// float: right;
 		width: 100%;
 		article {
-			border-bottom: 1px solid @saorange;
-			margin-bottom: 24px;
-			margin-bottom: 1.71429rem;
-			padding-bottom: 0;
+			// border-bottom: 1px solid @saorange;
+			// margin-bottom: 24px;
+			// margin-bottom: 1.71429rem;
+			// padding-bottom: 0;
 			// overflow: auto;
 		&:last-child {
 			border-bottom: none;
@@ -225,7 +225,7 @@
 			// font-style: italic;
 		}
 		.sapolicies, .saresources {
-			.icon { margin-right: 2%; }
+			// .icon { margin-right: 2%; }
 			// h1, h2, h4, p {
 			// 	clear: none;
 			// 	margin: 0 0 .5em 0;
@@ -237,14 +237,6 @@
 				// border-bottom: 1px solid @sapurple;
 			}
 
-			.sa-policy-meta {
-				.font-size(0.9);
-				margin-bottom: .4em;
-			}
-			.sa-policy-date {
-				color: #777;
-				margin-left: 2em;
-			}
 			#sa_associated_resources {
 				list-style: none;
 				li{
@@ -264,6 +256,14 @@
 					.font-size(0.9);
 				}
 			}
+		}
+		.sa-policy-meta {
+			.font-size(0.9);
+			margin-bottom: .4em;
+		}
+		.sa-policy-date {
+			color: #777;
+			// margin-left: 2em;
 		}
 		.related-policies, .taxonomy-policies {
 			h3 {
@@ -296,6 +296,9 @@
 		}
 		// Special cases for the short form articles
 		.sa-item-short-form {
+			margin-bottom: 2em;
+			padding-bottom: 2em;
+			border-bottom: 1px solid #DEDEDE;
 			.entry-content {
 				.entry-header {
 					.entry-title {
@@ -348,18 +351,29 @@
 			    margin-bottom: 14px;
 			    margin-bottom: 1rem;
 				}
-				h1 {
-					margin-top: 0;
-					margin-bottom: 1em !important;
-				}
+			h1 {
+				margin-top: 0;
+				// margin-bottom: 1em !important;
 			}
-			.learn-from-success-stories, .find-changes, .examples-of-change {
-				.third-block, .half-block {
-					margin-bottom: 1em;
-					padding-bottom: 1em;
-					border-bottom: none;
-				}
+			.policy-header-meta {
+				.font-size(.9);
 			}
+		}
+		.entry-meta {
+		    padding: 1em;
+		    margin-top: 1.7em;
+		    background-color: lighten( @graylight, 7% );
+		    .taxonomy-links {
+		    	margin-bottom: 1em;
+		    }
+		}
+		.learn-from-success-stories, .find-changes, .examples-of-change {
+			.third-block, .half-block {
+				margin-bottom: 1em;
+				padding-bottom: 1em;
+				border-bottom: none;
+			}
+		}
 		.salud-hero-video-summary h3 {
 			margin-top:0;
 		}
@@ -386,9 +400,6 @@
 		.font-size(1);
 	}
 
-	#message.error {
-		border-left: 4px solid @sared;
-	}
 	.sa-notice-item {
 		// margin-top: 1.2em;
 		&:first-of-type {
@@ -430,14 +441,71 @@
 		}
 	}
 
-	// Add space on archive pages
 	&.changes,
 	&.resources,
 	&.heroes,
 	&.video-contest,
 	&.take-action {
 		#item-body {
+			// Add space on archive pages
 			margin-top: 2.2em;
+		}
+	}
+
+	&.single-item {
+		#item-body {
+			article {
+				// padding-bottom: 0;
+			}
+		}
+	}
+	// Big-bet links, used on single post pages.
+	.big-bet-link {
+		display: inline-block;
+		margin-right: 1em;
+		// font-weight: 700;
+		padding: 0 .4em;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+		color: @white;
+		// .font-size(1);
+		transition: all .2s ease;
+		background-color: @saorange;
+		// The colors vary
+		&.sayellow {
+			background-color: @sayellow;
+		}
+		&.sagreen {
+			background-color: @sagreen;
+		}
+		&.sablue {
+			background-color: @sablue;
+		}
+		&.sapink {
+			background-color: @sapink;
+		}
+		&.sapurple {
+			background-color: @sapurple;
+		}
+		&:hover {
+			background-color: @ccblue;
+			color: @white;
+		}
+		&:visited {
+			color: @white;
+		}
+	}
+
+	// Featured image block, used on single pages.
+	.sa-featured-image-container {
+		float: none;
+		width: 100%;
+		margin-bottom: 2em;
+		.wp-caption-text {
+			margin-bottom: 0;
+		}
+		.dial-controls {
+			margin-right: .4em;
+			margin-bottom: .6em;
 		}
 	}
 }
@@ -484,7 +552,7 @@
 	}
 }
 
-.sa-active-playx30, .sa-active-spacesx30, .sa-better-food-in-neighborhoodsx30, .sa-healthier-school-snacksx30, .sa-healthier-marketingx30, .sa-sugary-drinksx30, .sa-healthy-weightx30, .sa-healthier-schoolsx30 {
+.sa-active-playx30, .sa-active-spacesx30, .sa-better-food-in-neighborhoodsx30, .sa-healthier-school-snacksx30, .sa-healthier-marketingx30, .sa-sugary-drinksx30, .sa-healthy-weightx30, .sa-healthier-schoolsx30, .sa-health-equityx30  {
 	background: url(../images/sa-sprites.png) no-repeat;
 	display: block;
 	float: left;
@@ -513,7 +581,7 @@
 	width: 90px;
 }
 
-.facebook-whx26, .twitter-whx26, .youtube-whx26, .sa-blog-wh-26x54, .sa-health-equityx30 {
+.facebook-whx26, .twitter-whx26, .youtube-whx26, .sa-blog-wh-26x54{
 	background: url(../images/sa-sprites.png) no-repeat;
 	display: inline-block;
 	vertical-align: middle;
@@ -680,6 +748,12 @@
 .sa-social-icons {
 	float: right;
 	width: 28%;
+}
+// Special cases for single policy pages
+.advo-target-thumbnail-link {
+	float: left;
+	margin: 0 22px 12px 0;
+	margin: 0 1.5833357rem 0.857142857rem 0;
 }
 //Styles for salud advanced search form
 #cc-adv-search{

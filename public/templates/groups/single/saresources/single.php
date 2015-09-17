@@ -1,46 +1,47 @@
 <?php
+/**
+ * Used to display "Resources"--the saresources post type.
+ */
+$user_id = get_current_user_id();
+$is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
+
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
-    //Fetch and human-readize the advocacy targets
-    $terms = get_the_terms( get_the_ID(), 'sa_advocacy_targets' );
-    $advocacy_targets = array();
-    if ( ! empty( $terms ) ) {
-        foreach ( $terms as $term ) {
-            $advocacy_targets[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( 'resources', $term->taxonomy, $term->slug ) . '">' . $term->name . '</a>';
-        }
-        $advocacy_targets = join( ', ', $advocacy_targets );
-    }
+    $main_post_id = get_the_ID();
+    $custom_fields = get_post_custom( $main_post_id );
 
-    //Fetch and human-readize the resource cats
-    $resource_cats = get_the_terms( get_the_ID(), 'sa_resource_cat' );
-    $resource_categories = array();
-    if ( ! empty( $resource_cats ) ) {
-        foreach ( $resource_cats as $cat ) {
-            $resource_categories[] = '<a href="' . sa_get_the_cpt_tax_intersection_link( 'resources', $cat->taxonomy, $cat->slug ) . '">' . $cat->name . '</a>';
-        }
-        $resource_categories = join( ', ', $resource_categories );
-    }
-?>
-    <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-        <div class="entry-content">
+    $geo_terms = get_the_terms( $post_id, 'geographies' );
+    // Get the GeoID if possible, else use the whole US
+    $geo_id = ( ! empty( $geo_terms ) ) ? current( $geo_terms )->description : '01000US';
+    ?>
+    <article id="post-<?php the_ID(); ?>" <?php post_class( 'clear main-article' ); ?>>
+        <div class="entry-content clear">
             <header class="entry-header clear">
-                <h1 class="entry-title"><?php the_title(); ?></h1>
-                <?php salud_the_target_icons(); ?>
+                <h1 class="entry-title screamer sayellow"><?php the_title(); ?></h1>
+                <?php sa_single_post_header_meta( $main_post_id ); ?>
             </header>
 
+            <?php // Featured Image and indicator dials ?>
+            <div class="sa-featured-image-container">
+                <?php
+                //First, show the thumbnail or the fallback image.
+                if ( has_post_thumbnail() ) {
+                    $thumbnail_id = get_post_thumbnail_id();
+                    ?>
+                    <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
+                        <?php the_post_thumbnail( 'feature-front' ); ?>
+                        <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
+                    </div>
+                    <?php
+                } else {
+                    echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
+                }
+                ?>
+            </div>
+
+            <?php sa_post_date_author( $main_post_id, 'p' ); ?>
+
             <?php the_content(); ?>
-
-            <?php if ( ! empty( $advocacy_targets ) ) { ?>
-                <p class="sa-policy-meta">Advocacy targets:
-                    <?php echo $advocacy_targets; ?>
-                </p>
-            <?php } ?>
-
-            <?php if ( ! empty( $resource_categories ) ) { ?>
-                <p class="sa-policy-meta">Categories :
-                    <?php echo $resource_categories; ?>
-                </p>
-            <?php } ?>
 
             <?php
                 if ( function_exists('cc_add_comment_button') ) {
@@ -52,11 +53,14 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                 }
             ?>
 
-            <div class="clear"></div>
-            <!-- Finding and listing related resources. -->
-
         </div><!-- .entry-content -->
-        <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
+
+        <footer class="entry-meta clear">
+            <?php
+            sa_post_terms_meta( $main_post_id, 'saresources' );
+            edit_post_link( 'Edit This Post', '<span class="edit-link">', '</span>', $main_post_id );
+            ?>
+        </footer>
     </article><!-- #post -->
     <?php comments_template(); ?>
 <?php endwhile; // end of the loop. ?>

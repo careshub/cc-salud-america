@@ -670,3 +670,74 @@ function sa_tabbed_content_by_adv_target() {
     </div> <!-- End .content-row -->
     <?php
 }
+
+/**
+ * Output html for the single post header meta.
+ * Includes taxonomy, location and the "sign up now" blocks.
+ *
+ * @since   1.2.0
+ * @param   int $post_id ID of post to process meta for.
+ *
+ * @return  html
+ */
+function sa_single_post_header_meta( $post_id = 0 ) {
+    if ( empty( $post_id ) ) {
+        $post_id = get_the_ID();
+    }
+    // Get the post_type
+    $post_type = get_post_type( $post_id );
+
+    // Set up the location
+    switch ( $post_type ) {
+        case 'sa_success_story':
+            // Set up the location.
+            $location_meta = get_post_meta( $post_id, 'sa_success_story_location', true );
+            $location = ( ! empty( $location_meta ) ) ? $location_meta : 'United States';
+            $map_link = sa_get_policy_map_base_url( '?address=' . urlencode( $location ) );
+        break;
+        case 'sapolicies':
+        case 'saresources':
+        default:
+            // Note that saresources don't have locations yet, so this may change.
+            $geo_terms = get_the_terms( $post_id, 'geographies' );
+            // Get the GeoID if possible, else use the whole US
+            $geo_id = ( ! empty( $geo_terms ) ) ? current( $geo_terms )->description : '01000US';
+            $map_link = sa_get_policy_map_base_url( '?geoid=' . $geo_id );
+            break;
+    }
+
+    ?>
+    <div class="Grid Grid--full large-Grid--fit">
+        <div class="Grid-cell background-light-gray">
+            <div class="inset-contents">
+                <?php salud_the_policy_target_icons( $post_id ); ?>
+            </div>
+        </div>
+        <div class="Grid-cell background-light-gray">
+            <div class="inset-contents">
+                <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map."><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/policy_map_thumb_90x90.png' ; ?>" class="alignleft" style="margin-top:0;"></a>
+                <p><strong><?php salud_the_location( $post_type ); ?></strong><br />
+                <span class="policy-header-meta">See all changes, resources, and Salud Heroes in <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map.">this area</a>!</span></p>
+            </div>
+        </div>
+        <?php
+        if ( ! $user_id || ! $is_sa_member ) {
+            ?>
+            <div class="Grid-cell background-light-gray">
+                <div class="inset-contents">
+                    <p><strong>How can you get involved?</strong><br />
+                    <span class="policy-header-meta">Become a Salud Leader and connect with others!</span><br />
+                    <?php if ( ! $user_id ) : ?>
+                        <a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em;text-shadow:none;">Register Now</a></div>
+                    <?php elseif ( ! $is_sa_member ) : ?>
+                        <div class="aligncenter" style="text-shadow:none;"><?php bp_group_join_button(); ?></div>
+                    <?php endif; ?>
+                    </p>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+}
