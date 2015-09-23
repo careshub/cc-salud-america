@@ -524,6 +524,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 			$developmentdatestg = $custom["sa_developmentdate_stg"][0];
 			$enactmentdatestg = $custom["sa_enactmentdate_stg"][0];
 			$implementationdatestg = $custom["sa_implementationdate_stg"][0];
+			$featured_video_url = $custom["sa_featured_video_url"][0];
 
 			if ( $sapolicy_type == null ){
 					$ptdef = "---Select a Policy Type---";
@@ -536,7 +537,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	?>
 	<!-- @TODO: switch types to a taxonomy
 				Also use sensible select-->
-			<strong>Type:</strong><br>
+			<h4>Type:</h4>
 			<select name="sa_policytype">
 				<option <?php selected( $sapolicy_type, "Legislation/Ordinance" ); ?> value="Legislation/Ordinance">Legislation/Ordinance</option>
 				<option <?php selected( $sapolicy_type, "Resolution" ); ?> value="Resolution">Resolution</option>
@@ -547,7 +548,13 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 				<option <?php selected( $sapolicy_type, "Design Manual" ); ?> value="Design Manual">Design Manual</option>
 				<option <?php selected( $sapolicy_type, "Other" ); ?> value="Other">Other</option>
 			</select>
-			<br><br>
+
+		<label for="sa_featured_video_url" class="description"><h4>Featured video URL</h4>
+			</label>
+		<input type="text" id="sa_featured_video_url" name="sa_featured_video_url" value="<?php echo esc_attr( $featured_video_url ); ?>" size="75" /><br />
+		<em>e.g.: http://www.youtube.com/watch?v=UueU0-EFido</em>
+		<hr />
+
 	<div id="leftcolumn2">
 			<h4>Stage:</h4>
 			<ul id="policy_stage_select">
@@ -791,7 +798,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		}
 
 		// Save policy meta
-		$meta_fields = array( 'sa_policytype', 'sa_policystage', 'sa_pre1', 'sa_pre2', 'sa_pre3', 'sa_dev1', 'sa_dev2', 'sa_dev3', 'sa_enact1', 'sa_enact2', 'sa_enact3', 'sa_post1', 'sa_post2', 'sa_post3', 'sa_dateenacted', 'sa_dateimplemented', 'sa_emergencedate_stg', 'sa_developmentdate_stg', 'sa_enactmentdate_stg' );
+		$meta_fields = array( 'sa_policytype', 'sa_policystage', 'sa_pre1', 'sa_pre2', 'sa_pre3', 'sa_dev1', 'sa_dev2', 'sa_dev3', 'sa_enact1', 'sa_enact2', 'sa_enact3', 'sa_post1', 'sa_post2', 'sa_post3', 'sa_dateenacted', 'sa_dateimplemented', 'sa_emergencedate_stg', 'sa_developmentdate_stg', 'sa_enactmentdate_stg', 'sa_featured_video_url' );
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields );
 
 		// Save Geography terms

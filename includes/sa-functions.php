@@ -363,7 +363,7 @@ function sa_get_query(){
 
         // On the video archive, only find stories with a set video url.
         if ( $section == 'heroes' && isset( $_GET['style'] ) && $_GET['style'] == 'videos' ) {
-            $query['meta_key'] = 'sa_success_story_video_url';
+            $query['meta_key'] = 'sa_featured_video_url';
         }
 
     }

@@ -17,8 +17,8 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
 
     // Set up the featured video.
     $video_url = '';
-    if ( ! empty( $post_meta['sa_success_story_video_url'] ) ) {
-        $video_url = current( $post_meta['sa_success_story_video_url'] );
+    if ( ! empty( $post_meta['sa_featured_video_url'] ) ) {
+        $video_url = current( $post_meta['sa_featured_video_url'] );
     }
     $video_embed_code = '';
     if ( ! empty( $video_url ) ) {

@@ -8,8 +8,17 @@ $is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
     $main_post_id = get_the_ID();
-    $custom_fields = get_post_custom( $main_post_id );
+    $post_meta = get_post_custom( $main_post_id );
 
+    // Set up the featured video.
+    $video_url = '';
+    if ( ! empty( $post_meta['sa_featured_video_url'] ) ) {
+        $video_url = current( $post_meta['sa_featured_video_url'] );
+    }
+    $video_embed_code = '';
+    if ( ! empty( $video_url ) ) {
+        $video_embed_code = wp_oembed_get( $video_url );
+    }
     ?>
     <article id="post-<?php echo $main_post_id; ?>" <?php post_class( 'clear main-article' ); ?>>
         <div class="entry-content clear">
@@ -21,17 +30,28 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
             <?php // Featured Image and indicator dials ?>
             <div class="sa-featured-image-container">
                 <?php
-                //First, show the thumbnail or the fallback image.
-                if ( has_post_thumbnail() ) {
-                    $thumbnail_id = get_post_thumbnail_id();
-                    ?>
-                    <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
-                        <?php the_post_thumbnail( 'feature-front' ); ?>
-                        <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
-                    </div>
+                // Show the featured video if one exists.
+                if ( ! empty( $video_embed_code ) ) { ?>
+                    <figure class="video-container">
+                        <?php echo $video_embed_code; ?>
+                    </figure>
                     <?php
                 } else {
-                    echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
+                    // Else show the post's featured image or a fallback.
+                    ?>
+                        <?php
+                        //First, show the thumbnail or the fallback image.
+                        if ( has_post_thumbnail() ) {
+                            $thumbnail_id = get_post_thumbnail_id();
+                            ?>
+                            <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
+                                <?php the_post_thumbnail( 'feature-front' ); ?>
+                                <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
+                            </div>
+                            <?php
+                        } else {
+                            echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
+                        }
                 }
 
                 // Next we show the dials for this region.
@@ -77,9 +97,9 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
             ?>
 
             <?php /* ?>
-            <?php if ( ! empty( $custom_fields['sa_policytype'][0] ) ) { ?>
+            <?php if ( ! empty( $post_meta['sa_policytype'][0] ) ) { ?>
                 <p class="sa-policy-meta">This change is of the type:
-                    <?php echo $custom_fields['sa_policytype'][0]; ?>
+                    <?php echo $post_meta['sa_policytype'][0]; ?>
                 </p>
             <?php } ?>
             <?php */ ?>
@@ -89,7 +109,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
         <footer class="entry-meta clear">
             <?php
             sa_post_terms_meta( $main_post_id, 'sapolicies' );
-            cc_the_policy_progress_tracker( $custom_fields['sa_policystage'][0] );
+            cc_the_policy_progress_tracker( $post_meta['sa_policystage'][0] );
             edit_post_link( 'Edit This Post', '<span class="edit-link">', '</span>', $main_post_id );
             ?>
         </footer>

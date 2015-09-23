@@ -317,12 +317,17 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			<p><input type="checkbox" id="saresource_promote" name="saresource_promote" <?php checked( $saresource_promote, 'on' ); ?> > <label for="saresource_promote">Promote to Resources <em>(visible independent of related policies)</em></label></input></p>
 			<?php */ ?>
 
-			<p><strong>Source Date</strong><br>
+			<label for="saresource_date"><h4>Source Date</h4></label>
 				<input type='text' name='saresource_date' id='saresource_date' value='<?php
 					if ( $saresource_date != "" ) {
 						echo $saresource_date;
 					}
-				 ?>'/></p>
+				 ?>'/>
+
+			<label for="sa_featured_video_url" class="description"><h4>Featured video URL</h4>
+			</label>
+			<input type="text" id="sa_featured_video_url" name="sa_featured_video_url" value="<?php echo esc_attr( $featured_video_url ); ?>" size="75" /><br />
+			<em>e.g.: http://www.youtube.com/watch?v=UueU0-EFido</em>
 			<?php
 			//@TODO: This is broken and not being used. Disabling for now.
 			/*
@@ -390,7 +395,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 		}
 
 		// Save meta
-		$meta_fields = array( "saresource_date", "saresource_policy", "saresource_promote" );
+		$meta_fields = array( "saresource_date", "saresource_policy", "saresource_promote", 'sa_featured_video_url' );
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields );
 
 	}

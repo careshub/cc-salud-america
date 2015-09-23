@@ -8,7 +8,17 @@ $is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
 $main_post = new WP_Query( sa_get_query() );
 while ( $main_post->have_posts() ) : $main_post->the_post();
     $main_post_id = get_the_ID();
-    $custom_fields = get_post_custom( $main_post_id );
+    $post_meta = get_post_custom( $main_post_id );
+
+    // Set up the featured video.
+    $video_url = '';
+    if ( ! empty( $post_meta['sa_featured_video_url'] ) ) {
+        $video_url = current( $post_meta['sa_featured_video_url'] );
+    }
+    $video_embed_code = '';
+    if ( ! empty( $video_url ) ) {
+        $video_embed_code = wp_oembed_get( $video_url );
+    }
 
     $geo_terms = get_the_terms( $post_id, 'geographies' );
     // Get the GeoID if possible, else use the whole US
@@ -21,23 +31,37 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                 <?php sa_single_post_header_meta( $main_post_id ); ?>
             </header>
 
-            <?php // Featured Image and indicator dials ?>
-            <div class="sa-featured-image-container">
+            <?php
+            // Show the featured video if one exists.
+            if ( ! empty( $video_embed_code ) ) { ?>
+                <div class="video-container-group video-right">
+                    <figure class="video-container">
+                        <?php echo $video_embed_code; ?>
+                    </figure>
+                </div>
                 <?php
-                //First, show the thumbnail or the fallback image.
-                if ( has_post_thumbnail() ) {
-                    $thumbnail_id = get_post_thumbnail_id();
-                    ?>
-                    <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
-                        <?php the_post_thumbnail( 'feature-front' ); ?>
-                        <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
-                    </div>
-                    <?php
-                } else {
-                    echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
-                }
+            } else {
+                // Else show the post's featured image or a fallback.
                 ?>
-            </div>
+                <div class="sa-featured-image-container">
+                    <?php
+                    //First, show the thumbnail or the fallback image.
+                    if ( has_post_thumbnail() ) {
+                        $thumbnail_id = get_post_thumbnail_id();
+                        ?>
+                        <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
+                            <?php the_post_thumbnail( 'feature-front' ); ?>
+                            <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
+                        </div>
+                        <?php
+                    } else {
+                        echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
+                    }
+                    ?>
+                </div>
+                <?php
+            }
+            ?>
 
             <?php sa_post_date_author( $main_post_id, 'p' ); ?>
 

@@ -9,7 +9,7 @@
 global $post;
 //print_r($post);
 // echo 'META:';
-$video_url = get_post_meta( $post->ID, 'sa_success_story_video_url', true );
+$video_url = get_post_meta( $post->ID, 'sa_featured_video_url', true );
 if ( !empty( $video_url ) ) {
     $video_embed_code = wp_oembed_get( $video_url );
 }

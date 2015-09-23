@@ -5,7 +5,7 @@ $total_pages = $heroes->max_num_pages;
 
 while ( $heroes->have_posts() ) : $heroes->the_post();
 
-    $video_url = get_post_meta( get_the_ID(), 'sa_success_story_video_url', 'true' );
+    $video_url = get_post_meta( get_the_ID(), 'sa_featured_video_url', 'true' );
     $video_embed_code = '';
     if ( ! empty( $video_url ) ) {
         $video_embed_code = wp_oembed_get( $video_url );

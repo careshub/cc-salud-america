@@ -239,7 +239,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		wp_nonce_field( $this->nonce_name, $this->nonce_value );
 
 		// Use get_post_meta to retrieve an existing value from the database.
-		$value = get_post_meta( $post->ID, 'sa_success_story_video_url', true );
+		$value = get_post_meta( $post->ID, 'sa_featured_video_url', true );
 
 		//****ADDED BY MIKE B.*********
 		$locvalue = get_post_meta( $post->ID, 'sa_success_story_location', true );
@@ -248,9 +248,9 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 
 		// Display the form, using the current value.
 		?>
-		<label for="sa_success_story_video_url" class="description"><h4>Featured video URL</h4>
-			<em>e.g.: http://www.youtube.com/watch?v=UueU0-EFido</em></label><br />
-		<input type="text" id="sa_success_story_video_url" name="sa_success_story_video_url" value="<?php echo esc_attr( $value); ?>" size="75" />
+		<label for="sa_featured_video_url" class="description"><h4>Featured video URL</h4></label>
+		<input type="text" id="sa_featured_video_url" name="sa_featured_video_url" value="<?php echo esc_attr( $value); ?>" size="75" /><br />
+		<em>e.g.: http://www.youtube.com/watch?v=UueU0-EFido</em>
 
 		<!--****ADDED BY MIKE B.*********-->
 		<label for="sa_success_story_location" class="description"><h4>Location</h4>
@@ -359,13 +359,13 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		}
 
 		// Sanitize the user input.
-		$video_url = sanitize_text_field( $_POST['sa_success_story_video_url'] );
+		$video_url = sanitize_text_field( $_POST['sa_featured_video_url'] );
 
 		// Update the meta field.
 		if ( ! empty( $video_url ) ) {
-			update_post_meta( $post_id, 'sa_success_story_video_url', $video_url );
+			update_post_meta( $post_id, 'sa_featured_video_url', $video_url );
 		} else {
-			delete_post_meta( $post_id, 'sa_success_story_video_url' );
+			delete_post_meta( $post_id, 'sa_featured_video_url' );
 		}
 		update_post_meta( $post_id, 'sa_success_story_location', $_POST['sa_success_story_location'] );
 		update_post_meta( $post_id, 'sa_success_story_latitude', $_POST['sa_success_story_latitude'] );
@@ -539,7 +539,7 @@ function sa_get_random_hero_video() {
 		//Custom Field Parameters
 		'meta_query'     => array(
 			array(
-				'key' => 'sa_success_story_video_url',
+				'key' => 'sa_featured_video_url',
 				'compare' => 'EXISTS'
 			),
 		),
@@ -552,7 +552,7 @@ function sa_get_random_hero_video() {
 	// Use alternate syntax (using the_post() object messes up the outer WP_Query loop because wp_reset_postdata in this case resets the postdata to the archive page's real job, not the page intro secondary loop.
 	foreach ( $video_story->posts as $video ) {
 
-		$video_url = get_post_meta( $video->ID, 'sa_success_story_video_url', 'true' );
+		$video_url = get_post_meta( $video->ID, 'sa_featured_video_url', 'true' );
 
 		if ( ! empty( $video_url ) ) {
 			$video_embed_code = wp_oembed_get( $video_url );
