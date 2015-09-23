@@ -31,11 +31,16 @@ function salud_america_footer() {
     endif;
 }
 
-add_filter( 'bp_get_group_description', 'sa_append_rwjf_logo_to_group_description' );
-function sa_append_rwjf_logo_to_group_description( $description ) {
+add_filter( 'bp_get_group_description', 'sa_customize_group_description' );
+function sa_customize_group_description( $description ) {
     if ( sa_is_sa_group() ) {
-        $replacement = '<a href="http://http://www.rwjf.org/"><img class="alignright" src="/wp-content/themes/CommonsRetheme/img/salud_america/logo-rwjf_small.png" ></a>';
-        $description = str_replace('<!--rwjf-logo-->', $replacement, $description);
+        // First, we add the "about/contact navigation to the footer
+        $salud_base_url = sa_get_group_permalink();
+        $footer_nav = '<span style="display:block;margin-bottom:1.71429em;"><a href="' . $salud_base_url . 'about/">About Salud America!</a>&emsp;<a href="' . $salud_base_url . 'about/contact">Contact Us</a></span>';
+        $description = str_replace('<!--about-contact-links-->', $footer_nav, $description);
+
+        $logo = '<a href="http://http://www.rwjf.org/"><img class="alignright" src="/wp-content/themes/CommonsRetheme/img/salud_america/logo-rwjf_small.png" ></a>';
+        $description = str_replace('<!--rwjf-logo-->', $logo, $description);
     }
     return $description;
 }
