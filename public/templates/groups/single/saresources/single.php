@@ -55,7 +55,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                         </div>
                         <?php
                     } else {
-                        echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front' );
+                        echo sa_get_advo_target_fallback_image_for_post( $main_post_id, 'feature-front' );
                     }
                     ?>
                 </div>

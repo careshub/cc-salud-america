@@ -1,15 +1,8 @@
 <?php
-$custom_fields = get_post_custom($post->ID);
-$terms = get_the_terms( $post->ID, 'sa_advocacy_targets' );
-if ( ! empty ($terms) ) :
-    foreach ( $terms as $term ) {
-        $advocacy_targets[] = '<a href="' .get_term_link($term->slug, 'sa_advocacy_targets') .'">'.$term->name.'</a>';
-    }
-    $advocacy_targets = join( ', ', $advocacy_targets );
-endif; //check for empty terms
+$post_id = get_the_ID();
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class( array( 'resource-short-general', 'sa-item-short-form', 'clear' ) ); ?>>
+<article id="post-<?php echo $post_id; ?>" <?php post_class( array( 'resource-short-general', 'sa-item-short-form', 'clear' ) ); ?>>
     <div class="entry-content">
         <header class="entry-header">
             <h3 class="entry-title">
@@ -21,7 +14,7 @@ endif; //check for empty terms
             if ( has_post_thumbnail() ) {
                 the_post_thumbnail( 'feature-front-sub', array( 'class' => 'attachment-feature-front-sub alignleft' ) );
             } else {
-                echo sa_get_advo_target_fallback_image( current( $terms ), 'feature-front-sub', 'alignleft' );
+                echo sa_get_advo_target_fallback_image_for_post( $post_id, 'feature-front-sub', 'alignleft' );
             }
             ?>
             <?php salud_the_target_icons(); ?>

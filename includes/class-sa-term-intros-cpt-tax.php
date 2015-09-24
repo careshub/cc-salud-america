@@ -366,10 +366,37 @@ $sa_term_intros_cpt_tax = new CC_SA_Term_Intros_CPT_Tax();
 // Functions in the global scope
 
 /**
+ * Return the html for a fallback image,, based on post ID.
+ *
+ * @param int $post_id ID of post to get the image for.
+ * @param string $size One of the WP-defined sizes.
+ * @param string $class Classes to include in output html.
+ *
+ * @return string html for image output
+ */
+function sa_get_advo_target_fallback_image_for_post( $post_id = 0, $size = 'feature-front-sub', $class = 'alignleft' ) {
+	if ( empty( $post_id ) ) {
+		$post_id = get_the_ID();
+	}
+    $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
+
+	if ( ! empty( $terms ) ) {
+		$retval = sa_get_advo_target_fallback_image( current( $terms ), $size, $class );
+	} else {
+		$retval = sa_get_advo_target_fallback_image( '', $size, $class );
+	}
+
+    return $retval;
+}
+
+/**
  * Return the html for a fallback image, given the terms of a post.
  *
- * @param string $size ONe of the WP-defined sizes.
+ * @param object $term WP Taxonomy Term object.
+ * @param string $size One of the WP-defined sizes.
+ * @param string $class Classes to include in output html.
  *
+ * @return string html for image output
  */
 function sa_get_advo_target_fallback_image( $term, $size = 'feature-front-sub', $class = 'alignleft' ) {
 	if ( empty( $term ) ) {
