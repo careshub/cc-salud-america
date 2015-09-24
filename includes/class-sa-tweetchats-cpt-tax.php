@@ -298,7 +298,8 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
         		$notices[ $post_id ] = array(
         			'action-phrase' => 'Tweetchat Alert',
         			'permalink'		=> sa_get_group_permalink() . 'tweetchats',
-        			'title'			=> $date . ': ' . $message
+        			'title'			=> $date . ': ' . $message,
+        			'fallback_image' => sa_get_plugin_base_uri() . 'public/images/fallbacks/twitter-icon.png'
         			);
 			endwhile;
 			// Put the post data back.

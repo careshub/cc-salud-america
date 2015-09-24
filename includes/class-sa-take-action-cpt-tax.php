@@ -317,7 +317,8 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
         		$notices[ $post_id ] = array(
         			'action-phrase' => 'Take Action Alert',
         			'permalink'		=> get_the_permalink(),
-        			'title'			=> $message
+        			'title'			=> $message,
+        			'fallback_image' => sa_get_plugin_base_uri() . 'public/images/fallbacks/take-action-icon.png'
         			);
 
 			endwhile;

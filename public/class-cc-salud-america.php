@@ -514,6 +514,8 @@ class CC_Salud_America {
 							<div class="notice-inset background-light-gray">
 								<?php if ( has_post_thumbnail( $key ) ) : ?>
 						 			<a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>" class="notice-image-link"><?php echo get_the_post_thumbnail( $key, 'thumbnail' ); ?></a>
+					 			<?php elseif ( ! empty( $notice['fallback_image'] ) ) : ?>
+					 				<a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>" class="notice-image-link"><img src="<?php echo $notice['fallback_image']; ?>"></a>
 					 			<?php endif; ?>
 					 			<span class="sa-action-phrase"><?php echo $notice['action-phrase']; ?></span><br />
 					 			<h4 class="sa-notice-title"><a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>"><?php echo apply_filters( 'the_title', $notice['title'] ); ?></h4></a>

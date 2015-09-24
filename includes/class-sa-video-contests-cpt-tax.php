@@ -485,7 +485,9 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
         		$notices[ $post_id ] = array(
         			'action-phrase' => 'Contest Alert',
         			'permalink'		=> get_the_permalink(),
-        			'title'			=> $message
+        			'title'			=> $message,
+        			'fallback_image' => sa_get_plugin_base_uri() . 'public/images/fallbacks/contest-icon.png'
+
     			);
 			endwhile;
 			wp_reset_query();
