@@ -721,7 +721,7 @@ function sa_single_post_header_meta( $post_id = 0 ) {
         <div class="Grid-cell background-light-gray">
             <div class="inset-contents">
                 <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map."><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/policy_map_thumb_90x90.png' ; ?>" class="alignleft" style="margin-top:0;"></a>
-                <p><strong><?php salud_the_location( $post_type ); ?></strong><br />
+                <p><strong class="meta-action"><?php salud_the_location( $post_type ); ?></strong><br />
                 <span class="policy-header-meta">See all changes, resources, and Salud Heroes in <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map.">this area</a>!</span></p>
             </div>
         </div>
@@ -730,7 +730,8 @@ function sa_single_post_header_meta( $post_id = 0 ) {
             ?>
             <div class="Grid-cell background-light-gray">
                 <div class="inset-contents">
-                    <p><strong>How can you get involved?</strong><br />
+                    <img src="<?php echo sa_get_plugin_base_uri() . 'public/images/how-you-can-get-involved-90x90.jpg' ; ?>" class="alignleft" style="margin-top:0;"></a>
+                    <p><strong>Get involved!</strong><br />
                     <span class="policy-header-meta">Become a Salud Leader and connect with others!</span><br />
                     <?php if ( ! $user_id ) : ?>
                         <a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em;text-shadow:none;">Register Now</a></div>
