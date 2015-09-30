@@ -14,8 +14,14 @@ if ( sa_is_section_front() ) {
         <div class="third-block spans-2">
             <h2 class="screamer sablue no-top-margin">New Healthy Changes!</h2>
 
-            <p>Our team is curating the newest policy-based healthy changes popping up in Latino areas nationwide.</p>
-            <p>These are great examples of ways you can get involved, either joining these efforts or starting a similar change in your town!</p>
+            <p><strong>Healthy changes are happening right now.</strong></p>
+
+            <p><em>Salud America!</em> is daily curating changes in policies, systems, and organizations that are making progress to reduce Latino childhood obesity across the nation.</p>
+
+            <p>Browse these curated changes to find great examples of ways you can get involved, either joining these efforts or starting a similar change in your area.</p>
+
+            <p><a href="<?php echo sa_get_group_permalink() . 'share-your-story/'; ?>">Add your own</a> news updates, resources, and stories of change!</p>
+
             <?php
             if ( function_exists('bp_share_post_button') ) {
                 bp_share_post_button();

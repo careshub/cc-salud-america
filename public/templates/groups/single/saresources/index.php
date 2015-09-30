@@ -14,8 +14,14 @@ if ( sa_is_section_front() ) {
         <div class="third-block spans-2">
             <h2 class="screamer sablue no-top-margin">New Resources for Change!</h2>
 
-            <p>Our team is curating the newest resources for change popping up in Latino areas nationwide.</p>
-            <p>These are great examples of ways you can get involved, either joining these efforts or starting a similar change in your town!</p>
+            <p><strong>Resources are tools you can use to push for healthy change.</strong></p>
+
+            <p><em>Salud America!</em> is daily curating toolkits, data, webinars and other educational materials to support you in creating obesity-reducing changes in your area.</p>
+
+            <p>These curated resources are great nuts-and-bolts guides to change, as well as helpful content and data that can help you build a case for a decision-maker.</p>
+
+            <p><a href="<?php echo sa_get_group_permalink() . 'share-your-story/'; ?>">Add your own</a> resources, news updates, and stories of change now!</p>
+
             <?php
             if ( function_exists('bp_share_post_button') ) {
                 bp_share_post_button();

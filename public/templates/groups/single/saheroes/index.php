@@ -24,7 +24,14 @@ if ( sa_is_section_front() ) {
             <div class="third-block spans-2">
                 <h2 class="screamer sablue no-top-margin">New Salud Heroes!</h2>
 
-                <p>Read/watch the stories of Salud Heroes from across the country who got an idea, persevered, and created a healthy change for Latino kids. Then follow their steps to <a href="<?php echo site_url( '/groups/salud-america/share-your-story/' ); ?>">create your own change</a>.</p>
+                <p><strong>Salud Heroes are champions of healthy change.</strong><p>
+
+                <p>They are people like you&mdash;children, parents, teachers, health workers&mdash;who learn of childhood obesity, get an idea to do something about it, mobilize support, and drive policy and system changes in schools and communities.</p>
+
+                <p><em>Salud America!</em> curates the stories of Salud Heroes through a <a href="<?php echo sa_get_group_permalink() . 'what-is-change/the-science-behind-healthy-change/'; ?>">step-by-step process of change</a> to inspire you to make a similar change in your area.</p>
+
+                <p><a href="<?php echo sa_get_group_permalink() . 'share-your-story/'; ?>">Add your own</a> Salud Heroes stories, news updates, and resources now!</p>
+
                 <?php
                 if ( function_exists('bp_share_post_button') ) {
                     bp_share_post_button();
