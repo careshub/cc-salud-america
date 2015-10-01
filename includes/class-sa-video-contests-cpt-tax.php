@@ -349,6 +349,8 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 				bp_core_add_message( __( 'Thanks for your vote!', $this->plugin_slug ) );
 	    } elseif ( -1 == $success ) {
 			bp_core_add_message( __( 'You\'ve already voted. No ballot stuffing! :)' , $this->plugin_slug ), 'error' );
+	    } elseif ( -2 == $success ) {
+			bp_core_add_message( __( 'You\'ve got to choose a video for your vote to count! Try again.' , $this->plugin_slug ), 'error' );
 	    } else {
 			bp_core_add_message( __( 'Sorry, we couldn\'t count your vote right now.', $this->plugin_slug ), 'error' );
 	    }
@@ -420,7 +422,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	 * @param 	int $post_id of the contest.
 	 * @param 	int $user_id to check. Defaults to current user.
 	 * @param 	int $video_id the user selected.
-	 * @return   int. -1 means "already voted", 0 "there was a problem", 1 "success"
+	 * @return   int. -1 means "already voted", -2 means "no video selected", 0 "there was a problem", 1 "success"
 	 */
 	public function count_vote( $post_id, $user_id, $video_id ) {
 		$votes = get_post_meta( $post_id, 'sa_video_contest_votes', true );
@@ -433,6 +435,10 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		// Is the user eligible to vote?
 		if ( ! sa_video_contest_current_user_can_vote( $post_id, $user_id ) ) {
 			return $success;
+		}
+		// Did the user choose a video?
+		if ( empty( $video_id ) ) {
+			return -2;
 		}
 
 		// Add the user's vote to the array
