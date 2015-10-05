@@ -374,7 +374,7 @@ class CC_Salud_America {
 	}
 
 	public function register_admin_page_aggregator() {
-		add_menu_page( 'Salud America', 'Salud America', 'edit_others_posts', 'salud_america', function() { echo 'Salud America'; }, 'dashicons-arrow-right', 58 );
+		add_menu_page( 'Salud America', 'Salud America', 'delete_sapoliciess', 'salud_america', function() { echo 'Salud America'; }, 'dashicons-arrow-right', 58 );
 	}
 
 
