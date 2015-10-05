@@ -102,6 +102,10 @@ class CC_Salud_America {
 		// @TODO: We may want to do this when a member is removed/leaves the group. Not sure.
 		add_action( 'deleted_user', array( $this, 'cleanup_sa_related_leaders' ) );
 
+		// Catch AJAX requests for recent items, from both logged-in and non-logged-in users.
+		add_action( "wp_ajax_cc_sa_get_recent_items", array( $this, "sa_get_recent_items" ) );
+		add_action( "wp_ajax_nopriv_cc_sa_get_recent_items", array( $this, "sa_get_recent_items" ) );
+
 	}
 
 
@@ -279,8 +283,6 @@ class CC_Salud_America {
 		    $wp_styles->add_data( $this->plugin_slug . '-ie-plugin-styles', 'conditional', 'lt IE 9' );
 
 			// Scripts
-			// @TODO: Use the min version after dev is finished
-			wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.js', __FILE__ ), array( 'jquery', 'wp-util' ), self::VERSION );
 		}
 
 	    if ( bp_is_register_page() && isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) {

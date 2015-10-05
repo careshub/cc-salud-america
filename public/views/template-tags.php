@@ -433,37 +433,38 @@ function sa_recent_posts_loop( $section = 'policies', $columns = 3, $numposts = 
  * @return  html The blocks and their contents.
  */
 function sa_the_advocacy_target_thumbnail( $post_id = null, &$possible_targets = array(), $width = 300 ) {
-    if ( is_null( $post_id ) ) {
-        $post_id = get_the_ID();
-    }
-    $advo_target = '';
-
-    // We're trying to find a good stand-in image based on the advocacy targets of the post.
-    $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
-    if ( ! empty( $terms ) ) {
-        // Loop through the post terms to find a usable (unique) image
-        foreach ( $terms as $term ) {
-            if ( in_array( $term->slug, $possible_targets ) ) {
-                $advo_target = $term->slug;
-                break;
-            }
-        }
-    } // end check for empty terms
-
-    // If an advo_target didn't get set, we'll set one at random
-    if ( empty( $advo_target ) ) {
-        $advo_target = current( $possible_targets );
-    }
-    // Delete the term we used from the possible values for future use.
-    $key_to_delete = array_search( $advo_target, $possible_targets );
-    if ( false !== $key_to_delete ) {
-        unset( $possible_targets[$key_to_delete] );
-    }
-
-    ?>
-    <img src="<?php echo sa_get_plugin_base_uri() . 'public/images/advocacy_targets/' . $advo_target . 'x' . $width; ?>.jpg" >
-    <?php
+    echo sa_get_the_advocacy_target_thumbnail( $post_id, $possible_targets, $width );
 }
+    function sa_get_the_advocacy_target_thumbnail( $post_id = null, &$possible_targets = array(), $width = 300 ) {
+        if ( is_null( $post_id ) ) {
+            $post_id = get_the_ID();
+        }
+        $advo_target = '';
+
+        // We're trying to find a good stand-in image based on the advocacy targets of the post.
+        $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
+        if ( ! empty( $terms ) ) {
+            // Loop through the post terms to find a usable (unique) image
+            foreach ( $terms as $term ) {
+                if ( in_array( $term->slug, $possible_targets ) ) {
+                    $advo_target = $term->slug;
+                    break;
+                }
+            }
+        } // end check for empty terms
+
+        // If an advo_target didn't get set, we'll set one at random
+        if ( empty( $advo_target ) ) {
+            $advo_target = current( $possible_targets );
+        }
+        // Delete the term we used from the possible values for future use.
+        $key_to_delete = array_search( $advo_target, $possible_targets );
+        if ( false !== $key_to_delete ) {
+            unset( $possible_targets[$key_to_delete] );
+        }
+
+        $retval = '<img src="' . sa_get_plugin_base_uri() . 'public/images/advocacy_targets/' . $advo_target . 'x' . $width .'jpg" >';
+    }
 
 /**
  * Output html for a tag list by advocacy target for changes.
@@ -630,49 +631,116 @@ function sa_post_date_author( $post_id, $wrapper ) {
  * @return  html
  */
 function sa_tabbed_content_by_adv_target() {
+    $advocacy_targets = get_terms('sa_advocacy_targets');
+    if ( empty( $advocacy_targets ) ) {
+        return;
+    }
+    $advocacy_target_slugs = wp_list_pluck( $advocacy_targets, 'slug' );
+
+    // We use the GET value 'recent_items_topic' to choose which term to show.
+    // If that's not set, we prime these blocks with content from a randomly selected term.
+    if ( isset( $_GET['recent_items_topic'] ) && in_array( $_GET['recent_items_topic'], $advocacy_target_slugs ) ) {
+        //Find the term with the matching slug.
+        foreach ( $advocacy_targets as $target ) {
+           if (  $_GET['recent_items_topic'] == $target->slug ) {
+                $primer_term = $target;
+                break;
+           }
+        }
+    } else {
+        $primer_term = $advocacy_targets[ array_rand( $advocacy_targets ) ];
+    }
+    $icon_size = 60;
+
+    // Get the most recent of each type of item in this taxonomy term:
+    $recent_items = sa_get_most_recent_items_by_big_bet( $primer_term->slug );
+
     ?>
     <div class="screamer sablue">Find changes, resources, and Salud Heroes&hellip;then START YOUR OWN CHANGE!</div>
-    <div class="content-row clear">
-    <div class="quarter-block">
-        <div class="entry-header">
-            <span class="icon sa-change"></span><h5>Topics</h5>
-            <span>Our Focal Areas</span>
+    <!-- <div class="recent-posts-section content-row clear"> -->
+    <div class="recent-posts-section Grid Grid--guttersLg Grid--full large-Grid--1of4">
+
+        <!-- <div class="quarter-block compact topic-selector"> -->
+        <div class="Grid-cell topic-selector">
+            <div class="cell-liner">
+                <div class="entry-header">
+                    <!-- <span class="icon sa-change"></span> --><h4 class="block-header">Topics</h4>
+                    <span class="header-description">Our Focal Areas</span>
+                </div>
+                <div class="Grid Grid--fill-height" id="topic-toggle">
+                <?php
+                foreach ( $advocacy_targets as $target ) {
+                    ?>
+                    <a href="?recent_items_topic=<?php echo $target->slug; ?>" title="<?php echo $target->description; ?>" class="Grid toggle<?php
+                        if ( $target->term_id == $primer_term->term_id ) {
+                            echo ' active';
+                        } else {
+                            echo ' inactive';
+                        }
+                        ?>" id="<?php echo $target->slug; ?>">
+                        <div class="Grid-cell Grid-cell--autoSize"><span class="advo-target-icon <?php echo $target->slug . 'x' . $icon_size; ?>"></span></div>
+                        <div class="Grid-cell Grid-cell--center"><span class="advo-target-name"><?php echo $target->name; ?></span></div>
+                        <div class="working-indicator Grid-cell Grid-cell--autoSize Grid-cell--center"><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/ajax-loader.gif' ?>" style="padding-right:.3em;"/></div>
+                    </a>
+                <?php } //end foreach
+                ?>
+                </div>
+            </div>
         </div>
-    <?php
-        $advocacy_targets = get_terms('sa_advocacy_targets');
-        $icon_size = 30;
-        echo '<div class="fill-height" id="topic-toggle">';
-        foreach ( $advocacy_targets as $target ) { ?>
-        <div><a href="#" title="<?php echo $target->description; ?>" class="toggle inactive" id="<?php echo $target->slug; ?>"><span class="<?php echo $target->slug . 'x' . $icon_size; ?>"></span><?php echo $target->name; ?></a></div>
-        <?php } //end foreach
-        echo '</div>';
-    ?>
-    </div>
-    <div class="quarter-block" id="most-recent-change">
-        <div class="entry-header">
-            <span class="icon sa-change"></span><h5>Changes</h5>
-            <span>New Healthy Policies</span>
-        </div>
-        <div class="entry-content">
-        </div>
-    </div>
-    <div class="quarter-block" id="most-recent-resource">
-        <div class="entry-header">
-            <span class="icon sa-change"></span><h5>Resources</h5>
-            <span>To Help You Make a Change</span>
-        </div>
-        <div class="entry-content">
-        </div>
-    </div>
-    <div class="quarter-block" id="most-recent-hero">
-        <div class="entry-header">
-            <span class="icon sa-change"></span><h5>Salud Heroes</h5>
-            <span>Follow the Steps of Change-makers</span>
-        </div>
-        <div class="entry-content">
-        </div>
-    </div>
+        <?php
+        $blocks = array( 'sapolicies', 'saresources', 'sa_success_story' );
+        $exclude_ids = array();
+
+        foreach ( $blocks as $block ) {
+            $exclude_ids[] = $recent_items['posts'][$block]['post_id'];
+            ?>
+            <!--<div class="quarter-block compact" id="most-recent-<?php echo str_replace( ' ', '-', sa_get_label_by_cpt( $block ) ) ; ?>"> -->
+            <div class="Grid-cell recent-item-cell <?php echo $block; ?>" id="most-recent-<?php echo str_replace( ' ', '-', sa_get_label_by_cpt( $block ) ) ; ?>">
+                <div class="cell-liner">
+                    <div class="entry-header">
+                            <!-- <span class="icon sa-change"></span> --><h4 class="block-header post-type-flag <?php echo $block; ?>"><a href="<?php echo sa_get_section_permalink( $block ); ?>"><?php echo ucwords( sa_get_label_by_cpt( $block ) ); ?></a></h4>
+                            <span class="header-description"><?php
+                                switch ( $block ) {
+                                    case 'saresources':
+                                        echo 'To Help You Make a Change';
+                                        break;
+                                    case 'sa_success_story':
+                                        echo 'Follow the Steps of Change-makers';
+                                        break;
+                                    default:
+                                        echo 'New Healthy Policies';
+                                        break;
+                                }
+                            ?></span>
+                    </div>
+                    <?php // The following div is what the JS will be building from the front end. ?>
+                    <div class="entry-content <?php echo $block . ' ' . $target->slug . ' ' . $recent_items['posts'][$block]['post_id']; ?>">
+                        <?php
+                        // Thumbnail
+                        echo '<a href="' . $recent_items['posts'][$block]['permalink'] . '">' . $recent_items['posts'][$block]['thumbnail'] . '</a>';
+                        // Title
+                        echo '<h5 class="post-title"><a href="' . $recent_items['posts'][$block]['permalink'] . '">' . $recent_items['posts'][$block]['title'] . '</a></h5>';
+                        // Excerpt
+                        echo '<p class="excerpt">' . $recent_items['posts'][$block]['excerpt'] . ' <a href="' . $recent_items['posts'][$block]['permalink'] . '">Read More</a></p>';
+                        ?>
+                    </div>
+                    <div class="entry-footer">
+                        <a href="<?php echo sa_get_section_permalink( $block ); ?>" class="button">See All <?php echo ucwords( sa_get_label_by_cpt( $block ) ); ?></a>
+                    </div>
+                </div>
+            </div>
+
+        <?php } ?>
     </div> <!-- End .content-row -->
+    <input type="hidden" id="sa-recent-items-exclude-ids" value="<?php echo implode( ',', $exclude_ids ); ?>">
+    <!-- We include the following template file for use by JS -->
+    <script type="text/html" id="tmpl-salud-recent-items-block">
+        <div class="entry-content {{data.post_type}} {{data.term_slug}} {{data.post_id}}" style="display:none;">
+            <a href="{{{data.permalink}}}">{{{data.thumbnail}}}</a>
+            <h5 class="post-title"><a href="{{{data.permalink}}}">{{{data.title}}}</a></h5>
+            <p class="excerpt">{{{data.excerpt}}} <a href="{{{data.permalink}}}">Read More</a></p>
+        </div>
+    </script>
     <?php
 }
 
@@ -746,4 +814,120 @@ function sa_single_post_header_meta( $post_id = 0 ) {
         ?>
     </div>
     <?php
+}
+
+/**
+ * Output html for the policy map and pitch box on the group home page.
+ * This is used via a shortcode: [sa_policy_map_widget_and_pitchbox].
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_the_home_page_map_and_pitchbox() {
+    $user_id = get_current_user_id();
+    $is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
+    ?>
+    <div class="content-row clear">
+        <?php if ( ! $user_id || ! $is_sa_member ) :
+            // We show two columns if we're pitching the user.
+        ?>
+        <div class="third-block compact spans-2">
+            <?php sa_the_policy_map_widget(); ?>
+        </div>
+        <div id="sa-join-group-action-call" class="third-block compact fill-height">
+            <?php sa_get_the_home_page_join_pitch_box( $user_id, $is_sa_member ); ?>
+        </div>
+        <?php else:
+            // If the user's already a group member, we can skip the pitch.
+        ?>
+            <?php sa_the_policy_map_widget(); ?>
+        <?php endif; ?>
+    </div>
+    <?php
+}
+
+/**
+ * Output html for the policy map on the group home page.
+ * This can be used via a shortcode [sa_policy_map_widget], but is
+ * also called internally in sa_the_home_page_map_and_pitchbox().
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_the_policy_map_widget( $hero_story_id = 0 ) {
+    $story_id_arg = '';
+    if ( empty( $hero_story_id ) ) {
+        // Get the most recent hero story ID:
+        $heroes = new WP_Query( array(
+            'post_type' => 'sa_success_story',
+            'posts_per_page' => 1,
+            'nopaging' => true,
+            'update_post_term_cache' => false,
+            'update_post_meta_cache' => false,
+            'no_found_rows' => 1,
+            'fields' => 'ids',
+            )
+        );
+
+        if ( $heroes->have_posts() ){
+            $hero_story_id = current( $heroes->posts );
+        }
+    }
+    if ( ! empty( $hero_story_id ) ) {
+        $story_id_arg = '&story_id=' . $hero_story_id;
+    }
+    // base_map_widget_src
+    echo '<div id="map-widget-container" class="sa-policy-map-widget"></div>';
+    echo '<script type="text/javascript">
+            var base_map_widget_src = "http://staging.maps.communitycommons.org/jscripts/mapWidget.js?interface=policymap' . $story_id_arg . '";
+        </script>';
+}
+
+/**
+ * Output html for the policy map on the group home page.
+ * This called internally in sa_the_home_page_map_and_pitchbox().
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_get_the_home_page_join_pitch_box( $user_id = null, $is_sa_member = null ) {
+    if ( is_null( $user_id ) ) {
+        $user_id = get_current_user_id();
+    }
+    if ( $user_id && is_null( $is_sa_member ) ) {
+        $is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
+    }
+
+?>
+    <div class="sa-join-group-prop background-sapink" style="padding:0.8em;">
+        <?php if ( ! $user_id ) : ?>
+            <div class="aligncenter"><a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em;text-shadow:none;">Register Now as a Salud Leader!</a></div>
+        <?php elseif ( ! $is_sa_member ) : ?>
+            <div class="aligncenter" style="text-shadow:none;"><?php bp_group_join_button(); ?></div>
+        <?php endif; ?>
+        <hr />
+        <ol class="sa-join-group-reasons">
+            <li>Get your name on our map!</li>
+            <li>Connect with other Leaders in your town for support!</li>
+            <li>Tell us about your change. We might write it up, publish it, promote it nationally, and move you from Leader to Hero!</li>
+            <li>Get a free, customized report of obesity in your area!</li>
+        </ol>
+    </div>
+<?php
+}
+
+/**
+ * Output the concatenated notices.
+ * This can be used via a shortcode [sa_homepage_notices]
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_the_homepage_notices() {
+    // This is like standing on a hillside shouting, "To me, to me!"
+    do_action( 'sa_build_home_page_notices' );
 }

@@ -695,3 +695,109 @@ function sa_policy_map_base_url( $append ) {
 
         return $retval;
     }
+
+function sa_get_most_recent_items_by_big_bet( $term_slug = '', $exclude_ids = array() ) {
+    if ( empty( $term_slug ) ) {
+        return;
+    }
+
+    // Get the term
+    $term = get_term_by( 'slug', $term_slug, 'sa_advocacy_targets' );
+
+    // Following is an attempt to minimize queries.
+    // If this doesn't work because one post type is published much less frequently than others, I may have to do separate queries.
+    $args = array(
+        'post_type' => array( 'sapolicies', 'saresources', 'sa_success_story' ),
+        'tax_query' => array(
+                            array(
+                                'taxonomy' => 'sa_advocacy_targets',
+                                'field'    => 'slug',
+                                'terms'    => $term_slug,
+                            ),
+                        ),
+        // Optimizations to minimize what WP_Query does.
+        'nopaging' => true,
+        'update_post_term_cache' => false,
+        'update_post_meta_cache' => false,
+        'no_found_rows' => 1,
+    );
+
+    // Don't send an empty array for the post__not_in argument.
+    if ( ! empty( $exclude_ids ) ) {
+        $args['post__not_in'] = array( $exclude_ids );
+    }
+
+    $recent_items = new WP_Query( $args );
+    // Set up the return array.
+    $results = array(
+        'term_slug' => $term_slug,
+        'posts' => array(
+            'sapolicies'        => array(
+                'post_type' => 'sapolicies', // This is duplicated here for easier use in the JS template loop.
+                'term_slug' => $term_slug, // This is duplicated here for easier use in the JS template loop.
+                'post_id'   => 0,
+                'title'     => '',
+                'permalink' => '',
+                'thumbnail' => '',
+                'excerpt'   => ''
+                ),
+            'saresources'       => array(
+                'post_type' => 'saresources',
+                'term_slug' => $term_slug,
+                'post_id'   => 0,
+                'title'     => '',
+                'permalink' => '',
+                'thumbnail' => '',
+                'excerpt'   => ''
+                ),
+            'sa_success_story'  => array(
+                'post_type' => 'sa_success_story',
+                'term_slug' => $term_slug,
+                'post_id'   => 0,
+                'title'     => '',
+                'permalink' => '',
+                'thumbnail' => '',
+                'excerpt'   => ''
+                ),
+            ),
+        );
+
+    if ( $recent_items->have_posts() ) {
+        $i = 1;
+
+        // Pull out the post_id, thumbnail image, create an excerpt from the content, permalink
+        foreach ( $recent_items->posts as $item ) {
+            $i++;
+
+            // Do we still need one of these?
+            if ( ! empty( $results['posts'][ $item->post_type ]['post_id'] ) ) {
+                continue;
+            }
+
+            $results['posts'][ $item->post_type ]['post_id'] = $item->ID;
+            $results['posts'][ $item->post_type ]['title'] = wptexturize( $item->post_title );
+            $results['posts'][ $item->post_type ]['permalink'] = get_permalink( $item->ID );
+
+            // Prepare the thumbnail code.
+            if ( has_post_thumbnail( $item->ID ) ) {
+                // Use the post thumbnail if it exists
+                $results['posts'][ $item->post_type ]['thumbnail'] = get_the_post_thumbnail( $item->ID, 'feature-front-sub' );
+            } else {
+                // Otherwise, use some stand-in images by advocacy target
+                $results['posts'][ $item->post_type ]['thumbnail'] = sa_get_advo_target_fallback_image( $term, 'feature-front-sub', '' );
+            }
+
+            $results['posts'][ $item->post_type ]['excerpt'] = wptexturize( cc_ellipsis( $item->post_content, 100 ) );
+
+            // Do we have a complete results set? Can we stop?
+            if ( ! empty( $results['posts'][ 'sapolicies' ]['post_id'] )
+                && ! empty( $results['posts'][ 'saresources' ]['post_id'] )
+                && ! empty( $results['posts'][ 'sa_success_story' ]['post_id'] ) ) {
+                break;
+            }
+        }
+
+    }
+
+    return $results;
+}

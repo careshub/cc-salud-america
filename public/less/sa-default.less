@@ -508,6 +508,83 @@
 			margin-bottom: .6em;
 		}
 	}
+
+	// Home page styling
+	.sa-policy-map-widget {
+		iframe {
+			margin-bottom: 0;
+		}
+	}
+	.sa-join-group-reasons {
+		margin-bottom: 0;
+		line-height: 1.4;
+		li {
+			margin-left: 2em;
+			margin-bottom: .5em;
+		}
+	}
+
+	// Home page "recent items section"
+    .recent-posts-section {
+    	.topic-selector {
+    		.toggle {
+	   			background-color: lighten( @graylight, 10% );
+	   			border-bottom: 1px solid #DADADA;
+	   			&:first-child {
+	   				border-top: 1px solid #DADADA;
+	   			}
+	   			&#sa-active-spaces.active {
+	   				background-color: lighten( @sablue, 54% );
+	   			}
+	   			&#sa-better-food-in-neighborhoods.active {
+	   				background-color: lighten( @saorange, 37% );
+	   			}
+	   			&#sa-healthier-schools.active {
+	   				background-color: lighten( @sayellow, 41% );
+	   			}
+	   			&#sa-healthy-weight.active {
+	   				background-color: lighten( @sapink, 50% );
+	   			}
+	   			&#sa-sugary-drinks.active {
+	   				background-color: lighten( @sapurple, 57% );
+	   			}
+    		}
+    		.active {
+    			background-color: lighten( @sapurple, 56% );
+    		}
+    		.advo-target-icon {
+    			margin: .3em 0.5em .3em .3em;
+    		}
+    		.advo-target-name {
+    			hyphens: none;
+    		}
+    		.working-indicator {
+    			display: none;
+    			&.ajax-loading {
+    				display: inherit;
+    			}
+    		}
+    	}
+    	.entry-header {
+    		margin-bottom: 1em;
+    	}
+
+    	.block-header {
+    		margin: 0;
+    		&.post-type-flag {
+    			display: block;
+    			a {
+	    			color: white;
+	    		}
+    		}
+    	}
+    	.header-description {
+
+    	}
+    	.post-title {
+    		margin: .4em 0;
+    	}
+    }
 }
 
 .tax-sa_advocacy_targets {
