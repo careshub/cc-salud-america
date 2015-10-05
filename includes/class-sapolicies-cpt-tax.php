@@ -1334,10 +1334,10 @@ function cc_the_policy_progress_tracker( $progress ) {
 			<h5 style="margin-bottom:0;">Where does this issue stand?</h5>
 			<p><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Learn more</a> about the steps behind healthy policy changes!</p>
 			<ol class="progtrckr" data-progtrckr-steps="4">
-				<li class="<?php echo ( in_array( $progress, array('emergence', 'development', 'enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Emergence</a></li><!--
-				--><li class="<?php echo ( in_array( $progress, array('development', 'enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Development</a></li><!--
-				--><li class="<?php echo ( in_array( $progress, array('enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Enactment</a></li><!--
-				--><li class="<?php echo ( in_array( $progress, array('implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/pages/the-science-behind-healthy-change/">Implementation</a></li>
+				<li class="<?php echo ( in_array( $progress, array('emergence', 'development', 'enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/what-is-change/the-science-behind-healthy-change/">Emergence</a></li><!--
+				--><li class="<?php echo ( in_array( $progress, array('development', 'enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/what-is-change/the-science-behind-healthy-change/">Development</a></li><!--
+				--><li class="<?php echo ( in_array( $progress, array('enactment', 'implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/what-is-change/the-science-behind-healthy-change/">Enactment</a></li><!--
+				--><li class="<?php echo ( in_array( $progress, array('implementation') ) ) ? "progtrckr-done" : "progtrckr-todo"; ?>"><a href="/groups/salud-america/what-is-change/the-science-behind-healthy-change/">Implementation</a></li>
 			</ol>
 		</div>
 	</div> <!-- end .meter-box -->
