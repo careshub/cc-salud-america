@@ -669,24 +669,26 @@ function sa_tabbed_content_by_adv_target() {
                     <!-- <span class="icon sa-change"></span> --><h4 class="block-header">Topics</h4>
                     <span class="header-description">Our Focal Areas</span>
                 </div>
-                <div class="Grid Grid--fill-height" id="topic-toggle">
+                <ul class="no-bullets toggle-list" id="topic-toggle">
                 <?php
                 foreach ( $advocacy_targets as $target ) {
                     ?>
-                    <a href="?recent_items_topic=<?php echo $target->slug; ?>" title="<?php echo $target->description; ?>" class="Grid-cell Grid toggle<?php
-                        if ( $target->term_id == $primer_term->term_id ) {
-                            echo ' active';
-                        } else {
-                            echo ' inactive';
-                        }
-                        ?>" id="<?php echo $target->slug; ?>">
-                        <div class="advo-target-icon-cell Grid-cell Grid-cell--autoSize"><span class="advo-target-icon <?php echo $target->slug . 'x' . $icon_size; ?>"></span></div>
-                        <div class="advo-target-name-cell Grid-cell Grid-cell--center"><span class="advo-target-name"><?php echo $target->name; ?></span></div>
-                        <div class="working-indicator Grid-cell Grid-cell--autoSize Grid-cell--center"><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/ajax-loader.gif' ?>" style="padding-right:.3em;"/></div>
-                    </a>
+                    <li class="toggle-list-item clear">
+                        <a href="?recent_items_topic=<?php echo $target->slug; ?>" title="<?php echo $target->description; ?>" class="Grid toggle<?php
+                            if ( $target->term_id == $primer_term->term_id ) {
+                                echo ' active';
+                            } else {
+                                echo ' inactive';
+                            }
+                            ?>" id="<?php echo $target->slug; ?>">
+                            <div class="advo-target-icon-cell Grid-cell Grid-cell--autoSize"><span class="advo-target-icon <?php echo $target->slug . 'x' . $icon_size; ?>"></span></div>
+                            <div class="advo-target-name-cell Grid-cell Grid-cell--center"><span class="advo-target-name"><?php echo $target->name; ?></span></div>
+                            <div class="working-indicator Grid-cell Grid-cell--autoSize Grid-cell--center"><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/ajax-loader.gif' ?>" style="padding-right:.3em;"/></div>
+                        </a>
+                    </li>
                 <?php } //end foreach
                 ?>
-                </div>
+                </ul>
             </div>
         </div>
         <?php

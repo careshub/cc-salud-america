@@ -553,12 +553,21 @@
 	// Home page "recent items section"
     .recent-posts-section {
     	.topic-selector {
+    		.toggle-list {
+    			margin-bottom: 0;
+	    		.toggle-list-item {
+		   			margin-left: 0;
+		   			margin-bottom: 0;
+		   			padding-bottom: 0;
+		   			border-bottom: 1px solid #DADADA;
+		   			&:first-child {
+		   				border-top: 1px solid #DADADA;
+		   			}
+	    		}
+    		}
+
     		.toggle {
 	   			background-color: lighten( @graylight, 10% );
-	   			border-bottom: 1px solid #DADADA;
-	   			&:first-child {
-	   				border-top: 1px solid #DADADA;
-	   			}
 	   			&#sa-active-spaces.active {
 	   				background-color: lighten( @sablue, 54% );
 	   			}

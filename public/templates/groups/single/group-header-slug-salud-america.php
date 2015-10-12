@@ -6,7 +6,6 @@ $big_bets_base_url = sa_get_section_permalink( 'big_bets' );
 $big_bets = get_terms( 'sa_advocacy_targets', array(
     'hide_empty' => 0,
  ) );
-// echo '<pre>'; var_dump( $big_bets ); echo '</pre>';
 ?>
 
 <div id="item-header-content">
