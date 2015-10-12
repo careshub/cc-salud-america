@@ -82,7 +82,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	        'not_found' => __( 'No petitions found', $this->plugin_slug ),
 	        'not_found_in_trash' => __( 'No petitions found in Trash', $this->plugin_slug ),
 	        'parent_item_colon' => __( 'Parent Petition:', $this->plugin_slug ),
-	        'menu_name' => __( 'Petitions', $this->plugin_slug ),
+	        'menu_name' => __( 'SA Petitions', $this->plugin_slug ),
 	    );
 
 	    $args = array(
@@ -92,7 +92,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	        'supports' => array( 'title', 'editor', 'thumbnail' ),
 	        'public' => true,
 	        'show_ui' => true,
-	        'show_in_menu' => 'salud_america',
+	        'show_in_menu' => true, //'salud_america',
 	        'show_in_nav_menus' => true,
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => false,

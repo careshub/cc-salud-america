@@ -83,7 +83,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	        'not_found' => __( 'No video contests found', $this->plugin_slug ),
 	        'not_found_in_trash' => __( 'No video contests found in Trash', $this->plugin_slug ),
 	        'parent_item_colon' => __( 'Parent Video Contest:', $this->plugin_slug ),
-	        'menu_name' => __( 'Video Contests', $this->plugin_slug ),
+	        'menu_name' => __( 'SA Video Contests', $this->plugin_slug ),
 	    );
 
 	    $args = array(
@@ -95,7 +95,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	        'public' => true,
 	        'show_ui' => true,
 	        // 'show_in_nav_menus' => true,
-	        'show_in_menu' => 'salud_america',//true,
+	        'show_in_menu' => true, //'salud_america',
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => false,
 	        'has_archive' => true,

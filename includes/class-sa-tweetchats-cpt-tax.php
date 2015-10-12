@@ -71,7 +71,7 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 	        'not_found' => __( 'No tweetchats found', $this->plugin_slug ),
 	        'not_found_in_trash' => __( 'No tweetchats found in Trash', $this->plugin_slug ),
 	        'parent_item_colon' => __( 'Parent Tweetchat:', $this->plugin_slug ),
-	        'menu_name' => __( 'Tweetchats', $this->plugin_slug ),
+	        'menu_name' => __( 'SA Tweetchats', $this->plugin_slug ),
 	    );
 
 	    $args = array(
@@ -81,7 +81,7 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 	        'supports' => array( 'title', 'thumbnail' ),
 	        'public' => true,
 	        'show_ui' => true,
-	        'show_in_menu' => 'salud_america',
+	        'show_in_menu' => true, //'salud_america',
 	        'show_in_nav_menus' => true,
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => false,

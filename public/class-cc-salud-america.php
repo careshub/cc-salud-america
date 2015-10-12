@@ -82,7 +82,7 @@ class CC_Salud_America {
 		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
 		add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
 
-		add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
+		// add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
 
 		// Buid home page notices to show, we wrap them in the appropriate container.
 		add_action( 'cc_group_home_page_before_content', array( $this, 'build_home_page_notices' ) );

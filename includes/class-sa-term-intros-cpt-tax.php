@@ -122,7 +122,7 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 	        'not_found' => __( 'No introductions found', $this->plugin_slug ),
 	        'not_found_in_trash' => __( 'No introductions found in Trash', $this->plugin_slug ),
 	        'parent_item_colon' => __( 'Parent Introduction:', $this->plugin_slug ),
-	        'menu_name' => __( 'Term Introductions', $this->plugin_slug ),
+	        'menu_name' => __( 'SA Term Introductions', $this->plugin_slug ),
 	    );
 
 	    $args = array(
@@ -133,7 +133,7 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 			'taxonomies' => array( 'sa_advocacy_targets' ),
 	        'public' => true,
 	        'show_ui' => true,
-	        'show_in_menu' => 'salud_america',
+	        'show_in_menu' => true, //'salud_america',
 	        'show_in_nav_menus' => true,
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => true,
