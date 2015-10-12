@@ -906,11 +906,11 @@ function sa_get_the_home_page_join_pitch_box( $user_id = null, $is_sa_member = n
 ?>
     <div class="sa-join-group-prop background-sapink" style="padding:0.8em;">
         <?php if ( ! $user_id ) : ?>
-            <div class="aligncenter"><a href="/register/?salud-america=1" title="Register Now" class="button" style="margin-top:.6em;text-shadow:none;">Register Now as a Salud Leader!</a></div>
+            <div class="aligncenter sa-login-register-cta"><a href="/register/?salud-america=1" title="Register Now">Register</a> or <a href="<?php echo wp_login_url( sa_get_group_permalink() ); ?>" title="Log in">Login</a> Now<br/> as a Salud Leader!</div>
         <?php elseif ( ! $is_sa_member ) : ?>
             <div class="aligncenter" style="text-shadow:none;"><?php bp_group_join_button(); ?></div>
+            <hr />
         <?php endif; ?>
-        <hr />
         <ol class="sa-join-group-reasons">
             <li>Get your name on our map!</li>
             <li>Connect with other Leaders in your town for support!</li>
