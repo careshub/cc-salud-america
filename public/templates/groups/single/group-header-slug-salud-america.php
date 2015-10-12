@@ -1,29 +1,40 @@
 <?php
 
 do_action( 'bp_before_group_header' );
-
+$plugin_base_url = sa_get_plugin_base_uri();
+$big_bets_base_url = sa_get_section_permalink( 'big_bets' );
+$big_bets = get_terms( 'sa_advocacy_targets', array(
+    'hide_empty' => 0,
+ ) );
+// echo '<pre>'; var_dump( $big_bets ); echo '</pre>';
 ?>
 
 <div id="item-header-content">
 
-<!--     <div class="noms clear">
-        <h2>
-            <div id="item-header-avatar">
-                <?php bp_group_avatar( 'width=80&height=80' ) ?>
-            </div>
-            <a href="<?php bp_group_permalink(); ?>" title="<?php bp_group_name(); ?>"><?php bp_group_name(); ?></a></h2>
-    </div> -->
     <div class="salud-header clear">
+        <?php /* ?>
         <a href="<?php bp_group_permalink(); ?>" class="logo"><?php bp_group_avatar() ?></a>
         <h1 class="sa-group-header-title">Salud America! <br /><span class="salud-tagline">Growing Healthy Change</span></h1>
+        <?php */ ?>
+        <a href="<?php bp_group_permalink(); ?>" class="logo"><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/SA-logo-2015-250x170.png' ?>" alt="Salud America logo" /></a>
+        <div class="big-bets-banners-header">
+        <?php
+            foreach ( $big_bets as $term ) {
+                ?>
+                <a href="<?php echo $big_bets_base_url . $term->slug; ?>" class="big-bet-icon-link" title="Link to Big Bet archive: <?php echo $term->name; ?>"><img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/' . $term->slug . '-112x150.png' ?>" alt="Icon for Big Bet: <?php echo $term->name; ?>" class="big-bet-icon" /></a>
+                <?php
+            }
+        ?>
+        </div>
+        <div class="sa-kids-photo"><img src="<?php echo $plugin_base_url . 'public/images/pointing-girl-205x150.jpg'; ?>" alt="Girl pointing at the Big Bets header"></div>
         <div class="sa-social-icon-wrapper">
-            <div class="sa-social-icons visible-maxi">
-                <a href='http://www.facebook.com/pages/SaludToday/160946931268' target="_blank" class="facebook-whx26"></a>
-                <a href='http://twitter.com/saludtoday' target="_blank" class="twitter-whx26"></a>
-                <a href='http://www.youtube.com/user/SaludToday' target="_blank" class="youtube-whx26"></a>
+            <div class="sa-social-icons">
+                <a href='http://twitter.com/saludtoday' target="_blank" class="sa-twitterx28"></a>
+                <a href='http://www.facebook.com/pages/SaludToday/160946931268' target="_blank" class="sa-facebookx28"></a>
+                <a href='http://www.youtube.com/user/SaludToday' target="_blank" class="sa-youtubex28"></a>
+                <a href='http://instagram.com/saludtoday' target="_blank" class="sa-instagramx28"></a>
             </div>
         </div>
-        <div class="sa-kids-photo"><img src="/wp-content/themes/CommonsRetheme/img/salud_america/sa-kids-335.png"></div>
 
     </div>
 

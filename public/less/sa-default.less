@@ -43,34 +43,48 @@
 		width:100%;
 		position: relative;
 		.logo {
-			display: none;
+			// display: none;
 			z-index: 50;
+			width: 80%;
+			img {
+				display: block;
+				margin-right: auto;
+				margin-left: auto;
+				max-width: 100%;
+			}
 		}
 		.sa-kids-photo {
 			display: none;
-			z-index: 10;
+			// z-index: 10;
 		}
-		.sa-group-header-title {
+		.big-bets-banners-header {
+			display: none;
+		}
+		// .sa-group-header-title {
 			// float: left;
-			clear: none;
+			// clear: none;
 			// margin-left: 2%;
-		    font-style: italic;
-		    position: relative;
-   		    z-index: 30;
-			.font-size(2.4);
-			color: @sared;
-			margin-top: 0;
-			margin-bottom: 0.5em;
-			line-height: 1;
-			.salud-tagline {
-				.font-size(2);
-			}
-		}
+		 //    font-style: italic;
+		 //    position: relative;
+   // 		    z-index: 30;
+			// .font-size(2.4);
+			// color: @sared;
+			// margin-top: 0;
+			// margin-bottom: 0.5em;
+			// line-height: 1;
+			// .salud-tagline {
+			// 	.font-size(2);
+			// }
+		// }
 		.sa-social-icon-wrapper {
+			margin-top: 1em;
 			background-color: @saorange;
 		    clear: left;
 		    height: 2px;
 		    z-index: 30;
+		}
+		.sa-social-icons {
+			display: none;
 		}
 	}
 	.salud-footer {
@@ -548,6 +562,9 @@
 	   			&#sa-sugary-drinks.active {
 	   				background-color: lighten( @sapurple, 57% );
 	   			}
+	   			&#sa-health-equity.active {
+	   				background-color: lighten( @sagreen, 45% );
+	   			}
     		}
     		.active {
     			background-color: lighten( @sapurple, 56% );
@@ -665,7 +682,26 @@
 	margin-right: 2%;
 	margin-top: -5px;
 }
-
+.sa-instagramx28, .sa-facebookx28, .sa-twitterx28, .sa-youtubex28 {
+	background: url(../images/sa-sprites.png) no-repeat;
+	display: inline-block;
+	vertical-align: middle;
+	// margin-right: 2%;
+	width: 28px;
+	height: 28px;
+}
+.sa-instagramx28 {
+	background-position: -408px -70px ;
+}
+.sa-facebookx28 {
+	background-position: -370px -70px ;
+}
+.sa-twitterx28 {
+	background-position: -370px -108px ;
+}
+.sa-youtubex28 {
+	background-position: -408px -108px ;
+}
 .sa-active-playx60{
 	background-position: -140px -70px ;
 }
@@ -822,10 +858,6 @@
 	height: 26px;
 }
 
-.sa-social-icons {
-	float: right;
-	width: 28%;
-}
 // Special cases for single policy pages
 .advo-target-thumbnail-link {
 	float: left;
