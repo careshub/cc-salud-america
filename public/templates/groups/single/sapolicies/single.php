@@ -60,7 +60,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                 // Get the GeoID if possible, else use the whole US
                 $geoid = ( ! empty( $geo_terms ) ) ? current( $geo_terms )->description : '01000US';
 
-                if ( $geoid ) : ?>
+                if ( $geoid && '01000US' != $geoid ) : ?>
                     <div class="indicator-dials horizontal aligncenter">
                     <h5 style="margin-bottom:0;">Area at a glance</h5>
                         <!-- Default dial -->
