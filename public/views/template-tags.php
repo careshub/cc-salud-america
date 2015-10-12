@@ -883,7 +883,7 @@ function sa_the_policy_map_widget( $hero_story_id = 0 ) {
     // base_map_widget_src
     echo '<div id="map-widget-container" class="sa-policy-map-widget"></div>';
     echo '<script type="text/javascript">
-            var base_map_widget_src = "http://staging.maps.communitycommons.org/jscripts/mapWidget.js?interface=policymap' . $story_id_arg . '";
+            var base_map_widget_src = "http://maps.communitycommons.org/jscripts/mapWidget.js?interface=policymap' . $story_id_arg . '";
         </script>';
 }
 
