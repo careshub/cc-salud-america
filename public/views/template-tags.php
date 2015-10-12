@@ -12,38 +12,40 @@
  */
 
 /**
- * Generate the Salud America footer text.
+ * Add the RWJF logo in the SA group's "About Me" text.
  *
  * @since   1.0.0
+ * @param   string The html for the text block
  *
  * @return  string The html for the text block
  */
-// add_action( 'bp_after_group_body', 'salud_america_footer' );
-function salud_america_footer() {
-    if ( sa_is_sa_group() ) :
-    ?>
-    <div class="salud-footer">
-        <p>Salud America!  is a national online network of researchers, community group leaders, decision-makers, and members of the public working together to support healthy policy and environmental changes that can help reverse obesity among Latino children.</p>
-        <p><a href="http://http://www.rwjf.org/"><img class="alignright" src="/wp-content/themes/CommonsRetheme/img/salud_america/logo-rwjf_small.png" ></a>The network, funded by the Robert Wood Johnson Foundation, is a project of <a href="http://ihpr.uthscsa.edu/"> the Institute for Health Promotion Research (IHPR)</a> at <a href="http://uthscsa.edu/">The UT Health Science Center at San Antonio</a>.</p>
-        <p>Policies, comments, external links, and contributed stories and images are not affiliated with Salud America!, RWJF, or The UT Health Science Center at San Antonio, nor do they necessarily reflect the views of or endorsement by these organizations.</p>
-    </div>
-    <?php
-    endif;
-}
-
 add_filter( 'bp_get_group_description', 'sa_customize_group_description' );
 function sa_customize_group_description( $description ) {
     if ( sa_is_sa_group() ) {
-        // First, we add the "about/contact navigation to the footer
-        $salud_base_url = sa_get_group_permalink();
-        $footer_nav = '<span style="display:block;margin-bottom:1.71429em;"><a href="' . $salud_base_url . 'about/">About Salud America!</a>&emsp;<a href="' . $salud_base_url . 'about/contact">Contact Us</a></span>';
-        $description = str_replace('<!--about-contact-links-->', $footer_nav, $description);
-
         $logo = '<a href="http://http://www.rwjf.org/"><img class="alignright" src="/wp-content/themes/CommonsRetheme/img/salud_america/logo-rwjf_small.png" ></a>';
         $description = str_replace('<!--rwjf-logo-->', $logo, $description);
     }
     return $description;
 }
+
+/**
+ * Output footer navigation on the Salud America group.
+ *
+ * @since   1.2.2
+ *
+ * @param   int $group_id The ID of the current group
+ *
+ * @return  string The html for the nav block
+ */
+add_filter( 'cc_before_group_description', 'sa_add_group_footer_nav' );
+function sa_add_group_footer_nav( $group_id ) {
+    if ( sa_get_group_id() == $group_id ) {
+        // Add the "about/contact" navigation to the footer
+        $salud_base_url = sa_get_group_permalink();
+        echo '<p><a href="' . $salud_base_url . 'about/">About Salud America!</a>&emsp;<a href="' . $salud_base_url . 'about/contact">Contact Us</a></p>';
+    }
+}
+
 /**
  * Generate archive navigation within Salud America.
  *
