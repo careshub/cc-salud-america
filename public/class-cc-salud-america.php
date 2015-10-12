@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.2.2';
 
 	/**
 	 *
@@ -85,7 +85,9 @@ class CC_Salud_America {
 		// add_action( 'admin_menu', array( $this, 'register_admin_page_aggregator' ) );
 
 		// Buid home page notices to show, we wrap them in the appropriate container.
-		add_action( 'cc_group_home_page_before_content', array( $this, 'build_home_page_notices' ) );
+		// add_action( 'cc_group_home_page_before_content', array( $this, 'build_home_page_notices' ) );
+		// Notices happen mid-content now, so they'll have to hook to a shortcode.
+		add_action( 'sa_build_home_page_notices', array( $this, 'build_home_page_notices' ) );
 
 		// Add activity stream items when policies are published
 		add_action( 'transition_post_status', array( $this, 'create_post_activity' ), 10, 3 );
@@ -492,19 +494,21 @@ class CC_Salud_America {
 	 *
 	 * @since   1.0.0
 	 *
-	 * @param 	int $group_id
+	 * @param 	int $group_id <-removed when changing the action hook.
 	 * @return  html
 	 */
-	public function build_home_page_notices( $current_group_id ){
-		if ( $current_group_id != sa_get_group_id() ) {
-			return;
-		}
+	public function build_home_page_notices(){
+		// This was needed when we were hooked to cc_group_home_page_before_content
+		// if ( $current_group_id != sa_get_group_id() ) {
+		// 	return;
+		// }
 
+		// Throw out a hook and see if you get any bites.
 		$notices = apply_filters( 'sa_group_home_page_notices', array() );
 
 		if ( ! empty( $notices ) ) {
 			?>
-			<div style="margin-top:1.4em;">
+			<div class="content-row clear" style="margin-top:1.4em;margin-bottom:3.2em;">
 				<div class="Grid Grid--gutters Grid--full large-Grid--fit Grid--flexCells">
 					<?php
 					// Sort the notices in descending order so the most recent is first.
@@ -520,7 +524,7 @@ class CC_Salud_America {
 					 				<a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>" class="notice-image-link"><img src="<?php echo $notice['fallback_image']; ?>"></a>
 					 			<?php endif; ?>
 					 			<span class="sa-action-phrase"><?php echo $notice['action-phrase']; ?></span><br />
-					 			<h4 class="sa-notice-title"><a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>"><?php echo apply_filters( 'the_title', $notice['title'] ); ?></h4></a>
+					 			<h4 class="sa-notice-title"><a href="<?php echo $notice['permalink']; ?>" title="Link to <?php echo $notice['title']; ?>"><?php echo apply_filters( 'the_title', $notice['title'] ); ?></a></h4>
 				 			</div>
 				 		</div>
 				 	<?php

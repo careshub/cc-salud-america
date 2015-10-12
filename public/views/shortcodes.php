@@ -163,3 +163,45 @@ function sa_tabbed_content_by_adv_target_shortcode() {
     return ob_get_clean();
 }
 add_shortcode( 'sa_tabbed_content_by_adv_target', 'sa_tabbed_content_by_adv_target_shortcode' );
+
+/**
+ * Output html for the interactive map.
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_policy_map_widget_shortcode() {
+    ob_start();
+    sa_the_policy_map_widget();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_policy_map_widget', 'sa_policy_map_widget_shortcode' );
+
+/**
+ * Output html for the interactive map.
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_policy_map_widget_and_pitchbox_shortcode() {
+    ob_start();
+    sa_the_home_page_map_and_pitchbox();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_policy_map_widget_and_pitchbox', 'sa_policy_map_widget_and_pitchbox_shortcode' );
+
+/**
+ * Output html for SA's home page notices.
+ *
+ * @since   1.2.0
+ *
+ * @return  html
+ */
+function sa_the_homepage_notices_shortcode() {
+    ob_start();
+    sa_the_homepage_notices();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_homepage_notices', 'sa_the_homepage_notices_shortcode' );

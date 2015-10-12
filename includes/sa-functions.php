@@ -65,7 +65,6 @@ function sa_get_group_permalink() {
  * @return  string url
  */
 function sa_get_section_permalink( $section = 'policies' ) {
-    // If a group_id is supplied, it is probably because the post originated from another group (and editing should occur from the original group's space).
     $permalink = sa_get_group_permalink() .  trailingslashit( sa_get_tab_slug( $section ) );
 
     return apply_filters( "sa_get_section_permalink", $permalink );
@@ -200,7 +199,7 @@ function sa_get_cpt_by_section( $section = 'policies' ){
  * @param   string $cpt The custom post type we want to find
  * @return  string $section The shorthand name of the section
  */
-function sa_get_section_by_cpt( $cpt = 'sapolicies' ){
+function sa_get_section_by_cpt( $cpt = 'sapolicies' ) {
     switch ( $cpt ) {
         case 'saresources':
             $section = "resources";
@@ -707,6 +706,7 @@ function sa_get_most_recent_items_by_big_bet( $term_slug = '', $exclude_ids = ar
     // Following is an attempt to minimize queries.
     // If this doesn't work because one post type is published much less frequently than others, I may have to do separate queries.
     $args = array(
+        'post_status' => array( 'publish' ),
         'post_type' => array( 'sapolicies', 'saresources', 'sa_success_story' ),
         'tax_query' => array(
                             array(
@@ -724,7 +724,7 @@ function sa_get_most_recent_items_by_big_bet( $term_slug = '', $exclude_ids = ar
 
     // Don't send an empty array for the post__not_in argument.
     if ( ! empty( $exclude_ids ) ) {
-        $args['post__not_in'] = array( $exclude_ids );
+        $args['post__not_in'] = $exclude_ids;
     }
 
     $recent_items = new WP_Query( $args );
@@ -787,7 +787,7 @@ function sa_get_most_recent_items_by_big_bet( $term_slug = '', $exclude_ids = ar
                 $results['posts'][ $item->post_type ]['thumbnail'] = sa_get_advo_target_fallback_image( $term, 'feature-front-sub', '' );
             }
 
-            $results['posts'][ $item->post_type ]['excerpt'] = wptexturize( cc_ellipsis( $item->post_content, 100 ) );
+            $results['posts'][ $item->post_type ]['excerpt'] = wptexturize( cc_ellipsis( $item->post_content, 125 ) );
 
             // Do we have a complete results set? Can we stop?
             if ( ! empty( $results['posts'][ 'sapolicies' ]['post_id'] )
