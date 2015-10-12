@@ -105,8 +105,9 @@ class CC_Salud_America {
 		add_action( 'deleted_user', array( $this, 'cleanup_sa_related_leaders' ) );
 
 		// Catch AJAX requests for recent items, from both logged-in and non-logged-in users.
-		add_action( "wp_ajax_cc_sa_get_recent_items", array( $this, "sa_get_recent_items" ) );
-		add_action( "wp_ajax_nopriv_cc_sa_get_recent_items", array( $this, "sa_get_recent_items" ) );
+		add_action( 'wp_ajax_cc_sa_get_recent_items', array( $this, 'sa_get_recent_items' ) );
+		add_action( 'wp_ajax_nopriv_cc_sa_get_recent_items', array( $this, 'sa_get_recent_items' ) );
+
 
 	}
 
@@ -285,6 +286,7 @@ class CC_Salud_America {
 		    $wp_styles->add_data( $this->plugin_slug . '-ie-plugin-styles', 'conditional', 'lte IE 9' );
 
 			// Scripts
+			wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.min.js', __FILE__ ), array( 'jquery', 'wp-util' ), self::VERSION );
 		}
 
 	    if ( bp_is_register_page() && isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) {
@@ -906,6 +908,28 @@ class CC_Salud_America {
 		$retval = $related_posts->posts;
 
 		return $retval;
+	}
+
+	/**
+	 * Catch AJAX requests for recent items, from both logged-in and non-logged-in users.
+	 * This is a wrapper for sa_get_most_recent_items_by_big_bet() to handle input
+	 * and format output to JSON.
+	 *
+	 * @since    1.2.0
+	 *
+	 * @return   JSON object
+	 */
+	public function sa_get_recent_items() {
+		$term_slug = isset( $_POST['advo_target'] ) ? $_POST['advo_target'] : '';
+		if ( isset( $_POST['exclude_ids'] ) ) {
+			$exclude_ids = explode( ',', $_POST['exclude_ids'] );
+		} else {
+			$exclude_ids = array();
+		}
+
+		$retval = sa_get_most_recent_items_by_big_bet( $term_slug, $exclude_ids );
+
+		wp_send_json_success( $retval );
 	}
 }
 $cc_salud_america = new CC_Salud_America();
