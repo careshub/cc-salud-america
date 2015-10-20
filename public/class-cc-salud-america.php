@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2.4';
+	const VERSION = '1.3.0';
 
 	/**
 	 *
@@ -108,6 +108,17 @@ class CC_Salud_America {
 		add_action( 'wp_ajax_cc_sa_get_recent_items', array( $this, 'sa_get_recent_items' ) );
 		add_action( 'wp_ajax_nopriv_cc_sa_get_recent_items', array( $this, 'sa_get_recent_items' ) );
 
+		// MEDIA MANAGEMENT ///////////////////////////////////////////////////
+		// Allow SA Curators to see all media authored by any SA Curator in the "Add Media" modal.
+		add_action( 'pre_get_posts', array( $this, 'media_library_curator_view'), 77 );
+		// Allow SA Curators to see all media authored by any SA Curator in the Media library.
+		add_filter( 'ajax_query_attachments_args', array( $this, 'filter_query_attachment_args'), 77 );
+
+		// When in the media/post editor, allow SA Curators to edit their own and other curators' media.
+		add_filter( 'map_meta_cap', array( $this, 'filter_map_meta_caps' ), 12, 4 );
+
+		// For efficiency, we want to store the curator user_ids as an serialized array in the options field.
+		add_action( 'set_user_role', array( $this, 'update_sa_curator_list'), 10, 3 );
 
 	}
 
@@ -930,6 +941,126 @@ class CC_Salud_America {
 		$retval = sa_get_most_recent_items_by_big_bet( $term_slug, $exclude_ids );
 
 		wp_send_json_success( $retval );
+	}
+
+	// MEDIA MANAGEMENT ////////////////////////////////////////////////////////
+	/**
+	 * Allow SA Curators to see all media authored by any SA Curator in the Media library.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param array $query WP_Query query args used in filtering the attachments query.
+	 */
+	function media_library_curator_view( $wp_query_obj ) {
+		global $pagenow;
+
+		// The Media library is identified by the $pagenow param.
+		if ( 'upload.php' != $pagenow ) {
+		    return;
+		}
+
+		if ( current_user_can( 'sa_curator' ) ) {
+			$curators = get_option( 'sa_curator_user_ids' );
+		    $wp_query_obj->set('author__in', $curators );
+		}
+
+		return;
+	}
+
+	/**
+	 * Allow SA Curators to see all media authored by any SA Curator in the "Add Media" modal.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param array $query WP_Query query args used in filtering the attachments query.
+	 */
+	public function filter_query_attachment_args( $query ) {
+		// current_user_can() accepts either a capability or role name.
+		// https://codex.wordpress.org/Function_Reference/current_user_can
+		// Using a role name is handy because then you don't have to exclude site admins (who have all the caps).
+		if ( current_user_can( 'sa_curator' ) ) {
+			$curators = get_option( 'sa_curator_user_ids' );
+		    $query['author__in'] = $curators ;
+		}
+
+	    return $query;
+	}
+
+	/**
+	 * Allow SA Curators to manage media authored by any SA Curator.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param array $caps Capabilities for meta capability
+	 * @param string $cap Capability name
+	 * @param int $user_id User id
+	 * @param mixed $args Arguments
+	 */
+	function filter_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+	    global $pagenow;
+
+		switch ( $cap ) {
+			case 'edit_post':
+			case 'delete_post':
+				// Only act on attachments.
+				if ( 'attachment' == get_post_type( $args[0] ) ) {
+					// If an SA curator was the author of this post, then replace the primitive cap with one that sa curators all have: edit_others_sapoliciess.
+					$curators = get_option( 'sa_curator_user_ids' );
+					// Was the media item created by an sa_curator?
+					$author_id = get_post_field( 'post_author', $args[0] );
+					if ( in_array( $author_id, $curators ) ) {
+						$caps = array( 'edit_others_sapoliciess' );
+					}
+				}
+			break;
+			case 'edit_others_posts':
+				/* There's a context-less edit_others_posts check in WP:
+				 * Addresses core bug in _wp_translate_postdata()
+				 *
+				 * @see https://core.trac.wordpress.org/ticket/30452
+				 */
+				// We have to get the right post object, since no reference to a post is passed.
+				$post_obj = false;
+				// This problem only seems to affect the media library editor view.
+				if ( 'post.php' === $pagenow
+					&& ! empty( $_POST['post_ID'] ) ) {
+					$post_obj = get_post( (int) $_POST['post_ID'] );
+				}
+				if ( ! $post_obj || 'attachment' != $post_obj->post_type ) {
+					break;
+				}
+				// If an SA curator was the author of this post, then replace the primitive cap with one that sa curators all have: edit_others_sapoliciess.
+				$curators = get_option( 'sa_curator_user_ids' );
+				// Was the media item created by an sa_curator?
+				if ( in_array( $post_obj->post_author, $curators ) ) {
+					$caps = array( 'edit_others_sapoliciess' );
+				}
+			break;
+		}
+
+		return $caps;
+	}
+
+	// PERFORMANCE /////////////////////////////////////////////////////////////
+	/**
+	 * Store the SA Curator user IDs as a list for performance reasons.
+	 * When checking against a whole page of attachments, building the curator list
+	 * using `get_users()` for each item is too slow.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param int    $user_id   User ID of the user whose roles are being updated.
+	 * @param string $role      New role to be applied.
+	 * @param array  $old_roles The user's roles before the change.
+	 */
+	public function update_sa_curator_list( $user_id, $role, $old_roles ) {
+		if ( 'sa_curator' == $role || in_array( 'sa_curator', $old_roles )  ) {
+			$curators = get_users( array(
+				'role'         => 'sa_curator',
+				'fields'       => 'id',
+			 ) );
+			update_option( 'sa_curator_user_ids', $curators, false );
+		}
 	}
 }
 $cc_salud_america = new CC_Salud_America();
