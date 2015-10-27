@@ -278,6 +278,29 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 
 				?>
 			</div>
+			<div>
+				<h4>Users who voted</h4>
+				<ul>
+				<?php
+					$votes = $custom[ 'sa_video_contest_votes' ][0];
+					if ( ! empty( $votes ) ) {
+						$votes = maybe_unserialize( $votes );
+						foreach ( $votes as $user_id => $video_id ) {
+							?>
+							<li>
+							<?php echo bp_core_get_userlink( $user_id );
+							?> &bull; <?php
+								$email_addy = get_userdata( $user_id )->user_email;
+							?><a href="mailto:<?php echo $email_addy; ?>"><?php echo $email_addy; ?></a>
+							</li>
+							<?php
+						}
+					} else {
+						echo '<li>No votes yet!</li>';
+					}
+				?>
+				</ul>
+			</div>
 
 		 	<script type="text/javascript">
 				jQuery(document).ready(function(){
@@ -527,6 +550,9 @@ function sa_video_contest_count_votes( $post_id = 0 ){
 	foreach ( $videos_with_no_votes as $id ) {
 		$counts[ $id ] = 0;
 	}
+
+	// Finally, we order the array by values lowest to highest, so our winner is always first.
+	arsort( $counts );
 
     return $counts;
 }

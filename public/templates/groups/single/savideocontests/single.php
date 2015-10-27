@@ -13,9 +13,6 @@ $end_date = sa_convert_to_human_date( $custom_fields['sa_video_contest_end_date'
 
 // echo '<pre>'; var_dump( get_post_meta( get_the_ID(), 'sa_video_contest_votes', true ) ); echo '</pre>';
 
-// Fetch the votes
-$votes = sa_video_contest_count_votes();
-
 $post_class = 'sa-video-contest';
 if ( $is_active ) {
     $post_class .= ' active-contest';
