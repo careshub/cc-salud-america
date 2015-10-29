@@ -801,3 +801,32 @@ function sa_get_most_recent_items_by_big_bet( $term_slug = '', $exclude_ids = ar
 
     return $results;
 }
+
+/**
+ * Fetch the field ids that we use to determine location.
+ *
+ * @since   1.4
+ *
+ * @return  int The field ID
+ */
+function sa_get_location_xprofile_field_ids(){
+    $location = get_site_url();
+    switch ( $location ) {
+        case 'http://commonsdev.local':
+            $ids = array( 'optin' => 96, 'location' => 98 );
+            break;
+        case 'http://dev.communitycommons.org':
+            $ids = array( 'optin' => 96, 'location' => 98 );
+            break;
+        case 'http://staging.communitycommons.org':
+            $ids = array( 'optin' => 1013, 'location' => 949 );
+            break;
+        case 'http://www.communitycommons.org':
+            $ids = array( 'optin' => 1013, 'location' => 949 );
+            break;
+        default:
+            $ids = array( 'optin' => 1013, 'location' => 949 );
+            break;
+    }
+    return apply_filters( 'sa_get_location_xprofile_field_ids', $ids );
+}

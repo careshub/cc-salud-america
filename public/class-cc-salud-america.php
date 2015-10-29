@@ -120,6 +120,19 @@ class CC_Salud_America {
 		// For efficiency, we want to store the curator user_ids as an serialized array in the options field.
 		add_action( 'set_user_role', array( $this, 'update_sa_curator_list'), 10, 3 );
 
+		// Handle the creation and deletion of the leader map location meta ///
+		// Create/update the meta:
+		// At registration -- case should be covered by group join at signup
+		// add_action( 'bp_core_signup_user', array( $this, 'set_user_lat_lon_at_signup' ), 88 );
+		// When the profile field group is updated.
+		add_action( 'xprofile_updated_profile', array( $this, 'set_user_lat_lon_at_profile_update' ), 88, 5 );
+		// At group join (if the user once belonged to the group--the profile data still exists--and re-joins it).
+		add_action( 'groups_join_group', array( $this, 'maybe_set_sa_leader_map_location_meta_at_group_join' ), 10, 2 );
+
+		// Delete the meta when a user leaves or is removed from a group:
+		add_action( 'groups_leave_group', array( $this, 'unset_sa_leader_map_location_meta_at_group_leave' ), 10, 2 );
+		add_action( 'groups_remove_member', array( $this, 'unset_sa_leader_map_location_meta_at_group_leave' ), 10, 2 );
+
 	}
 
 
@@ -1039,6 +1052,273 @@ class CC_Salud_America {
 		}
 
 		return $caps;
+	}
+
+	// MAPPING SA MEMBER LOCATIONS /////////////////////////////////////////////
+	/**
+	 * Add the 'sa_leader_map_long_lat' user meta at succesful login.
+	 * This should be covered by tge join group action. Disabling for now.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param int $user_id User who is updating his profile.
+	 */
+	public function set_user_lat_lon_at_signup( $user_id ) {
+		$towrite = PHP_EOL . print_r( date('Y-m-d H:i:s'), TRUE ) . ' | signup';
+		$fp = fopen('sa_geocoder_results.txt', 'a');
+		fwrite($fp, $towrite);
+		fclose($fp);
+
+		if ( empty( $user_id ) ) {
+			$towrite = ' | User ID is empty';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+			return false;
+		} else {
+			$towrite = ' | User ID: ' . print_r( $user_id, TRUE );
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+		}
+
+		// Get the xprofile field values.
+		$location_field_ids = sa_get_location_xprofile_field_ids();
+		$map_optin_value = xprofile_get_field_data( $location_field_ids['optin'], $user_id );
+		$location = xprofile_get_field_data( $location_field_ids['location'], $user_id );
+
+		if ( ! empty( $map_optin_value ) && ! empty( $location ) ) {
+			// If location exists, attempt to get the long/lat from the Google geocoder.
+			$coordinates = $this->get_long_lat_from_location( $location );
+			if ( $coordinates ) {
+				$this->add_user_to_leader_map( $user_id, $coordinates );
+
+				$towrite = PHP_EOL . 'Adding meta, coords: ' . print_r( $coordinates, true );
+				$fp = fopen('sa_geocoder_results.txt', 'a');
+				fwrite($fp, $towrite);
+				fclose($fp);
+
+			} else {
+				$towrite = PHP_EOL . 'Did not add meta, no coords.';
+				$fp = fopen('sa_geocoder_results.txt', 'a');
+				fwrite($fp, $towrite);
+				fclose($fp);
+			}
+		}
+	}
+
+	/**
+	 * Update 'sa_leader_map_long_lat' meta entry based on profile updates.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param int $user_id User who is updating his profile.
+	 * @param array $posted_field_ids IDs of fields that are being updated
+	 * @param bool $errors Are there problems?
+	 * @param mixed $args Arguments
+	 * @param array $old_values Values to be replaced.
+	 * @param array $new_values Values to be used in update.
+	 */
+	public function set_user_lat_lon_at_profile_update( $user_id, $posted_field_ids = array(), $errors = false, $old_values = array(), $new_values = array() ) {
+		$towrite = PHP_EOL . print_r( date('Y-m-d H:i:s'), TRUE ) . ' | profile updated';
+		$fp = fopen('sa_geocoder_results.txt', 'a');
+		fwrite($fp, $towrite);
+		fclose($fp);
+
+		if ( empty( $user_id ) ) {
+			$towrite = ' | User ID is empty';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+			return false;
+		} else {
+			$towrite = ' | User ID: ' . print_r( $user_id, TRUE );
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+		}
+
+		// Get the xprofile field ids; we'll need them several times.
+		$location_field_ids = sa_get_location_xprofile_field_ids();
+		$map_optin_field_id = $location_field_ids['optin'];
+		$location_field_id = $location_field_ids['location'];
+
+		// Only continue if the Location field was updated.
+		if ( ! in_array( $location_field_id, $posted_field_ids ) ) {
+			return;
+		}
+
+		// Troubleshooting
+		$towrite = PHP_EOL . 'posted_field_ids: ' . print_r( $posted_field_ids, TRUE );
+		$towrite .= PHP_EOL . 'old values: ' . print_r( $old_values, TRUE );
+		$towrite .= PHP_EOL . 'new values: ' . print_r( $new_values, TRUE );
+		$fp = fopen('sa_geocoder_results.txt', 'a');
+		fwrite($fp, $towrite);
+		fclose($fp);
+
+		// If the user has unchecked the "opt-in" checkbox, we delete the meta value.
+		if ( in_array( $map_optin_field_id, $posted_field_ids ) && empty( $new_values[$map_optin_field_id]['value'] ) ) {
+			$removed = delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
+			$towrite = ' | Removing meta, opt-in is empty.';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+			// And we stop here.
+			return;
+		}
+
+		// If the location used to be populated, but is now empty, we delete the meta value.
+		if ( empty( $new_values[$location_field_id]['value'] ) && ! empty( $old_values[$location_field_id]['value'] ) ) {
+			$removed = delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
+			$towrite = ' | Removing meta, new value is empty.';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+
+		} elseif ( ( $old_values[$location_field_id]['value'] != $new_values[$location_field_id]['value'] )
+				|| ( $old_values[$map_optin_field_id]['value'] != $new_values[$map_optin_field_id]['value'] ) ) {
+			// If the value of either control has changed, we need to update the meta value.
+			$coordinates = $this->get_long_lat_from_location( $new_values[$location_field_id]['value'] );
+			if ( $coordinates ) {
+				$this->add_user_to_leader_map( $user_id, $coordinates );
+				$towrite = ' | Updating meta., coords: ' . print_r( $coordinates, true );
+				$fp = fopen('sa_geocoder_results.txt', 'a');
+				fwrite($fp, $towrite);
+				fclose($fp);
+			} else {
+				// If no coords were returned, we should delete any value that exists.
+				$removed = delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
+				$towrite = ' | Removing meta, geocoder error.';
+				$fp = fopen('sa_geocoder_results.txt', 'a');
+				fwrite($fp, $towrite);
+				fclose($fp);
+			}
+
+		} else {
+			$towrite = ' | No change to meta.';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+		}
+	}
+
+	public function add_user_to_leader_map( $user_id, $coordinates ) {
+		update_user_meta( $user_id, 'sa_leader_map_long_lat', $coordinates );
+
+		/**
+		 * Fires after update of user's leader map location.
+		 *
+		 * @since 1.3.1
+		 *
+		 * @param int   $user_id   ID of the user.
+		 */
+		do_action( 'sa_add_user_to_leader_map', $user_id );
+	}
+
+	/**
+	 * Send a location string to Google and return a long_lat string.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param string $location Place name to geocode.
+	 */
+	public function get_long_lat_from_location( $location = '' ){
+		if ( empty( $location ) ) {
+			return false;
+		}
+		$location = urlencode( $location );
+
+		$details_url = "http://maps.googleapis.com/maps/api/geocode/json?address=" . $location . "&sensor=false";
+		$coordinates = false;
+
+		$ch = curl_init();
+		curl_setopt( $ch, CURLOPT_URL, $details_url );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		$response = json_decode( curl_exec($ch), true );
+
+		// If Status Code is ZERO_RESULTS, OVER_QUERY_LIMIT, REQUEST_DENIED or INVALID_REQUEST
+		if ( $response['status'] != 'OK' ) {
+			// A location is provided, but it's not recognized by Google.
+			$towrite = ' | Geocoder error status: ' . print_r( $response['status'], TRUE );
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+
+			return false;
+		}
+
+		if ( $geometry = $response['results'][0]['geometry'] ) {
+			$longitude = $geometry['location']['lng'];
+			$latitude = $geometry['location']['lat'];
+			$coordinates = (string) $longitude . ',' . (string) $latitude;
+			// Write the result to the usermeta table
+			$towrite = ' | Returned good results';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+		}
+		return $coordinates;
+	}
+
+	/**
+	 * Delete 'sa_leader_map_long_lat' meta entry when leaving the SA group.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param int $user_id User who is leaving the group.
+	 * @param int $group_id Group that is being left.
+	 */
+	public function unset_sa_leader_map_location_meta_at_group_leave( $group_id, $user_id ) {
+		if ( $group_id == sa_get_group_id() ) {
+			$towrite = PHP_EOL . print_r( date('Y-m-d H:i:s'), TRUE ) . ' | leaving the group';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+
+			delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
+		}
+		return;
+	}
+
+	/**
+	 * Maybe update 'sa_leader_map_long_lat' meta entry when joining the SA group.
+	 * Edge case: if a user was on the map, then leaves the group, then re-joins the
+	 * group, the profile data will still exist, so he can just be re-meta'd.
+	 *
+	 * @since 1.3.1
+	 *
+	 * @param int $user_id User who is joining the group.
+	 * @param int $group_id Group that is being joined.
+	 */
+	public function maybe_set_sa_leader_map_location_meta_at_group_join( $group_id, $user_id ) {
+		if ( $group_id == sa_get_group_id() ) {
+			$towrite = PHP_EOL . print_r( date('Y-m-d H:i:s'), TRUE ) . ' | joining the group';
+			$fp = fopen('sa_geocoder_results.txt', 'a');
+			fwrite($fp, $towrite);
+			fclose($fp);
+			// This is the SA group. Does the user already have completed info for the location fields?
+			$location_field_ids = sa_get_location_xprofile_field_ids();
+			$map_optin_value = xprofile_get_field_data( $location_field_ids['optin'], $user_id );
+			$location = xprofile_get_field_data( $location_field_ids['location'], $user_id );
+
+			if ( ! empty( $map_optin_value ) && ! empty( $location ) ) {
+				// If location exists, attempt to get the long/lat from the Google geocoder.
+				$coordinates = $this->get_long_lat_from_location( $location );
+				if ( $coordinates ) {
+					add_user_meta( $user_id, 'sa_leader_map_long_lat', $coordinates );
+					$towrite = PHP_EOL . 'Adding meta, coords: ' . print_r( $coordinates, true );
+					$fp = fopen('sa_geocoder_results.txt', 'a');
+					fwrite($fp, $towrite);
+					fclose($fp);
+				} else {
+					$towrite = PHP_EOL . 'Did not add meta, no coords.';
+					$fp = fopen('sa_geocoder_results.txt', 'a');
+					fwrite($fp, $towrite);
+					fclose($fp);
+				}
+			}
+		}
+		return;
 	}
 
 	// PERFORMANCE /////////////////////////////////////////////////////////////

@@ -469,6 +469,15 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 
 		if ( update_post_meta( $post_id, 'sa_video_contest_votes', $votes ) ) {
 			$success = 1;
+			/**
+			 * Fires on successful tally of user vote.
+			 *
+			 * @since 1.3.1
+			 *
+			 * @param int   $post_id   ID of the contest the user voted in.
+			 * @param int   $user_id   ID of the voter.
+			 */
+			do_action( 'sa_count_video_contest_vote', $post_id, $user_id );
 		}
 
 		return $success;
