@@ -78,6 +78,8 @@ class CC_Salud_America {
 		// Add our templates to BuddyPress' template stack.
 		add_filter( 'bp_get_template_stack', array( $this, 'add_template_stack'), 10, 1 );
 		add_filter( 'bp_get_template_part', array( $this, 'replace_group_header' ), 10, 3 );
+		// Replace the default registration page with an SA-specific version.
+		add_filter( 'bp_get_template_part', array( $this, 'replace_registration_page' ), 10, 3 );
 
 		// Modify the permalinks for SA-related CPTs. Point all traffic to the group.
 		add_filter( 'post_type_link', array( $this, 'cpt_permalink_filter'), 12, 2);
@@ -93,9 +95,11 @@ class CC_Salud_America {
 		add_action( 'transition_post_status', array( $this, 'create_post_activity' ), 10, 3 );
 		add_action( 'transition_post_status', array( $this, 'delete_post_activity' ), 10, 3 );
 
-		// Add SA section to registration page
-		add_action( 'bp_before_registration_submit_buttons', array( $this, 'salud_interest_section_registration' ), 71 );
-		add_action( 'bp_core_signup_user', array( $this, 'sa_newsletter_opt_in_fields' ), 1, 71 );
+		// Modify registration page
+		// This is done via a completely separate template now.
+		// See public/templates/members/register-salud-america.php
+		// Save page results, process meta and such.
+		add_action( 'bp_core_signup_user', array( $this, 'save_sa_registration_fields' ), 1, 71 );
 
 		// Add the Salud America interest query string to the register link on SA pages
 		add_filter( 'registration_form_interest_query_string', array( $this, 'add_registration_interest_parameter' ), 12, 1 );
@@ -331,32 +335,6 @@ class CC_Salud_America {
 	}
 
 	/**
-	 * NOTE:  Actions are points in the execution of a page or process
-	 *        lifecycle that WordPress fires.
-	 *
-	 *        Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function action_method_name() {
-		// @TODO: Define your action hook callback here
-	}
-
-	/**
-	 * NOTE:  Filters are points of execution in which WordPress modifies data
-	 *        before saving it or sending it to the browser.
-	 *
-	 *        Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function filter_method_name() {
-		// @TODO: Define your filter hook callback here
-	}
-
-	/**
 	 * Add our templates to BuddyPress' template stack.
 	 *
 	 * @since    1.0.0
@@ -364,7 +342,7 @@ class CC_Salud_America {
 	public function add_template_stack( $templates ) {
 	    // if we're on a page of our plugin and the theme is not BP Default, then we
 	    // add our path to the template path array
-	    if ( bp_is_current_component( 'groups' ) && sa_is_sa_group() ) {
+	    if ( ( bp_is_current_component( 'groups' ) && sa_is_sa_group() ) || bp_is_register_page() ) {
 	        $templates[] = trailingslashit( plugin_dir_path( __FILE__ ) . 'templates' );
 	    }
 	   // $towrite = print_r($templates, TRUE);
@@ -377,6 +355,13 @@ class CC_Salud_America {
 	public function replace_group_header( $templates, $slug, $name ) {
 		if ( $slug == 'groups/single/group-header' && sa_is_sa_group() ) {
 			$templates = array( 'groups/single/group-header-slug-salud-america.php' );
+		}
+		return $templates;
+	}
+
+	public function replace_registration_page( $templates, $slug, $name ) {
+		if ( $slug == 'members/register' && ( isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) ) {
+			$templates = array( 'members/register-salud-america.php' );
 		}
 		return $templates;
 	}
@@ -668,51 +653,86 @@ class CC_Salud_America {
 	}
 
 	/**
-	 * Add SA newsletter opt-in checkbox on register page
-	 * @since 0.1
-	 */
-	function salud_interest_section_registration() {
-	  if ( isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) :
-	  ?>
-	    <div id="sa-interest-opt-in" class="alignright register-section checkbox">
-		    <?php $avatar = bp_core_fetch_avatar( array(
-				'item_id' => sa_get_group_id(),
-				'object'  => 'group',
-				'type'    => 'thumb',
-				'class'   => 'registration-logo',
-
-			) );
-			echo $avatar; ?>
-	      <h4 class="registration-headline">Join the Hub: <em>Salud America!</em> <br />Growing Healthy Change</h4>
-
-	      <label><input type="checkbox" name="salud_interest_group" id="salud_interest_group" value="agreed" <?php $this->determine_checked_status_default_is_checked( 'salud_interest_group' ); ?> /> Yes, I’m interested in work by Salud America! to reduce Latino childhood obesity.</label>
-
-	      <label><input type="checkbox" name="salud_newsletter" id="salud_newsletter" value="agreed" <?php $this->determine_checked_status_default_is_checked( 'salud_newsletter' ); ?> /> I would like to receive email updates on this topic.</label>
-
-	      <p class="description">Periodically, Salud America! sends out news updates and brief surveys.</p>
-
-	    </div>
-	    <?php
-	    endif;
-	}
-
-	/**
 	* Update usermeta with custom registration data
 	* @since 0.1
 	*/
-	function sa_newsletter_opt_in_fields( $user_id ) {
+	function save_sa_registration_fields( $user_id ) {
 
+		// the interest group input is hidden, and only appears on the SA registration page.
 		if ( isset( $_POST['salud_interest_group'] ) ) {
 			// Create the group request
 			$request = groups_join_group( sa_get_group_id(), $user_id );
 			// $request = groups_send_membership_request( $user_id, sa_get_group_id() );
+
+			/*
+			if ( ! empty( $_POST['sa_profile_field_ids'] ) ) {
+				$profile_field_ids = explode( ',', $_POST['sa_profile_field_ids'] );
+
+				foreach ( (array) $profile_field_ids as $field_id ) {
+					if ( empty( $_POST["field_{$field_id}"] ) ) {
+						continue;
+					}
+
+					$current_field = $_POST["field_{$field_id}"];
+					xprofile_set_field_data( $field_id, $user_id, $current_field );
+
+					// Save the visibility level
+					$visibility_level = ! empty( $_POST['field_' . $field_id . '_visibility'] ) ? $_POST['field_' . $field_id . '_visibility'] : 'public';
+					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
+				}
+			}
+			*/
 		}
 
 		if ( isset( $_POST['salud_newsletter'] ) ) {
 		    update_usermeta( $user_id, 'salud_newsletter', $_POST['salud_newsletter'] );
 		}
 
-	  return $user_id;
+		// We need to truck some data between fields, too.
+		// Backfill SA Location to CC Location (vis is only me)
+		// Backfill SA About Me to CC About Me (match vis)
+		$location = get_site_url();
+	    switch ( $location ) {
+	        case 'http://commonsdev.local':
+	            $transfer_fields = array(
+	            	'location' => array( 'sa' => 98, 'cc' => 15), // Location (SA) => Location (CC)
+	            	'about-me' => array( 'sa' => 101, 'cc' => 10), // About Me (SA)
+	            	);
+	            break;
+	        case 'http://dev.communitycommons.org':
+	            $include_fields = array();
+	            break;
+	        case 'http://staging.communitycommons.org':
+	            $transfer_fields = array(
+	            	'location' => array( 'sa' => 949, 'cc' => 470), // Location (SA) => Location (CC)
+	            	'about-me' => array( 'sa' => 950, 'cc' => 10), // About Me (SA)
+	            	);
+	            break;
+	        case 'http://www.communitycommons.org':
+	            $transfer_fields = array(
+	            	'location' => array( 'sa' => 1314, 'cc' => 470), // Location (SA) => Location (CC)
+	            	'about-me' => array( 'sa' => 1317, 'cc' => 10), // About Me (SA)
+	            	);
+	            break;
+	        default:
+	            $transfer_fields = array(
+	            	98 => 15, // Location (SA) => Location (CC)
+	            	101 => 10, // About Me (SA)
+	            	);
+	            break;
+	    }
+
+	    // Location - set vis at adminsonly.
+	    $location = xprofile_get_field_data( $transfer_fields['location']['sa'], $user_id );
+	    xprofile_set_field_data( $transfer_fields['location']['cc'], $user_id, $location );
+
+	    // About Me - match visibility.
+	 //    $about_me = xprofile_get_field_data( $transfer_fields['about-me']['sa'], $user_id );
+	 //    xprofile_set_field_data( $transfer_fields['about-me']['cc'], $user_id, $about_me );
+	 //    $about_me_vis = xprofile_get_field_visibility_level( $transfer_fields['about-me']['sa'], $user_id );
+		// xprofile_set_field_visibility_level( $transfer_fields['about-me']['cc'], $user_id, $about_me_vis );
+
+	    return $user_id;
 	}
 
 	public function add_registration_interest_parameter( $interests ) {

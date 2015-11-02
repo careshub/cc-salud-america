@@ -822,7 +822,7 @@ function sa_get_location_xprofile_field_ids(){
             $ids = array( 'optin' => 1013, 'location' => 949 );
             break;
         case 'http://www.communitycommons.org':
-            $ids = array( 'optin' => 1013, 'location' => 949 );
+            $ids = array( 'optin' => 1312, 'location' => 1314 );
             break;
         default:
             $ids = array( 'optin' => 1013, 'location' => 949 );
