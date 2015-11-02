@@ -100,6 +100,8 @@ class CC_Salud_America {
 		// See public/templates/members/register-salud-america.php
 		// Save page results, process meta and such.
 		add_action( 'bp_core_signup_user', array( $this, 'save_sa_registration_fields' ), 1, 71 );
+		// Don't redirect the user to the CC welcome page--send them back to SA.
+		add_filter( 'cc_redirect_after_signup', array( $this, 'filter_cc_redirect_after_signup' ) );
 
 		// Add the Salud America interest query string to the register link on SA pages
 		add_filter( 'registration_form_interest_query_string', array( $this, 'add_registration_interest_parameter' ), 12, 1 );
@@ -742,6 +744,15 @@ class CC_Salud_America {
 		}
 
 	    return $interests;
+	}
+
+	public function filter_cc_redirect_after_signup( $redirect ) {
+		// $_POST should still be set at this point.
+		if ( isset( $_POST['salud_interest_group'] ) ) {
+			$redirect = sa_get_group_permalink();
+		}
+
+		return $redirect;
 	}
 
 	public function determine_checked_status_default_is_checked( $field_name ){
