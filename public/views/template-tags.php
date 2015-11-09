@@ -862,23 +862,6 @@ function sa_the_home_page_map_and_pitchbox() {
  */
 function sa_the_policy_map_widget( $hero_story_id = 0 ) {
     $story_id_arg = '';
-    if ( empty( $hero_story_id ) ) {
-        // Get the most recent hero story ID:
-        $heroes = new WP_Query( array(
-            'post_type' => 'sa_success_story',
-            'posts_per_page' => 1,
-            'nopaging' => true,
-            'update_post_term_cache' => false,
-            'update_post_meta_cache' => false,
-            'no_found_rows' => 1,
-            'fields' => 'ids',
-            )
-        );
-
-        if ( $heroes->have_posts() ){
-            $hero_story_id = current( $heroes->posts );
-        }
-    }
     if ( ! empty( $hero_story_id ) ) {
         $story_id_arg = '&story_id=' . $hero_story_id;
     }
