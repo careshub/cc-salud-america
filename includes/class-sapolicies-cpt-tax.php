@@ -389,10 +389,10 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 			$geo_tax_id = $geo_tax[0]->term_id;
 
 			//Helper function returns the type of geography we're working with.
-			$geo_type = cc_get_the_geo_tax_type();
+			$geo_type = cc_get_the_geo_tax_type( $post->ID );
 
 			//Get the state name in human-readable format
-			$geo_tax_state = cc_get_the_geo_tax_state();
+			$geo_tax_state = cc_get_the_geo_tax_state( $post->ID );
 
 	?>
 	<style type="text/css">
@@ -933,52 +933,58 @@ function get_geo_tax_top_level_term_id() {
 }
 
 
-function cc_get_the_geo_tax_type() {
-	global $post;
-	//Get the Geography term for this post
-		$geo_tax = wp_get_object_terms( $post->ID, 'geographies' );
-		// $geo_tax_id = $geo_tax[0]->term_id;
+function cc_get_the_geo_tax_type( $post_id = 0 ) {
+    if ( empty( $post_id ) ) {
+        $post_id = get_the_ID();
+    }
+    // Set default return value.
+    $geo_type = 'National';
 
-		//Figure out which level of geography we're dealing with here. Get the term's parent, which will give us the type of geography.
-		if ( !empty( $geo_tax ) )
-			$geo_type_terms = get_term_by( 'id', $geo_tax[0]->parent, 'geographies' );
-				// Possible Values of $geo_type_terms->name:
-				// United States (parent term of all states)
-				// Counties
-				// Cities
-				// School Districts
-				// US Congressional Districts
-				// State House Districts
-				// State Senate Districts
+	// Get the Geography term for this post
+	$geo_tax = wp_get_object_terms( $post_id, 'geographies' );
 
-		switch ($geo_type_terms->name) {
-			case 'United States':
-				$geo_type = 'State';
-				break;
-			case 'Counties':
-				$geo_type = 'County';
-				break;
-			case 'Cities':
-				$geo_type = 'City';
-				break;
-			case 'School Districts':
-				$geo_type = 'School District';
-				break;
-			case 'US Congressional Districts':
-				$geo_type = 'US Congressional District';
-				break;
-			case 'State House Districts':
-				$geo_type = 'State House District';
-				break;
-			case 'State Senate Districts':
-				$geo_type = 'State Senate District';
-				break;
-			default:
-				$geo_type = 'National';
-				break;
+	//Figure out which level of geography we're dealing with here. Get the term's parent, which will give us the type of geography.
+	if ( ! empty( $geo_tax ) ) {
+		$geo_term_parent = get_term_by( 'id', $geo_tax[0]->parent, 'geographies' );
+		// Possible Values of $geo_term_parent->name:
+		// United States (parent term of all states)
+		// Counties
+		// Cities
+		// School Districts
+		// US Congressional Districts
+		// State House Districts
+		// State Senate Districts
+		if ( ! empty( $geo_term_parent->name ) ) {
+			switch ( $geo_term_parent->name ) {
+				case 'United States':
+					$geo_type = 'State';
+					break;
+				case 'Counties':
+					$geo_type = 'County';
+					break;
+				case 'Cities':
+					$geo_type = 'City';
+					break;
+				case 'School Districts':
+					$geo_type = 'School District';
+					break;
+				case 'US Congressional Districts':
+					$geo_type = 'US Congressional District';
+					break;
+				case 'State House Districts':
+					$geo_type = 'State House District';
+					break;
+				case 'State Senate Districts':
+					$geo_type = 'State Senate District';
+					break;
+				default:
+					$geo_type = 'National';
+					break;
+			}
 		}
+	}
 
-		return $geo_type;
+	return $geo_type;
 }
 
 /**
@@ -988,14 +994,13 @@ function cc_get_the_geo_tax_type() {
  *
  * @return  string
  */
-function cc_get_the_geo_tax_name(){
-	global $post;
-	$geo_tax = wp_get_object_terms( $post->ID, 'geographies' );
+function cc_get_the_geo_tax_name( $post_id = 0 ){
+	if ( empty( $post_id ) ) {
+        $post_id = get_the_ID();
+    }
+	$geo_tax = wp_get_object_terms( $post_id, 'geographies' );
 
-	$locality_name = $geo_tax[0]->name;
-
-	return $locality_name;
-
+	return $geo_tax[0]->name;
 }
 
 /**
@@ -1005,29 +1010,31 @@ function cc_get_the_geo_tax_name(){
  *
  * @return  string
  */
-function cc_get_the_geo_tax_state(){
-	global $post;
-	$geo_tax = wp_get_object_terms( $post->ID, 'geographies' );
-	$geo_tax_type = cc_get_the_geo_tax_type();
+function cc_get_the_geo_tax_state( $post_id = 0 ){
+	if ( empty( $post_id ) ) {
+        $post_id = get_the_ID();
+    }
+	$geo_tax = wp_get_object_terms( $post_id, 'geographies' );
+	$geo_tax_type = cc_get_the_geo_tax_type( $post_id );
 
-	switch ($geo_tax_type) {
-			case 'State':
-				$geo_tax_state = $geo_tax[0]->name;
-				break;
-			case 'County':
-			case 'City':
-			case 'School District':
-			case 'US Congressional District':
-			case 'State House District':
-			case 'State Senate District':
-				$geo_parent_term = get_term_by( 'id', $geo_tax[0]->parent, 'geographies' );
-				$geo_grandparent_term = get_term_by( 'id', $geo_parent_term->parent, 'geographies' );
-				$geo_tax_state = $geo_grandparent_term->name;
-				break;
-			default:
-				$geo_tax_state = '';
-				break;
-		}
+	switch ( $geo_tax_type ) {
+		case 'State':
+			$geo_tax_state = $geo_tax[0]->name;
+			break;
+		case 'County':
+		case 'City':
+		case 'School District':
+		case 'US Congressional District':
+		case 'State House District':
+		case 'State Senate District':
+			$geo_parent_term = get_term_by( 'id', $geo_tax[0]->parent, 'geographies' );
+			$geo_grandparent_term = get_term_by( 'id', $geo_parent_term->parent, 'geographies' );
+			$geo_tax_state = $geo_grandparent_term->name;
+			break;
+		default:
+			$geo_tax_state = '';
+			break;
+	}
 
 	return $geo_tax_state;
 
