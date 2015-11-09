@@ -141,12 +141,12 @@ endwhile; // end of the loop. ?>
         $( '.dial-controls' ).click(function( e ) {
             var indicator_id = jQuery( this ).data( 'indicator-id' );
             var target_div_id = 'dial-' + indicator_id;
-            var target_div_empty = jQuery( '#' + target_div_id ).html() ? false : true;
+            // var target_div_empty = jQuery( '#' + target_div_id ).html() ? false : true;
 
-            console.log( "Handler for .click() called." );
-            console.log( "id is: " + indicator_id );
-            console.log( "target_div_empty is: " + target_div_empty );
-            console.log( "geoid is: " + geoid );
+            // console.log( "Handler for .click() called." );
+            // console.log( "id is: " + indicator_id );
+            // console.log( "target_div_empty is: " + target_div_empty );
+            // console.log( "geoid is: " + geoid );
 
             // This doesn't work as is.
             // if ( target_div_empty ) {
