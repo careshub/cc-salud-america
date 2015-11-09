@@ -122,7 +122,7 @@ function sa_get_tab_slug( $section = 'policies' ){
 function sa_get_tab_label( $section = 'policies' ){
     switch ( $section ) {
         case 'resources':
-            $label = "Resources for Change";
+            $label = "Resources";
             break;
         case 'heroes':
         case 'success-stories':
@@ -138,12 +138,12 @@ function sa_get_tab_label( $section = 'policies' ){
             $label = "Tweetchats";
             break;
         case 'big_bets':
-            $slug = 'Big Bets';
+            $label = 'Topics';
             break;
         case 'policies':
         case 'changes':
         default:
-            $label = "Find Change";
+            $label = "Changes";
             break;
     }
 

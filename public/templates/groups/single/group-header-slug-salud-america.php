@@ -89,4 +89,6 @@ $big_bets = get_terms( 'sa_advocacy_targets', array(
 <?php
 do_action( 'bp_after_group_header' );
 do_action( 'template_notices' );
+// One that only fires on the SA group:
+do_action( 'sa_bp_after_group_header' );
 ?>

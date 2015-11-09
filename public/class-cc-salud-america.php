@@ -139,6 +139,12 @@ class CC_Salud_America {
 		add_action( 'groups_leave_group', array( $this, 'unset_sa_leader_map_location_meta_at_group_leave' ), 10, 2 );
 		add_action( 'groups_remove_member', array( $this, 'unset_sa_leader_map_location_meta_at_group_leave' ), 10, 2 );
 
+		// Sub-navigation label changes
+		// We'll be operating on the $bp global, so I've added an action that only occurs in the SA header to target these changes.
+		add_filter( 'sa_bp_after_group_header', array( $this, 'filter_subnav_tab_labels' ) );
+		// add_filter( 'bp_init', array( $this, 'filter_subnav_tab_labels' ) );
+
+
 	}
 
 
@@ -1350,6 +1356,31 @@ class CC_Salud_America {
 			}
 		}
 		return;
+	}
+
+	// Label changes ///////////////////////////////////////////////////////////
+	/**
+	 * Filters the "options nav", the secondary-level single item navigation menu.
+	 *
+	 * This is invoked only on the SA group header, so it's narrowly applied.
+	 *
+	 * @since 1.3.0
+	 *
+	 */
+	public function filter_subnav_tab_labels() {
+		$bp = buddypress();
+
+		// $towrite = PHP_EOL . 'bp nav' . print_r($bp->bp_nav, TRUE);
+		// $towrite .= PHP_EOL . 'bp options nav' . print_r($bp->bp_options_nav, TRUE);
+		// // $towrite = PHP_EOL . 'bp options nav[groups]' . print_r($bp->bp_options_nav['groups'], TRUE);
+		// $fp = fopen('sa_navigation_changes.txt', 'a');
+		// fwrite($fp, $towrite);
+		// fclose($fp);
+
+		// Activity tab has position 10.
+		$bp->bp_options_nav['salud-america'][10]['name'] = 'Hub Activity';
+		// Members tab has position 60.
+		$bp->bp_options_nav['salud-america'][60]['name'] = str_replace( 'Members', 'Salud Leaders', $bp->bp_options_nav['salud-america'][60]['name'] );
 	}
 
 	// PERFORMANCE /////////////////////////////////////////////////////////////
