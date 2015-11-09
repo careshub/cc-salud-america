@@ -912,3 +912,29 @@ function sa_the_homepage_notices() {
     // This is like standing on a hillside shouting, "To me, to me!"
     do_action( 'sa_build_home_page_notices' );
 }
+
+/**
+ * Add an introduction before the group members list.
+ *
+ * @since   1.3.0
+ *
+ * @return  html
+ */
+add_action( 'bp_before_group_members_content', 'sa_before_member_list_intro' );
+function sa_before_member_list_intro() {
+    if ( ! sa_is_sa_group() ) {
+        return;
+    }
+    ?>
+    <h5><em>Salud America!</em> Salud Leaders are parents, teachers, researchers, and leaders like you who are interested in starting and supporting healthy change for Latino kids across the country.</h5>
+
+    <p>Salud Leaders can <a href="/register/?salud-america=1" title="Register Now">register</a> or <a href="<?php echo wp_login_url( sa_get_group_permalink() ); ?>" title="Log in">log in</a> to our website to:</p>
+    <ol>
+        <li>Get a place on our Salud Leader national map.</li>
+        <li>Contact other Salud Leaders for support and advice.</li>
+        <li>Get a customized Salud Leader Report to make a case for a change.</li>
+        <li>Get technical assistance.</li>
+        <li>Share your own change&hellip;and move from being a Salud Leader to a Salud Hero!</li>
+    </ol>
+    <?php
+}
