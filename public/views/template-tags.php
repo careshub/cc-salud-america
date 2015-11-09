@@ -29,24 +29,6 @@ function sa_customize_group_description( $description ) {
 }
 
 /**
- * Output footer navigation on the Salud America group.
- *
- * @since   1.2.2
- *
- * @param   int $group_id The ID of the current group
- *
- * @return  string The html for the nav block
- */
-add_filter( 'cc_before_group_description', 'sa_add_group_footer_nav' );
-function sa_add_group_footer_nav( $group_id ) {
-    if ( sa_get_group_id() == $group_id ) {
-        // Add the "about/contact" navigation to the footer
-        $salud_base_url = sa_get_group_permalink();
-        echo '<p><a href="' . $salud_base_url . 'about/">About Salud America!</a>&emsp;<a href="' . $salud_base_url . 'about/contact">Contact Us</a></p>';
-    }
-}
-
-/**
  * Generate archive navigation within Salud America.
  *
  * @since   1.0.0
