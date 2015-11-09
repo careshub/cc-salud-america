@@ -746,6 +746,9 @@ function sa_single_post_header_meta( $post_id = 0 ) {
     // Get the post_type
     $post_type = get_post_type( $post_id );
 
+    // Default map buffer setting
+    $buffer = 10;
+
     // Set up the location
     switch ( $post_type ) {
         case 'sa_success_story':
@@ -760,8 +763,12 @@ function sa_single_post_header_meta( $post_id = 0 ) {
             // Note that saresources don't have locations yet, so this may change.
             $geo_terms = get_the_terms( $post_id, 'geographies' );
             // Get the GeoID if possible, else use the whole US
+            // var_dump($geo_terms);
             $geo_id = ( ! empty( $geo_terms ) ) ? current( $geo_terms )->description : '01000US';
             $map_link = sa_get_policy_map_base_url( '?geoid=' . $geo_id );
+            if ( 'City' == cc_get_the_geo_tax_type( $post_id ) ) {
+                $buffer = 85;
+            }
             break;
     }
 
@@ -774,7 +781,12 @@ function sa_single_post_header_meta( $post_id = 0 ) {
         </div>
         <div class="Grid-cell background-light-gray">
             <div class="inset-contents">
-                <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map."><img src="<?php echo sa_get_plugin_base_uri() . 'public/images/policy_map_thumb_90x90.png' ; ?>" class="alignleft" style="margin-top:0;"></a>
+                <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map." class="tiny-policymap-container"><?php /*<img src="<?php echo sa_get_plugin_base_uri() . 'public/images/policy_map_thumb_90x90.png' ; ?>"> */ ?>
+                    <?php /* ?> <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=base&w=90&h=90&geoid=<?php echo $geo_id; ?>" ></script><?php */ ?>
+                    <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=natgeo&w=90&h=90&maplink=0&buffer=<?php echo $buffer; ?>&geoid=<?php echo $geo_id; ?>" ></script>
+                  <?php /* ?> <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=imagery&w=90&h=90&geoid=<?php echo $geo_id; ?>" ></script>
+                    <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=ve&w=90&h=90&geoid=<?php echo $geo_id; ?>" ></script><?php */ ?>
+                </a>
                 <p><strong class="meta-action"><?php salud_the_location( $post_type ); ?></strong><br />
                 <span class="policy-header-meta">See all changes, resources, and Salud Heroes in <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map.">this area</a>!</span></p>
             </div>
