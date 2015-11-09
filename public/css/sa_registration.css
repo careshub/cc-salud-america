@@ -1,11 +1,22 @@
-.standard-form #sa-interest-opt-in .registration-logo {
+.registration-logo {
 	margin-right: 1em;
 	vertical-align: middle; /*Only works because element is display: inline;*/
 }
 
 .standard-form #sa-interest-opt-in .registration-headline {
-	display: inline-block;
-	vertical-align: middle; /*Only works because element is display: inline;*/
-	width: 75%;
+	/*display: inline-block;
+	vertical-align: middle;*/ /*Only works because element is display: inline;*/
+	/*width: 75%;*/
+}
+.sa-join-header-text {
+	display: inline;
+	vertical-align: middle;
+	font-size: 18px;
+}
+
+.sa-registration-form-extras {
+	border-bottom: 2px solid #0088cf;
+	padding-bottom: 2em;
+	padding-top: 2em;
 }
 /*# sourceMappingURL=sa_registration.css.map */
