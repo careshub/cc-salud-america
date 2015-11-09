@@ -938,3 +938,22 @@ function sa_before_member_list_intro() {
     </ol>
     <?php
 }
+
+/**
+ * Add an introduction before the group activity stream.
+ *
+ * @since   1.3.0
+ *
+ * @return  html
+ */
+add_action( 'bp_before_group_activity_content', 'sa_before_activity_list_intro' );
+function sa_before_activity_list_intro() {
+    if ( ! sa_is_sa_group() ) {
+        return;
+    }
+    ?>
+    <h5>Here’s the latest activity on the <em>Salud America!</em> Hub to drive healthy changes:</h5>
+    <?php
+}
+
+
