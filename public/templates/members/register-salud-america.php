@@ -54,14 +54,14 @@
 
 			/** This action is documented in bp-templates/bp-legacy/buddypress/activity/index.php */
 			do_action( 'template_notices' ); ?>
-				<h2 class="registration-headline screamer sablue"><?php $avatar = bp_core_fetch_avatar( array(
+			<h2 class="registration-headline screamer sablue"><?php $avatar = bp_core_fetch_avatar( array(
 					'item_id' => sa_get_group_id(),
 					'object'  => 'group',
 					'type'    => 'thumb',
 					'class'   => 'registration-logo',
 
 				) );
-				echo $avatar; ?><span class="sa-join-header-text">Join the <em>Salud America!</em> Hub and the Community Commons.</span></h2>
+			echo $avatar; ?><span class="sa-join-header-text">Join the <em>Salud America!</em> Hub and the Community Commons.</span></h2>
 			<p>Register with <em>Salud America!</em> and we&rsquo;ll make you a Salud Leader, a member of our national movement of parents, teachers, academics, and activists who want to reduce Latino childhood obesity.</p>
 			<p>Then you can (for free):</p>
 			<ol>
@@ -151,8 +151,6 @@
 				 */
 				do_action( 'bp_account_details_fields' ); ?>
 
-			</div><!-- #basic-details-section -->
-
 			<?php
 
 			/**
@@ -175,9 +173,7 @@
 				 */
 				do_action( 'bp_before_signup_profile_fields' ); ?>
 
-				<div class="register-section" id="profile-details-section">
-
-					<h4><?php _e( 'Profile Details', 'buddypress' ); ?></h4>
+					<h4 class="cc-profile-details-header" style="margin-top:3.4em">Community Commons Profile Details</h4>
 <!-- <pre> -->
 					<?php
 					// This logic is tortured, but we really want to use bp_has_profile().
@@ -249,7 +245,22 @@
 					?>
 <!-- </pre> -->
 					<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
-					<?php if ( bp_is_active( 'xprofile' ) ) : if ( bp_has_profile( array( 'exclude_fields' => $exclude_fields, 'fetch_field_data' => false ) ) ) : while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
+					<?php
+					$current_group = 1;
+					if ( bp_is_active( 'xprofile' ) ) :
+						if ( bp_has_profile( array( 'exclude_fields' => $exclude_fields, 'fetch_field_data' => false ) ) ) :
+							while ( bp_profile_groups() ) : bp_the_profile_group();
+						// We end the div after the BP base group and start a new one before the the SA fields.
+						bp_the_profile_group_name();
+						if ( 5 == bp_get_the_profile_group_id() ) {
+							?>
+							</div>
+							<div class="register-section alignright">
+								<h4><em>Salud America!</em> Profile Details</h4>
+							<?php
+						}
+
+						?>
 
 					<?php while ( bp_profile_fields() ) : bp_the_profile_field(); ?>
 
@@ -304,7 +315,10 @@
 
 					<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="<?php bp_the_profile_field_ids(); ?>" />
 
-					<?php endwhile; endif; endif; ?>
+					<?php
+					endwhile;
+				endif;
+			endif; ?>
 
 					<?php
 
