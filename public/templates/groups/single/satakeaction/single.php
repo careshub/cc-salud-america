@@ -17,7 +17,7 @@ $custom_fields = get_post_meta( get_the_ID() );
                 $button_text = 'Take Action Now!';
             }
             ?>
-            <a href="<?php echo $custom_fields['sa_take_action_url'][0]; ?>" class="button"><?php echo $button_text; ?></a>
+            <a href="<?php echo $custom_fields['sa_take_action_url'][0]; ?>" class="sa-take-action-link button" data-petition-title="<?php the_title(); ?>" target="_blank"><?php echo $button_text; ?></a>
             <?php
         }
         ?>
