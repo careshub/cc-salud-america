@@ -47,10 +47,10 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		add_action( 'save_post', array( $this, 'save' ) );
 
 		// Add our templates to BuddyPress' template stack.
-		// add_filter( 'manage_edit-sapolicies_columns', array( $this, 'edit_admin_columns') );
-		// add_filter( 'manage_sapolicies_posts_custom_column', array( $this, 'manage_admin_columns') );
-		// add_filter( 'manage_edit-sapolicies_sortable_columns', array( $this, 'register_sortable_columns' ) );
-		// add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
+		add_filter( 'manage_edit-sa_video_contest_columns', array( $this, 'edit_admin_columns') );
+		add_filter( 'manage_sa_video_contest_posts_custom_column', array( $this, 'manage_admin_columns'), 19, 2 );
+		add_filter( 'manage_edit-sa_video_contest_sortable_columns', array( $this, 'register_sortable_columns' ) );
+		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
 		add_action( 'bp_init', array( $this, 'capture_vote_submission'), 78 );
@@ -110,23 +110,22 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	}
 
 	/**
-	 * Change behavior of the SA Policies overview table by adding taxonomies and custom columns.
-	 * - Add Type and Stage columns (populated from post meta).
+	 * Change behavior of the video contests overview table.
+	 * - Add expiration date.
 	 *
 	 * @since    1.0.0
 	 *
 	 * @return   array of columns to display
 	 */
 	public function edit_admin_columns( $columns ) {
-		// Last two columns are always Comments and Date.
-		// We want to insert our new columns just before those.
+		// Last column is Date.
+		// We want to insert our new columns just before that.
 		$entries = count( $columns );
 		$opening_set = array_slice( $columns, 0, $entries - 2 );
 		$closing_set = array_slice( $columns, - 2 );
 
 		$insert_set = array(
-			'type' => __( 'Type' ),
-			'stage' => __( 'Stage' )
+			'expires_date' => __( 'Closing Date' ),
 			);
 
 		$columns = array_merge( $opening_set, $insert_set, $closing_set );
@@ -143,17 +142,9 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	 * @return   string content of custom columns
 	 */
 	public function manage_admin_columns( $column, $post_id ) {
-			switch( $column ) {
-				case 'type' :
-					// These are all title case.
-					$type = get_post_meta( $post_id, 'sa_policytype', true );
-					echo $type;
-				break;
-				case 'stage' :
-					// These are all lowercase.
-					$stage = get_post_meta( $post_id, 'sa_policystage', true );
-					echo ucfirst( $stage );
-				break;
+			if ( $column == 'expires_date' ) {
+				$date = get_post_meta( $post_id, 'sa_expiry_date', true );
+				echo sa_convert_to_short_complete_human_date( $date );
 			}
 	}
 
@@ -166,8 +157,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	 * @return   array of columns to display
 	 */
 	public function register_sortable_columns( $columns ) {
-					$columns["type"] = "type";
-					$columns["stage"] = "stage";
+					$columns['expires_date'] = 'expires_date';
 					//Note: Advo targets can't be sortable, because the value is a string.
 					return $columns;
 	}
@@ -187,13 +177,9 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			$orderby = $query->get( 'orderby');
 
 			switch ( $orderby ) {
-				case 'stage':
-						$query->set( 'meta_key','sa_policystage' );
-						$query->set( 'orderby','meta_value' );
-					break;
-				case 'type':
-						$query->set( 'meta_key','sa_policytype' );
-						$query->set( 'orderby','meta_value' );
+				case 'expires_date':
+					$query->set( 'meta_key','sa_expiry_date' );
+					$query->set( 'orderby','meta_value_num' );
 					break;
 			}
 	}
@@ -212,7 +198,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	}
 		function sa_video_contest_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
-			$end_date = maybe_unserialize( $custom[ 'sa_video_contest_end_date' ][0] );
+			$end_date = maybe_unserialize( $custom[ 'sa_expiry_date' ][0] );
 			$stem_sentence = $custom[ 'sa_notice_box_stem' ][0];
 			$votes = sa_video_contest_count_votes( $post->ID );
 
@@ -222,7 +208,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			<div>
 				<h4>Contest End Date</h4>
 				<p>
-					<input type='text' name='sa_video_contest_end_date' id='sa_video_contest_end_date' value='<?php
+					<input type='text' name='sa_expiry_date' id='sa_expiry_date' value='<?php
 						if ( ! empty( $end_date ) ) {
 							echo sa_convert_to_human_date( $end_date );
 						}
@@ -304,7 +290,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 
 		 	<script type="text/javascript">
 				jQuery(document).ready(function(){
-					jQuery("#sa_video_contest_end_date").datepicker( {
+					jQuery("#sa_expiry_date").datepicker( {
 						dateFormat: "MM d, yy",
 					} );
 				});
@@ -330,10 +316,10 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			return false;
 		}
 		// Create array of fields to save
-		$meta_fields_to_save = array( 'sa_video_contest_end_date', 'sa_notice_box_stem' );
+		$meta_fields_to_save = array( 'sa_expiry_date', 'sa_notice_box_stem' );
 		// Convert the end date for storage.
-		if ( ! empty( $_POST[ 'sa_video_contest_end_date' ] ) ) {
-			$_POST[ 'sa_video_contest_end_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_video_contest_end_date' ] );
+		if ( ! empty( $_POST[ 'sa_expiry_date' ] ) ) {
+			$_POST[ 'sa_expiry_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_expiry_date' ] );
 		}
 
 		for ( $i = 1; $i < 7; $i++ ) {
@@ -496,7 +482,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		'posts_per_page' => 1,
 		'meta_query' => array(
 				            array(
-				                'key' => 'sa_video_contest_end_date', // Check the start date field
+				                'key' => 'sa_expiry_date', // Check the start date field
 				                'value' => date("Ymd"), // Set today's date (note the similar format)
 				                'compare' => '>=', // Return the ones greater than today's date
 				                'type' => 'NUMERIC,' // Let WordPress know we're working with numbers
@@ -641,7 +627,7 @@ function sa_video_contest_is_active( $post_id ) {
 	if ( empty( $post_id ) ) {
 		$post_id = get_the_ID();
 	}
-	$end_date = get_post_meta( $post_id, 'sa_video_contest_end_date', true );
+	$end_date = get_post_meta( $post_id, 'sa_expiry_date', true );
 	return ( date( 'Ymd' ) <= $end_date ) ? true : false ;
 }
 
@@ -652,7 +638,7 @@ function sa_has_current_video_contest() {
 		'post_type' => $sa_video_contest_class->post_type,
 		'meta_query' => array(
 				            array(
-				                'key' => 'sa_video_contest_end_date', // Check the start date field
+				                'key' => 'sa_expiry_date', // Check the start date field
 				                'value' => date("Ymd"), // Set today's date (note the similar format)
 				                'compare' => '>=', // Return the ones greater than today's date
 				                'type' => 'NUMERIC,' // Let WordPress know we're working with numbers
