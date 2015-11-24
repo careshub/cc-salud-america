@@ -672,73 +672,56 @@ class CC_Salud_America {
 			$request = groups_join_group( sa_get_group_id(), $user_id );
 			// $request = groups_send_membership_request( $user_id, sa_get_group_id() );
 
-			/*
-			if ( ! empty( $_POST['sa_profile_field_ids'] ) ) {
-				$profile_field_ids = explode( ',', $_POST['sa_profile_field_ids'] );
+			// We need to truck some data between fields, too.
+			// Backfill SA Location to CC Location (vis is only me)
+			// Backfill SA About Me to CC About Me (match vis)
+			$site = get_site_url();
+		    switch ( $site ) {
+		        case 'http://commonsdev.local':
+		            $transfer_fields = array(
+		            	'location' => array( 'sa' => 98, 'cc' => 15), // Location (SA) => Location (CC)
+		            	'about-me' => array( 'sa' => 101, 'cc' => 10), // About Me (SA)
+		            	);
+		            break;
+		        case 'http://dev.communitycommons.org':
+		            $include_fields = array();
+		            break;
+		        case 'http://staging.communitycommons.org':
+		            $transfer_fields = array(
+		            	'location' => array( 'sa' => 949, 'cc' => 470), // Location (SA) => Location (CC)
+		            	'about-me' => array( 'sa' => 950, 'cc' => 10), // About Me (SA)
+		            	);
+		            break;
+		        case 'http://www.communitycommons.org':
+		            $transfer_fields = array(
+		            	'location' => array( 'sa' => 1314, 'cc' => 470), // Location (SA) => Location (CC)
+		            	'about-me' => array( 'sa' => 1317, 'cc' => 10), // About Me (SA)
+		            	);
+		            break;
+		        default:
+		            $transfer_fields = array(
+		            	98 => 15, // Location (SA) => Location (CC)
+		            	101 => 10, // About Me (SA)
+		            	);
+		            break;
+		    }
 
-				foreach ( (array) $profile_field_ids as $field_id ) {
-					if ( empty( $_POST["field_{$field_id}"] ) ) {
-						continue;
-					}
-
-					$current_field = $_POST["field_{$field_id}"];
-					xprofile_set_field_data( $field_id, $user_id, $current_field );
-
-					// Save the visibility level
-					$visibility_level = ! empty( $_POST['field_' . $field_id . '_visibility'] ) ? $_POST['field_' . $field_id . '_visibility'] : 'public';
-					xprofile_set_field_visibility_level( $field_id, $user_id, $visibility_level );
-				}
+		    // Location - set vis at adminsonly.
+		    $location = xprofile_get_field_data( $transfer_fields['location']['sa'], $user_id );
+		    if ( ! empty( $location ) ) {
+			    xprofile_set_field_data( $transfer_fields['location']['cc'], $user_id, $location );
 			}
-			*/
+
+			// About Me - match visibility.
+			// $about_me = xprofile_get_field_data( $transfer_fields['about-me']['sa'], $user_id );
+			// xprofile_set_field_data( $transfer_fields['about-me']['cc'], $user_id, $about_me );
+			// $about_me_vis = xprofile_get_field_visibility_level( $transfer_fields['about-me']['sa'], $user_id );
+			// xprofile_set_field_visibility_level( $transfer_fields['about-me']['cc'], $user_id, $about_me_vis );
 		}
 
 		if ( isset( $_POST['salud_newsletter'] ) ) {
 		    update_usermeta( $user_id, 'salud_newsletter', $_POST['salud_newsletter'] );
 		}
-
-		// We need to truck some data between fields, too.
-		// Backfill SA Location to CC Location (vis is only me)
-		// Backfill SA About Me to CC About Me (match vis)
-		$location = get_site_url();
-	    switch ( $location ) {
-	        case 'http://commonsdev.local':
-	            $transfer_fields = array(
-	            	'location' => array( 'sa' => 98, 'cc' => 15), // Location (SA) => Location (CC)
-	            	'about-me' => array( 'sa' => 101, 'cc' => 10), // About Me (SA)
-	            	);
-	            break;
-	        case 'http://dev.communitycommons.org':
-	            $include_fields = array();
-	            break;
-	        case 'http://staging.communitycommons.org':
-	            $transfer_fields = array(
-	            	'location' => array( 'sa' => 949, 'cc' => 470), // Location (SA) => Location (CC)
-	            	'about-me' => array( 'sa' => 950, 'cc' => 10), // About Me (SA)
-	            	);
-	            break;
-	        case 'http://www.communitycommons.org':
-	            $transfer_fields = array(
-	            	'location' => array( 'sa' => 1314, 'cc' => 470), // Location (SA) => Location (CC)
-	            	'about-me' => array( 'sa' => 1317, 'cc' => 10), // About Me (SA)
-	            	);
-	            break;
-	        default:
-	            $transfer_fields = array(
-	            	98 => 15, // Location (SA) => Location (CC)
-	            	101 => 10, // About Me (SA)
-	            	);
-	            break;
-	    }
-
-	    // Location - set vis at adminsonly.
-	    $location = xprofile_get_field_data( $transfer_fields['location']['sa'], $user_id );
-	    xprofile_set_field_data( $transfer_fields['location']['cc'], $user_id, $location );
-
-	    // About Me - match visibility.
-	 //    $about_me = xprofile_get_field_data( $transfer_fields['about-me']['sa'], $user_id );
-	 //    xprofile_set_field_data( $transfer_fields['about-me']['cc'], $user_id, $about_me );
-	 //    $about_me_vis = xprofile_get_field_visibility_level( $transfer_fields['about-me']['sa'], $user_id );
-		// xprofile_set_field_visibility_level( $transfer_fields['about-me']['cc'], $user_id, $about_me_vis );
 
 	    return $user_id;
 	}
