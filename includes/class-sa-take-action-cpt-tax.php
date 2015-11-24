@@ -47,14 +47,11 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 		add_action( 'save_post', array( $this, 'save' ) );
 
 		// Add our templates to BuddyPress' template stack.
-		// add_filter( 'manage_edit-sapolicies_columns', array( $this, 'edit_admin_columns') );
-		// add_filter( 'manage_sapolicies_posts_custom_column', array( $this, 'manage_admin_columns') );
-		// add_filter( 'manage_edit-sapolicies_sortable_columns', array( $this, 'register_sortable_columns' ) );
-		// add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
+		add_filter( 'manage_edit-sa_take_action_columns', array( $this, 'edit_admin_columns') );
+		add_filter( 'manage_sa_take_action_posts_custom_column', array( $this, 'manage_admin_columns'), 18, 2 );
+		add_filter( 'manage_edit-sa_take_action_sortable_columns', array( $this, 'register_sortable_columns' ) );
+		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
-
-		// add_action( 'bp_init', array( $this, 'capture_vote_submission'), 78 );
-		// add_action( 'bp_init', array( $this, 'capture_join_group_submission'), 78 );
 
 		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 20 );
 
@@ -109,23 +106,22 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	}
 
 	/**
-	 * Change behavior of the SA Policies overview table by adding taxonomies and custom columns.
-	 * - Add Type and Stage columns (populated from post meta).
+	 * Change behavior of the video contests overview table.
+	 * - Add expiration date.
 	 *
 	 * @since    1.0.0
 	 *
 	 * @return   array of columns to display
 	 */
 	public function edit_admin_columns( $columns ) {
-		// Last two columns are always Comments and Date.
-		// We want to insert our new columns just before those.
+		// Last column is Date.
+		// We want to insert our new columns just before that.
 		$entries = count( $columns );
-		$opening_set = array_slice( $columns, 0, $entries - 2 );
-		$closing_set = array_slice( $columns, - 2 );
+		$opening_set = array_slice( $columns, 0, $entries - 1 );
+		$closing_set = array_slice( $columns, - 1 );
 
 		$insert_set = array(
-			'type' => __( 'Type' ),
-			'stage' => __( 'Stage' )
+			'expires_date' => __( 'Closing Date' ),
 			);
 
 		$columns = array_merge( $opening_set, $insert_set, $closing_set );
@@ -142,17 +138,9 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	 * @return   string content of custom columns
 	 */
 	public function manage_admin_columns( $column, $post_id ) {
-			switch( $column ) {
-				case 'type' :
-					// These are all title case.
-					$type = get_post_meta( $post_id, 'sa_policytype', true );
-					echo $type;
-				break;
-				case 'stage' :
-					// These are all lowercase.
-					$stage = get_post_meta( $post_id, 'sa_policystage', true );
-					echo ucfirst( $stage );
-				break;
+			if ( $column == 'expires_date' ) {
+				$date = get_post_meta( $post_id, 'sa_expiry_date', true );
+				echo sa_convert_to_short_complete_human_date( $date );
 			}
 	}
 
@@ -165,8 +153,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	 * @return   array of columns to display
 	 */
 	public function register_sortable_columns( $columns ) {
-					$columns["type"] = "type";
-					$columns["stage"] = "stage";
+					$columns['expires_date'] = 'expires_date';
 					//Note: Advo targets can't be sortable, because the value is a string.
 					return $columns;
 	}
@@ -186,13 +173,9 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 			$orderby = $query->get( 'orderby');
 
 			switch ( $orderby ) {
-				case 'stage':
-						$query->set( 'meta_key','sa_policystage' );
-						$query->set( 'orderby','meta_value' );
-					break;
-				case 'type':
-						$query->set( 'meta_key','sa_policytype' );
-						$query->set( 'orderby','meta_value' );
+				case 'expires_date':
+					$query->set( 'meta_key','sa_expiry_date' );
+					$query->set( 'orderby','meta_value_num' );
 					break;
 			}
 	}
@@ -211,12 +194,22 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	}
 		function sa_take_action_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
+			$end_date = maybe_unserialize( $custom[ 'sa_expiry_date' ][0] );
 			$stem_sentence = $custom[ 'sa_notice_box_stem' ][0];
 
 			// Add a nonce field so we can check for it later.
 			wp_nonce_field( $this->nonce_name, $this->nonce_value );
 			?>
 			<div>
+				<p>
+					<label for='sa_expiry_date'>Petition End Date</label><br />
+					<input type='text' name='sa_expiry_date' id='sa_expiry_date' value='<?php
+						if ( ! empty( $end_date ) ) {
+							echo sa_convert_to_human_date( $end_date );
+						}
+					 ?>'/>
+				</p>
+				<p class="info">After this date, this petition will move from the "current actions" screen to the "past actions" screen. Set the start date by scheduling the publication date in the "Publish" box.</p>
 				<p>
 					<label for='sa_take_action_url'>Petition URL</label><br />
 					<input type='text' name='sa_take_action_url' value='<?php
@@ -254,7 +247,13 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 			</div>
 			<div>
 
-
+		 	<script type="text/javascript">
+				jQuery(document).ready(function(){
+					jQuery("#sa_expiry_date").datepicker( {
+						dateFormat: "MM d, yy",
+					} );
+				});
+			</script>
 			</div>
 			<?php
 
@@ -276,8 +275,13 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 		if ( ! $this->user_can_save( $post_id, $this->nonce_value, $this->nonce_name  ) ) {
 			return false;
 		}
+
+		// Convert the end date for storage.
+		if ( ! empty( $_POST[ 'sa_expiry_date' ] ) ) {
+			$_POST[ 'sa_expiry_date' ] = sa_convert_to_computer_date( $_POST[ 'sa_expiry_date' ] );
+		}
 		// Create array of fields to save
-		$meta_fields_to_save = array( 'sa_take_action_highlight', 'sa_take_action_url', 'sa_take_action_button_text', 'sa_notice_box_stem' );
+		$meta_fields_to_save = array( 'sa_take_action_highlight', 'sa_take_action_url', 'sa_take_action_button_text', 'sa_notice_box_stem', 'sa_expiry_date' );
 
 		// Save meta
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields_to_save );
