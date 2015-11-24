@@ -792,7 +792,7 @@ class CC_Salud_America {
 			foreach( $leaders as $leader ) {
 				$user = get_user_by( 'id', $leader );
 				if ( $user !== false ) {
-					$leaders_usernames[] = '@' . $user->user_login;
+					$leaders_usernames[] = '@' . $user->user_nicename;
 				}
 			}
 			sort( $leaders_usernames );
@@ -809,7 +809,7 @@ class CC_Salud_America {
 				?></textarea>
 				<span class="howto">Enter a comma-separated list of usernames. Start the suggest tool by typing <code>@</code>.</span>
 			</p>
-			<?php //print_r( json_encode( $hub_members ) ); ?>
+			<?php wp_nonce_field( 'sa_add_related_hub_members', 'sa_related_hub_members_meta' ); ?>
 		</div>
 		<script type="text/javascript">
 			var sa_group_id = <?php echo sa_get_group_id(); ?>,
@@ -818,8 +818,7 @@ class CC_Salud_America {
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
 				jQuery( '#sa-associated-leaders' ).bp_mentions({
-					data: <?php echo json_encode( $hub_members ); ?>,
-					// tpl:        '<li data-value="@${ID}"><img src="${image}" />Whoa now.<span class="username">@${ID}</span><small>${name}</small></li>'
+					data: <?php echo json_encode( $hub_members ); ?>
 				});
 			});
 		</script>
@@ -855,10 +854,10 @@ class CC_Salud_America {
 		$new_leader_ids = array();
 		foreach ( $new_leaders as $leader ) {
 			if ( ! empty( $leader ) ) {
-				// Strip the @ symbol form the username
+				// Strip the @ symbol from the username
 				$leader = str_replace( '@', '', $leader );
 				// Get the user ID from the username
-				$user = get_user_by( 'login', $leader );
+				$user = get_user_by( 'slug', $leader );
 				if ( $user !== false ) {
 					$new_leader_ids[] = $user->ID;
 				}
@@ -880,15 +879,6 @@ class CC_Salud_America {
 				add_post_meta( $post_id, 'sa_associated_leader', $add );
 			}
 		}
-
-		// $towrite = PHP_EOL . '$old_leader_ids: ' . print_r($old_leader_ids, TRUE);
-		// $towrite .= PHP_EOL . '$new_leaders: ' . print_r($new_leaders, TRUE);
-		// $towrite .= PHP_EOL . '$new_leader_ids: ' . print_r($new_leader_ids, TRUE);
-		// $towrite .= PHP_EOL . '$users_to_add: ' . print_r($users_to_add, TRUE);
-		// $towrite .= PHP_EOL . '$users_to_remove: ' . print_r($users_to_remove, TRUE);
-		// $fp = fopen('sa_leaders.txt', 'a');
-		// fwrite($fp, $towrite);
-		// fclose($fp);
 
 	}
 
@@ -1195,7 +1185,7 @@ class CC_Salud_America {
 			fwrite($fp, $towrite);
 			fclose($fp);
 
-		} elseif ( ( $old_values[$location_field_id]['value'] != $new_values[$location_field_id]['value'] )
+		} elseif ( ( $old_values[$location_field_id]['value'] !== $new_values[$location_field_id]['value'] )
 				|| ( $old_values[$map_optin_field_id]['value'] != $new_values[$map_optin_field_id]['value'] ) ) {
 			// If the value of either control has changed, we need to update the meta value.
 			$coordinates = $this->get_long_lat_from_location( $new_values[$location_field_id]['value'] );
