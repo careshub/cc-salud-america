@@ -12,23 +12,6 @@
  */
 
 /**
- * Add the RWJF logo in the SA group's "About Me" text.
- *
- * @since   1.0.0
- * @param   string The html for the text block
- *
- * @return  string The html for the text block
- */
-add_filter( 'bp_get_group_description', 'sa_customize_group_description' );
-function sa_customize_group_description( $description ) {
-    if ( sa_is_sa_group() ) {
-        $logo = '<a href="http://http://www.rwjf.org/"><img class="alignright" src="/wp-content/themes/CommonsRetheme/img/salud_america/logo-rwjf_small.png" ></a>';
-        $description = str_replace('<!--rwjf-logo-->', $logo, $description);
-    }
-    return $description;
-}
-
-/**
  * Generate archive navigation within Salud America.
  *
  * @since   1.0.0
