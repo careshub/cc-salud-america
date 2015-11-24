@@ -246,13 +246,12 @@
 <!-- </pre> -->
 					<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
 					<?php
-					$current_group = 1;
 					if ( bp_is_active( 'xprofile' ) ) :
 						if ( bp_has_profile( array( 'exclude_fields' => $exclude_fields, 'fetch_field_data' => false ) ) ) :
 							while ( bp_profile_groups() ) : bp_the_profile_group();
 						// We end the div after the BP base group and start a new one before the the SA fields.
 						bp_the_profile_group_name();
-						if ( 5 == bp_get_the_profile_group_id() ) {
+						if ( 1 != bp_get_the_profile_group_id() ) {
 							?>
 							</div>
 							<div class="register-section alignright">
