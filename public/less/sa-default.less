@@ -457,9 +457,7 @@
 
 	&.changes,
 	&.resources,
-	&.heroes,
-	&.video-contest,
-	&.take-action {
+	&.heroes {
 		#item-body {
 			// Add space on archive pages
 			margin-top: 2.2em;
@@ -549,7 +547,6 @@
 			margin-bottom: .5em;
 		}
 	}
-
 	// Home page "recent items section"
     .recent-posts-section {
     	.topic-selector {
@@ -623,6 +620,58 @@
     		margin: .4em 0;
     	}
     }
+	form[name="video_contest_ballot"] {
+    	input[type="radio"] {
+			display: none;
+    	}
+    	.video-container-group {
+	    	background-color: lighten(@sayellow, 40%);
+	    }
+	    .input-container {
+	    	line-height: 28px;
+	    	margin-bottom: .6em;
+    	    display: table;
+		    margin-left: auto;
+		    margin-right: auto;
+	    }
+    	label {
+	    	.font-size(1.1);
+		}
+	    .fancy-checkbox:before {
+			background-color: white;
+			color: @sagreen;
+			content: " ";
+			display: block;
+			border-radius: 50%;
+			border: 2px solid @sayellow;
+			position: relative;
+			float: left;
+			width: 24px;
+			height: 24px;
+			text-align: center;
+			transition: all 0.2s;
+			transform: scale(.625);
+		}
+		:checked + .fancy-checkbox:before {
+			content: "\2714";
+			font-size: 24px;
+			background-color: lighten(@sagreen, 45%);
+			border-color: lighten(@sayellow, 20%);
+			transform: scale(1);
+		}
+		input[type="submit"] {
+			width: 100%;
+			background: @sagreen;
+			border: 1px solid @sagreen;
+		    color: white;
+		    .font-size(1.2);
+			transition: all 0.2s;
+		    &:disabled {
+				background: lighten( desaturate(@sagreen, 20%), 25%);
+		    }
+    	}
+    }
+
 }
 
 .tax-sa_advocacy_targets {
@@ -948,6 +997,12 @@
 }
 .post-type-flag.sa_success_story, {
 	background-color: @sapurple;
+}
+.post-type-flag.sa_video_contest, {
+	background-color: @saorange;
+}
+.post-type-flag.sa_take_action, {
+	background-color: @sapink;
 }
 
 .background-sapink,
