@@ -1,32 +1,23 @@
 <?php
 $custom_fields = get_post_meta( get_the_ID() );
-if ( sa_is_single_post() ) {
-    $size = 'feature-front';
-} else {
-    $size = 'feature-front-sub';
-}
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(  ); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class( array( 'clear', 'clear', 'sa-item-short-form' ) ); ?>>
     <div class="entry-content">
-        <header class="entry-header clear">
-            <h3 class="entry-title screamer sapink"><?php the_title(); ?></h3>
-        </header>
-        <div class="sa-featured-image-container">
+        <header class="entry-header">
+            <h3 class="entry-title">
+            <?php cc_post_type_flag(); ?>
+            <a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
+            </h3>
             <?php
-            //First, show the thumbnail or the fallback image.
+            // Featured image or fallback.
             if ( has_post_thumbnail() ) {
-                $thumbnail_id = get_post_thumbnail_id();
-                ?>
-                <div id="attachment_<?php echo $thumbnail_id; ?>" class="wp-caption">
-                    <?php the_post_thumbnail( $size ); ?>
-                    <p class="wp-caption-text"><?php echo get_post( $thumbnail_id )->post_excerpt; ?></p>
-                </div>
-                <?php
+                the_post_thumbnail( 'feature-front-sub', array( 'class' => 'attachment-feature-front-sub alignleft' ) );
             } else {
-                echo sa_get_advo_target_fallback_image_for_post( $main_post_id, $size );
+                echo sa_get_advo_target_fallback_image_for_post( $post_id, 'feature-front-sub', 'alignleft' );
             }
             ?>
-        </div>
+            <?php salud_the_target_icons(); ?>
+        </header>
         <?php
         the_content();
         if ( ! empty( $custom_fields['sa_take_action_url'][0] ) ) {
