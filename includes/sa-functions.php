@@ -342,6 +342,31 @@ function sa_get_query(){
         } else {
             $query['name'] = $request;
         }
+    } else if ( sa_is_take_action_tab() ) {
+        // The Take Action tab is a rule unto itself.
+        // We sort by end date, interleaving video contests and petitions.
+        // There are two sub-pages, "current-actions" and "past-actions"
+        $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+
+        $query = array(
+            'post_type' => array( 'sa_video_contest', 'sa_take_action' ),
+            'paged' => $paged,
+            'meta_query' => array(
+                array(
+                    'key' => 'sa_expiry_date',
+                    'value' => date("Ymd"), // Set today's date
+                    'type' => 'NUMERIC'
+                    )
+                ),
+        );
+        if ( 'past-actions' == bp_action_variable( 0 )) {
+            // Find only "expired" posts
+            $query['meta_query'][0]['compare'] = '<';
+        } else {
+            // Find only posts that haven't expired
+            $query['meta_query'][0]['compare'] = '>=';
+        }
+
     } else {
         // This is a taxonomy term view
         $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
