@@ -103,7 +103,7 @@ class CC_Salud_America_Video_Contests extends BP_Group_Extension {
     }
 
 }
-bp_register_group_extension( 'CC_Salud_America_Video_Contests' );
+// bp_register_group_extension( 'CC_Salud_America_Video_Contests' );
 
 class CC_Salud_America_Take_Action extends BP_Group_Extension {
     // Documentation: https://codex.buddypress.org/developer/group-extension-api/

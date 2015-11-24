@@ -340,7 +340,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			return;
 		}
 
-		if ( ! sa_is_section( 'video-contest') ) {
+		if ( ! sa_is_section( 'take-action') ) {
 			return;
 		}
 
@@ -348,14 +348,18 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		if( ! wp_verify_nonce( $_POST[ $nonce_value ], 'sa_video_contest_vote' ) ) {
 			bp_core_add_message( __( 'Sorry, we couldn\'t count your vote right now.', $this->plugin_slug ), 'error' );
 			// Redirect and exit
-			bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+			if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
+				bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );
+			} else {
+				bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+			}
 			return;
 		}
 
 		$success = $this->count_vote( $_POST['video_contest_id'], get_current_user_ID(), $_POST['sa_video_contest_selection'] );
 
 		if ( 1 == $success ) {
-				bp_core_add_message( __( 'Thanks for your vote!', $this->plugin_slug ) );
+			bp_core_add_message( __( 'Thanks for your vote!', $this->plugin_slug ) );
 	    } elseif ( -1 == $success ) {
 			bp_core_add_message( __( 'You\'ve already voted. No ballot stuffing! :)' , $this->plugin_slug ), 'error' );
 	    } elseif ( -2 == $success ) {
@@ -364,7 +368,11 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			bp_core_add_message( __( 'Sorry, we couldn\'t count your vote right now.', $this->plugin_slug ), 'error' );
 	    }
 		// Redirect and exit
-		bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+		if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
+			bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );
+		} else {
+			bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+		}
 		return;
 	}
 
@@ -376,7 +384,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			return;
 		}
 
-		if ( ! sa_is_section( 'video-contest') ) {
+		if ( ! sa_is_section( 'take-action') ) {
 			return;
 		}
 		$user_id = get_current_user_id();
@@ -384,8 +392,11 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		$nonce_value = 'sa_video_contest_join_submit_' . $user_id;
 		if( ! wp_verify_nonce( $_POST[ $nonce_value ], 'sa_video_contest_join_submit' ) ) {
 			bp_core_add_message( __( 'Sorry, we couldn\'t add you to the hub Salud America!', $this->plugin_slug ), 'error' );
-			// Redirect and exit
-			bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+			if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
+				bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );
+			} else {
+				bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+			}
 			return;
 		}
 
@@ -420,7 +431,11 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			}
 		}
 		// Redirect and exit
-		bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+		if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
+			bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );
+		} else {
+			bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
+		}
 		return;
 	}
 

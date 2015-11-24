@@ -92,7 +92,8 @@ function sa_get_tab_slug( $section = 'policies' ){
             $slug = 'take-action'; //old value = take-action-list
             break;
         case 'video-contest':
-            $slug = 'video-contest';
+            // $slug = 'video-contest';
+            $slug = 'take-action'; // video contests were moved under the take-action tab.
             break;
         case 'tweetchats':
             $slug = 'tweetchats';
@@ -169,7 +170,7 @@ function sa_get_cpt_by_section( $section = 'policies' ){
             break;
         case 'take_action':
         case 'take-action':
-            $cpt = 'sa_take_action';
+            $cpt = array( 'sa_take_action', 'sa_video_contest' );
             break;
         case 'video-contest':
             $cpt = 'sa_video_contest';
@@ -211,7 +212,8 @@ function sa_get_section_by_cpt( $cpt = 'sapolicies' ) {
             $section = 'take_action';
             break;
         case 'sa_video_contest':
-            $section = 'video-contest';
+            // $section = 'video-contest';
+            $section = 'take_action';
             break;
         case 'sa_tweetchats':
             $section = 'tweetchats';
@@ -422,6 +424,12 @@ function sa_is_single_post(){
             // What taxonomies are associated with that cpt?
             $taxonomy_names = get_object_taxonomies( $cpt );
             $other_names = array( 'page', 'paged', 'search' );
+
+            // The "take action" tab has two subsections, we'll need to account for those.
+            if ( sa_is_take_action_tab() ) {
+                $other_names[] = 'current-actions';
+                $other_names[] = 'past-actions';
+            }
 
             $action_variables = bp_action_variables();
 
@@ -651,6 +659,22 @@ function sa_is_big_bets_tab(){
     return $retval;
 }
 
+/**
+ * Are we viewing the reimagined "take action" tab?
+ * URLs are structured differently here.
+ *
+ * @since   1.3.5
+ *
+ * @return  bool
+ */
+function sa_is_take_action_tab(){
+    $retval = false;
+    if ( bp_current_action() == sa_get_tab_slug( 'take_action' ) ) {
+        $retval = true;
+    }
+    return $retval;
+}
+
 
 /**
 * Date format converters
@@ -674,6 +698,11 @@ function sa_convert_to_short_human_date( $date ){
     // Goal format is 3/25
     $shuffle = date_create_from_format( 'Ymd', $date );
     return date_format( $shuffle, 'n/j' );
+}
+function sa_convert_to_short_complete_human_date( $date ){
+    // Goal format is 3/25/2015
+    $shuffle = date_create_from_format( 'Ymd', $date );
+    return date_format( $shuffle, 'n/j/Y' );
 }
 
 /**
