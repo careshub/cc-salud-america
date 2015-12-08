@@ -55,18 +55,64 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 					),
 			),
 		),
-		'infographics' => array(
-			'label' => 'Infographics',
+		'infographic-1' => array(
+			'label' => 'Infographic 1',
 			'fields' => array(
-				'infographics_icon' => array(
+				'infographic_1_label' => array(
+					'label' => 'Label',
+					'type'	=> 'text'
+					),
+				'infographic_1_icon' => array(
 					'label' => 'Icon',
 					'type'	=> 'image'
 					),
-				'infographic_english' => array(
+				'infographic_1_english' => array(
 					'label' => 'English Version',
 					'type'	=> 'image'
 					),
-				'infographic_spanish' => array(
+				'infographic_1_spanish' => array(
+					'label' => 'Spanish Version',
+					'type'	=> 'image'
+					),
+			 ),
+		),
+		'infographic-2' => array(
+			'label' => 'Infographic 2',
+			'fields' => array(
+				'infographic_2_label' => array(
+					'label' => 'Label',
+					'type'	=> 'text'
+					),
+				'infographic_2_icon' => array(
+					'label' => 'Icon',
+					'type'	=> 'image'
+					),
+				'infographic_2_english' => array(
+					'label' => 'English Version',
+					'type'	=> 'image'
+					),
+				'infographic_2_spanish' => array(
+					'label' => 'Spanish Version',
+					'type'	=> 'image'
+					),
+			 ),
+		),
+		'infographic-3' => array(
+			'label' => 'Infographic 3',
+			'fields' => array(
+				'infographic_3_label' => array(
+					'label' => 'Label',
+					'type'	=> 'text'
+					),
+				'infographic_3_icon' => array(
+					'label' => 'Icon',
+					'type'	=> 'image'
+					),
+				'infographic_3_english' => array(
+					'label' => 'English Version',
+					'type'	=> 'image'
+					),
+				'infographic_3_spanish' => array(
 					'label' => 'Spanish Version',
 					'type'	=> 'image'
 					),
@@ -200,31 +246,42 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 					<th scope="row" ><?php echo $section['label']; ?></th>
 					<td>
 					<?php foreach ( $section['fields'] as $field_id => $field ) {
-						$filetype_label = ( $field['type'] == 'pdf' ) ? 'PDF' : "Image";
-						?>
-						<label for='sa_term_intro_<?php echo $field_id; ?>'><strong><?php echo $field['label']; ?></strong></label><br />
-						<span id="sa_term_intro_<?php echo $field_id; ?>_filename"><?php
-						if ( ! empty( $custom[ 'sa_term_intro_' . $field_id ][0] ) ) {
-							echo basename( get_attached_file( $custom[ 'sa_term_intro_' . $field_id ][0] ) );
-						} else {
-							echo "<em>No file selected.</em>";
-						}
-						?></span>
-						<input id='sa_term_intro_<?php echo $field_id; ?>' type='hidden' name='sa_term_intro_<?php echo $field_id; ?>' value='<?php
+						if ( in_array( $field['type'], array( 'pdf', 'image' ) ) ) {
+							$filetype_label = ( $field['type'] == 'pdf' ) ? 'PDF' : "Image";
+							?>
+							<label for='sa_term_intro_<?php echo $field_id; ?>'><strong><?php echo $field['label']; ?></strong></label><br />
+							<span id="sa_term_intro_<?php echo $field_id; ?>_filename"><?php
+							if ( ! empty( $custom[ 'sa_term_intro_' . $field_id ][0] ) ) {
+								echo basename( get_attached_file( $custom[ 'sa_term_intro_' . $field_id ][0] ) );
+							} else {
+								echo "<em>No file selected.</em>";
+							}
+							?></span>
+							<input id='sa_term_intro_<?php echo $field_id; ?>' type='hidden' name='sa_term_intro_<?php echo $field_id; ?>' value='<?php
+								if ( ! empty( $custom[ 'sa_term_intro_' . $field_id ][0] ) ) {
+									echo $custom[ 'sa_term_intro_' . $field_id ][0];
+								}
+								?>'/>
+							<button id="sa_term_intro_<?php echo $field_id; ?>_button" class="sa_term_intro_file_upload_button" data-section="<?php echo $field_id; ?>" data-filetype="<?php echo $field['type'] ?>">Select <?php echo $filetype_label; ?></button>
+							<?php
+							if ( empty( $custom[ 'sa_term_intro_' . $field_id ][0] ) ) {
+								$show_style = 'style="display:none"';
+							} else {
+								$show_style = '';
+							}
+							?>
+							<button id="sa_term_intro_<?php echo $field_id; ?>_button_remove" class="sa_term_intro_file_remove_button" data-section="<?php echo $field_id; ?>" <?php echo $show_style; ?>>Remove <?php echo $filetype_label; ?></button><br />
+							<?php
+						} elseif ( 'text' == $field['type'] ) {
+							?>
+							<label for='sa_term_intro_<?php echo $field_id; ?>'><strong><?php echo $field['label']; ?></strong></label><br />
+							<input type='text' name='sa_term_intro_<?php echo $field_id; ?>' value='<?php
 							if ( ! empty( $custom[ 'sa_term_intro_' . $field_id ][0] ) ) {
 								echo $custom[ 'sa_term_intro_' . $field_id ][0];
 							}
-							?>'/>
-						<button id="sa_term_intro_<?php echo $field_id; ?>_button" class="sa_term_intro_file_upload_button" data-section="<?php echo $field_id; ?>" data-filetype="<?php echo $field['type'] ?>">Select <?php echo $filetype_label; ?></button>
-						<?php
-						if ( empty( $custom[ 'sa_term_intro_' . $field_id ][0] ) ) {
-							$show_style = 'style="display:none"';
-						} else {
-							$show_style = '';
+							?>' size="36"/><br />
+							<?php
 						}
-						?>
-						<button id="sa_term_intro_<?php echo $field_id; ?>_button_remove" class="sa_term_intro_file_remove_button" data-section="<?php echo $field_id; ?>" <?php echo $show_style; ?>>Remove <?php echo $filetype_label; ?></button><br />
-						<?php
 					}
 					?>
 					<td>

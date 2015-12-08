@@ -95,10 +95,10 @@ if ( $page_intro->have_posts() ) :
 
             the_content(); ?>
 
-            <div class="clear clear-both">
+            <div class="Grid Grid--full large-Grid--fit">
 
                     <?php if ( ! empty( $custom[ 'sa_term_intro_research_review' ][0] ) ) : ?>
-                        <div class="column1of3 aligncenter">
+                        <div class="Grid-cell aligncenter">
                             <?php
                             if ( ! empty( $custom[ 'sa_term_intro_research_review_icon' ][0] ) ) {
                                 echo wp_get_attachment_image( $custom[ 'sa_term_intro_research_review_icon' ][0], 'detail', false, $small_icon_attr );
@@ -108,7 +108,7 @@ if ( $page_intro->have_posts() ) :
                         </div>
                     <?php endif; ?>
                     <?php if ( ! empty( $custom[ 'sa_term_intro_issue_brief_english' ][0] ) || ! empty( $custom[ 'sa_term_intro_issue_brief_spanish' ][0] ) ) : ?>
-                        <div class="column1of3 aligncenter">
+                        <div class="Grid-cell aligncenter">
                             <?php
                             if ( ! empty( $custom[ 'sa_term_intro_issue_brief_icon' ][0] ) ) {
                                 echo wp_get_attachment_image( $custom[ 'sa_term_intro_issue_brief_icon' ][0], 'detail',false, $small_icon_attr );
@@ -128,27 +128,42 @@ if ( $page_intro->have_posts() ) :
                             ?>
                         </div>
                     <?php endif; ?>
-                    <?php if ( ! empty( $custom[ 'sa_term_intro_infographic_english' ][0] ) || ! empty( $custom[ 'sa_term_intro_infographic_spanish' ][0] ) ) :  ?>
-                        <div class="column1of3 aligncenter">
-                            <?php
-                            if ( ! empty( $custom[ 'sa_term_intro_infographics_icon' ][0] ) ) {
-                                echo wp_get_attachment_image( $custom[ 'sa_term_intro_infographics_icon' ][0], 'detail', false, $small_icon_attr );
-                            }
-                            ?><strong>Infographic</strong>
-                            <?php
-                            if ( ! empty( $custom[ 'sa_term_intro_infographic_english' ][0] ) ) {
-                            ?>
-                                <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_infographic_english' ][0] ); ?>" class="button aligncenter">Download in English</a></div>
-                            <?php
-                            }
-                            if ( ! empty( $custom[ 'sa_term_intro_infographic_spanish' ][0] ) ) {
-                            ?>
-                                <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_infographic_spanish' ][0] ); ?>" class="button aligncenter">Download in Spanish</a></div>
-                            <?php
-                            }
-                            ?>
-                        </div>
-                    <?php endif; ?>
+                    <?php
+                    $infographics = array(
+                        'infographic_1',
+                        'infographic_2',
+                        'infographic_3'
+                    );
+                    foreach ( $infographics as $meta_key ) {
+                        if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_english' ][0] ) || ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_spanish' ][0] ) ) :  ?>
+                            <div class="Grid-cell aligncenter">
+                                <?php
+                                if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_icon' ][0] ) ) {
+                                    echo wp_get_attachment_image( $custom[ 'sa_term_intro_' . $meta_key . '_icon' ][0], 'detail', false, $small_icon_attr );
+                                }
+                                ?><strong><?php
+                                if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_label' ][0] ) ) {
+                                    echo $custom[ 'sa_term_intro_' . $meta_key . '_label' ][0];
+                                } else {
+                                    echo 'Infographic';
+                                }
+                                ?></strong>
+                                <?php
+                                if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_english' ][0] ) ) {
+                                ?>
+                                    <div class="pad" style="margin:4px;"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_' . $meta_key . '_english' ][0] ); ?>" class="button aligncenter">Download in English</a></div>
+                                <?php
+                                }
+                                if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_spanish' ][0] ) ) {
+                                ?>
+                                    <div class="pad" style="margin:4px;"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_' . $meta_key . '_spanish' ][0] ); ?>" class="button aligncenter">Download in Spanish</a></div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        <?php endif;
+                    } // end foreach;
+                    ?>
            </div>
        </article>
     <?php
