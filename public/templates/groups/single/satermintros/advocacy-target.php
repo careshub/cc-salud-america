@@ -59,10 +59,10 @@ if ( $page_intro->have_posts() ) :
 
             // Output the introductory videos
             if ( ! empty( $custom[ 'sa_term_intro_video_english_url' ][0] ) ) {
-                // $video_embed_english = wp_oembed_get( $custom[ 'sa_term_intro_video_english_url' ][0] );
+                $video_embed_english = wp_oembed_get( $custom[ 'sa_term_intro_video_english_url' ][0] );
             }
             if ( ! empty( $custom[ 'sa_term_intro_video_spanish_url' ][0] ) ) {
-                // $video_embed_spanish = wp_oembed_get( $custom[ 'sa_term_intro_video_spanish_url' ][0] );
+                $video_embed_spanish = wp_oembed_get( $custom[ 'sa_term_intro_video_spanish_url' ][0] );
             }
             // If we have at least one video, output the video block
             if ( ! empty( $video_embed_english ) || ! empty( $video_embed_spanish ) ) {
@@ -96,71 +96,7 @@ if ( $page_intro->have_posts() ) :
             the_content(); ?>
 
             <div class="clear clear-both">
-                <?php // What a pain in the ass.
-                // Output a "coming soon block", which of course is different for every term. Eff me.
-                $links = array();
-                switch ( $tax_term->slug ) {
-                    case 'sa-healthier-schools':
-                        // Includes both Active Play and Healthier School Snacks
-                        $links[] = '<strong>Active Play</strong> <a href="' . site_url( '/wp-content/uploads/2013/08/Active-Play-Research-Review.pdf' ) . '">Research Review</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Active-Play-Issue-Brief.pdf') . '">Issue Brief in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/SpanishActive-Play-Issue-Brief.pdf') . '">Issue Brief in Spanish</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2015/03/Active-Play-Infographic-875-1.jpg') . '">Infographic in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/ActivePlay_Infographic_SPN_sml.jpg') . '">Infographic in Spanish</a>';
-                        $links[] = '<br /><strong>Healthier School Snacks</strong> <a href="' . site_url( '/wp-content/uploads/2013/08/Healthier-School-Snacks-Research-Review.pdf' ) . '">Research Review</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Healthier-School-Snacks-Issue-Brief.pdf') . '">Issue Brief in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/SpanishHealthier-School-Snacks-Issue-Brief.pdf') . '">Issue Brief in Spanish</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Healthier-School-Snacks-Infographic-875.jpg') . '">Infographic in English</a>';
-                        break;
-                    case 'sa-active-spaces':
-                        $links[] = '<strong>Active Spaces</strong> <a href="' . site_url( '/wp-content/uploads/2013/08/Active-Spaces-Research-Review.pdf' ) . '">Research Review</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Active-Spaces-Issue-Brief.pdf') . '">Issue Brief in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/SpanishActive-Spaces-Issue-Brief.pdf') . '">Issue Brief in Spanish</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Active-Spaces-Infographic-875.jpg') . '">Infographic in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Salud_ActiveSpaces_Infographic_SPN_sml.jpg') . '">Infographic in Spanish</a>';
-                        break;
-                    case 'sa-better-food-in-neighborhoods':
-                        $links[] = '<strong>Better Food in Neighborhoods </strong><a href="' . site_url( '/wp-content/uploads/2013/08/BetterFoodintheNeighborhood-ResearchReview.pdf' ) . '">Research Review</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Better-Food-in-the-Neighborhood-Issue-Brief.pdf') . '">Issue Brief in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/SpanishBetter-Food-in-Neighborhoods-Issue-Brief.pdf') . '">Issue Brief in Spanish</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2013/08/Better-Food-in-the-Neighborhood-Infographic-875.jpg') . '">Infographic in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Salud_BetterFoods_Infographic_SPN_sml_0.jpg') . '">Infographic in Spanish</a>';
-                        break;
-                    case 'sa-sugary-drinks':
-                        $links[] = '<strong>Better Food in Neighborhoods </strong><a href="' . site_url( '/wp-content/uploads/2014/02/Sugary-Drinks-research-review.pdf' ) . '">Research Review</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Sugary-Drinks-issue-brief.pdf') . '">Issue Brief in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/SpanishSugary-Drinks-Issue-Brief.pdf') . '">Issue Brief in Spanish</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Sugary-Drinks-Infographic-875.png') . '">Infographic in English</a>';
-                        $links[] = '<a href="' . site_url('/wp-content/uploads/2014/02/Salud_SugaryDrinks_Infographic_SPN_sml.jpg') . '">Infographic in Spanish</a>';
-                        break;
-                    case 'sa-health-equity':
-                    case 'sa-healthy-weight':
-                    default:
-                        break;
-                }
 
-                ?>
-
-                <div id="message" class="updated">
-                    <h5>New Research Coming!</h5>
-                    <p><em>Salud America!</em> will be releasing a brand-new research review on this topic, as well as a two-page research summary, infographics, and an animated video.</p>
-
-                    <?php if ( ! empty( $links ) ) {
-                        ?>
-                        <p>Until then, refer to our 2013 <em>Salud America!</em> research.</p>
-                        <p><?php echo implode( ', ', $links ); ?></p>
-                        <?php
-                    } else {
-                        ?>
-                        <p>Until then, visit the <a href="http://www.rwjf.org/en/culture-of-health.html" target="_blank">RWJF blog</a> on creating a culture of health.</p>
-                        <?php
-                    }
-                ?>
-                <div>
-                <?php
-                // We're temporarily changing the display of this stuff.
-                if ( false ) {
-                ?>
                     <?php if ( ! empty( $custom[ 'sa_term_intro_research_review' ][0] ) ) : ?>
                         <div class="column1of3 aligncenter">
                             <?php
@@ -213,7 +149,6 @@ if ( $page_intro->have_posts() ) :
                             ?>
                         </div>
                     <?php endif; ?>
-                <?php } // temporary highjacking the old stuff.?>
            </div>
        </article>
     <?php
