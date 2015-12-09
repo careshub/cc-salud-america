@@ -4,13 +4,12 @@
 
 // Pull mailing list data for SA, creates a CSV
 function sa_pull_mailing_list() {
-	$args = array(
-	    'meta_key'     => 'salud_newsletter',
-	    'meta_compare' => 'EXISTS',
-	);
-	$user_query = new WP_User_Query( $args );
-	// User Loop
+	global $wpdb;
+	$user_ids = $wpdb->get_col( 'SELECT d.user_id FROM wp_bp_xprofile_data d WHERE d.field_id = 1382 AND d.value LIKE "%receive%"', 0 );
+	$user_query = new BP_User_Query( array( 'user_ids' => $user_ids ) );
 	// var_dump($user_query);
+
+	// User Loop
 	$i = 1;
 
 	if ( ! empty( $user_query->results ) ) {
