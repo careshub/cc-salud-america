@@ -219,6 +219,7 @@
 					            	950, // About Me (SA)
 					            	1100, // Self-efficacy (SA)
 					            	1101, // Collective Efficacy
+					            	1173, // Join the SA e-mail list
 					            	);
 					            break;
 					        case 'http://www.communitycommons.org':
@@ -233,6 +234,7 @@
 					            	1317, // About Me (SA)
 					            	1318, // Self-efficacy (SA)
 					            	1329, // Collective Efficacy
+					            	1382, // Join the SA e-mail list
 					            	);
 					            break;
 					    }
@@ -250,7 +252,6 @@
 						if ( bp_has_profile( array( 'exclude_fields' => $exclude_fields, 'fetch_field_data' => false ) ) ) :
 							while ( bp_profile_groups() ) : bp_the_profile_group();
 						// We end the div after the BP base group and start a new one before the the SA fields.
-						bp_the_profile_group_name();
 						if ( 1 != bp_get_the_profile_group_id() ) {
 							?>
 							</div>
@@ -425,13 +426,6 @@
 				do_action( 'bp_after_blog_details_fields' ); ?>
 
 			<?php endif; ?>
-
-			<div id="sa-newsletter-opt-in" class="register-section checkbox alignright">
-				<div class="editfield persistent">
-					<label><input type="checkbox" name="salud_newsletter" id="salud_newsletter" value="agreed" <?php checked( $_POST['salud_newsletter'], 'agreed' ); ?>/> I would like to receive email updates from Salud America!</label>
-					<p class="description">Periodically, Salud America! sends out news updates and brief surveys.</p>
-				</div>
-			</div>
 
 			<input type="hidden" name="salud_interest_group" id="salud_interest_group" value="1" />
 
