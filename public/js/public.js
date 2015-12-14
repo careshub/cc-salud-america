@@ -107,7 +107,14 @@
 		 		query_string += $( this ).val();
 		 		counter++;
 		 	});
-		 	$( '#salud-hub-advanced-search #type' ).val( query_string );
+
+		 	// Set the value if one exists.
+		 	if ( query_string ) {
+			 	$( '#salud-hub-advanced-search #type' ).val( query_string );
+			} else {
+				// If no value, disable the input so that the url is cleaner.
+				$( '#salud-hub-advanced-search #type' ).prop( 'disabled', true );
+			}
 
 		 	// Same routine for topics
 		 	query_string = '';
@@ -119,7 +126,14 @@
 		 		query_string += $( this ).val();
 		 		counter++;
 		 	});
+
+		 	// Set the value if one exists.
+		 	if ( query_string ) {
 		 	$( '#salud-hub-advanced-search #topic' ).val( query_string );
+			} else {
+				// If no value, disable the input so that the url is cleaner.
+				$( '#salud-hub-advanced-search #topic' ).prop( 'disabled', true );
+			}
 
 		 	// Submit the form.
 		 	$( '#salud-hub-advanced-search' ).submit();
