@@ -939,4 +939,24 @@ function sa_before_activity_list_intro() {
     <?php
 }
 
+/**
+ * Template tag to output a search box that sends queries to the SA search tab.
+ *
+ * @since   1.4.0
+ * @param   string $placeholder  Text to use as form input placeholder.
+ *
+ * @return  html
+ */
+function salud_hub_search_form( $placeholder = "Search" ) {
+    // Grab user-entered search terms.
+    $search_terms = get_query_var('s') ? get_query_var('s') : '';
+    ?>
+    <div class="salud-search-box">
+        <form id="salud-hub-search" method="get" action="<?php echo sa_get_section_permalink( 'search' ); ?>">
+            <input id="salud-hub-search-text" class="salud-search-input searchx18" type="search" maxlength="150" value="<?php echo $search_terms; ?>" name="s" placeholder="<?php echo $placeholder; ?>">
+            <input class="salud-hub-search-button" type="submit" value="Search">
+        </form>
+    </div>
+    <?php
+}
 

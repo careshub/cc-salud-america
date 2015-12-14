@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.3.0';
+	const VERSION = '1.4.0';
 
 	/**
 	 *
@@ -144,6 +144,8 @@ class CC_Salud_America {
 		add_filter( 'sa_bp_after_group_header', array( $this, 'filter_subnav_tab_labels' ) );
 		// add_filter( 'bp_init', array( $this, 'filter_subnav_tab_labels' ) );
 
+		// SEARCH
+		add_filter('relevanssi_prevent_default_request', array( $this, 'stop_relevanssi_on_sa_search' ) );
 
 	}
 
@@ -1376,6 +1378,15 @@ class CC_Salud_America {
 			 ) );
 			update_option( 'sa_curator_user_ids', $curators, false );
 		}
+	}
+
+	// SEARCH
+	// Prevent relevanssi from breaking our archive searches
+	public function stop_relevanssi_on_sa_search( $run ) {
+		if ( sa_is_section( 'search' ) ) {
+		    $run = false;
+		}
+		return $run;
 	}
 }
 $cc_salud_america = new CC_Salud_America();

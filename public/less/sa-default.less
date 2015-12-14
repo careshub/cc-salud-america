@@ -58,33 +58,21 @@
 			// z-index: 10;
 		}
 		.big-bets-banners-header {
-			display: none;
-		}
-		// .sa-group-header-title {
-			// float: left;
-			// clear: none;
-			// margin-left: 2%;
-		 //    font-style: italic;
-		 //    position: relative;
-   // 		    z-index: 30;
-			// .font-size(2.4);
-			// color: @sared;
-			// margin-top: 0;
-			// margin-bottom: 0.5em;
-			// line-height: 1;
-			// .salud-tagline {
-			// 	.font-size(2);
-			// }
-		// }
-		.sa-social-icon-wrapper {
-			margin-top: 1em;
-			background-color: @saorange;
-		    clear: left;
-		    height: 2px;
-		    z-index: 30;
-		}
-		.sa-social-icons {
-			display: none;
+			z-index: 42;
+			.big-bet-icon-link {
+				float: left;
+				margin: -34px;
+			}
+			.big-bet-icon {
+				transition: transform 0.2s;
+				transform: scale(.38);
+				z-index: 43;
+				position: relative;
+				&:hover {
+					transform: scale(.5);
+					z-index: 44;
+				}
+			}
 		}
 	}
 	.salud-footer {
@@ -972,6 +960,52 @@
 			}
 		}
 	}
+}
+// Salud Hub search form
+.sa-social-icon-wrapper {
+	margin-top: 1em;
+	background-color: @saorange;
+    clear: left;
+    z-index: 30;
+    position: relative;
+    height: 28px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.sa-social-bar-items {
+	position: absolute;
+	right: 2%;
+	left: 2%;
+	text-align: right;
+}
+.salud-search-box {
+	display: inline-block;
+}
+.salud-search-box .salud-search-input {
+	width: 9em;
+	height: 28px;
+	background-position: -100px -270px;
+	padding: 3px 3px 3px 28px;
+}
+.salud-search-box .salud-hub-search-button {
+	display: none;
+}
+.sa-social-icons {
+	display: inline-block;
+	margin-left: 2%;
+}
+// Search page
+.salud-search-page-search-form .salud-search-box {
+	display: block;
+}
+.salud-search-page-search-form .salud-search-box form {
+	margin-bottom: .5em;
+}
+.salud-search-page-search-form .salud-search-box .salud-search-input {
+	width: 80%;
+}
+.salud-search-page-search-form .salud-search-box .salud-hub-search-button {
+	display: inline-block;
 }
 // Video contest styles
 .video-contest {

@@ -78,7 +78,7 @@ function sa_get_section_permalink( $section = 'policies' ) {
  * @param   string $section The shorthand name of the section
  * @return  string The slug for the target tab
  */
-function sa_get_tab_slug( $section = 'policies' ){
+function sa_get_tab_slug( $section = 'policies' ) {
     switch ( $section ) {
         case 'resources':
         case 'saresources':
@@ -100,6 +100,9 @@ function sa_get_tab_slug( $section = 'policies' ){
             break;
         case 'big_bets':
             $slug = 'big-bets';
+            break;
+        case 'search':
+            $slug = 'search';
             break;
         case 'changes':
         case 'policies':
@@ -257,6 +260,85 @@ function sa_get_label_by_cpt( $cpt = 'sapolicies' ) {
     }
 
     return apply_filters( 'sa_get_label_by_cpt', $section );
+}
+
+/**
+ * Get short slug-type string to represent a post type.
+ * Useful for query arguments.
+ *
+ * @since   1.4.0
+ * @param   string $post_type
+ *
+ * @return  string
+ */
+function salud_get_post_type_short_slug( $post_type ) {
+    switch ( $post_type ) {
+        case 'resources':
+        case 'saresources':
+            $slug = "resources";
+            break;
+        case 'heroes':
+        case 'sa_success_story':
+            $slug = 'heroes'; //old value = sa_success_story
+            break;
+        case 'sa_take_action':
+            $slug = 'take-action'; //old value = take-action-list
+            break;
+        case 'sa_video_contest':
+            // $slug = 'video-contest';
+            $slug = 'video-contests'; // video contests were moved under the take-action tab.
+            break;
+        case 'tweetchats':
+            $slug = 'tweetchats';
+            break;
+        case 'changes':
+        case 'policies':
+        case 'sapolicies':
+        default:
+            $slug = 'changes'; //old value = sapolicies
+            break;
+    }
+
+    return $slug;
+}
+
+/**
+ * Get short string to represent a post type.
+ *
+ * @since   1.4.0
+ * @param   string $post_type
+ *
+ * @return  string
+ */
+function salud_get_post_type_short_name( $post_type ) {
+    switch ( $post_type ) {
+        case 'resources':
+        case 'saresources':
+            $slug = "Resources";
+            break;
+        case 'heroes':
+        case 'sa_success_story':
+            $slug = 'Salud Heroes'; //old value = sa_success_story
+            break;
+        case 'sa_take_action':
+            $slug = 'Take Action!'; //old value = take-action-list
+            break;
+        case 'sa_video_contest':
+            // $slug = 'video-contest';
+            $slug = 'Video Contests'; // video contests were moved under the take-action tab.
+            break;
+        case 'tweetchats':
+            $slug = 'Tweetchats';
+            break;
+        case 'changes':
+        case 'policies':
+        case 'sapolicies':
+        default:
+            $slug = 'Changes'; //old value = sapolicies
+            break;
+    }
+
+    return $slug;
 }
 
 /*
@@ -883,4 +965,25 @@ function sa_get_location_xprofile_field_ids(){
             break;
     }
     return apply_filters( 'sa_get_location_xprofile_field_ids', $ids );
+}
+
+/**
+ * Get very short slug to stand in for the full slug of a big bet.
+ * Useful as a query argument.
+ *
+ * @since   1.4.0
+ * @param   string $term_slug
+ *
+ * @return  string url
+ */
+// Sometimes the advocacy target term slug is too long, like for query arguments.
+function salud_get_bet_short_name( $term_slug ) {
+    // Substrings are good enough--I can imagine these slugs changing,
+    // so we'll just pick out the key, unique word.
+    $shorties = array( 'spaces', 'food', 'equity', 'schools', 'weight', 'sugar' );
+    foreach( $shorties as $shorty ) {
+        if ( strpos( $term_slug, $shorty ) ) {
+            return $shorty;
+        }
+    }
 }

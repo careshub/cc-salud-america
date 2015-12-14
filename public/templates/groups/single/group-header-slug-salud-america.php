@@ -27,11 +27,14 @@ $big_bets = get_terms( 'sa_advocacy_targets', array(
         </div>
         <div class="sa-kids-photo"><img src="<?php echo $plugin_base_url . 'public/images/pointing-girl-205x150.jpg'; ?>" alt="Girl pointing at the Big Bets header"></div>
         <div class="sa-social-icon-wrapper">
-            <div class="sa-social-icons">
-                <a href='http://twitter.com/saludtoday' target="_blank" class="sa-twitterx28"></a>
-                <a href='http://www.facebook.com/pages/SaludToday/160946931268' target="_blank" class="sa-facebookx28"></a>
-                <a href='http://www.youtube.com/user/SaludToday' target="_blank" class="sa-youtubex28"></a>
-                <a href='http://instagram.com/saludtoday' target="_blank" class="sa-instagramx28"></a>
+            <div class="sa-social-bar-items">
+                <?php salud_hub_search_form(); ?>
+                <div class="sa-social-icons">
+                    <a href='http://twitter.com/saludtoday' target="_blank" class="sa-twitterx28"></a>
+                    <a href='http://www.facebook.com/pages/SaludToday/160946931268' target="_blank" class="sa-facebookx28"></a>
+                    <a href='http://www.youtube.com/user/SaludToday' target="_blank" class="sa-youtubex28"></a>
+                    <a href='http://instagram.com/saludtoday' target="_blank" class="sa-instagramx28"></a>
+                </div>
             </div>
         </div>
 

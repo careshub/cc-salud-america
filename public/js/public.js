@@ -76,6 +76,54 @@
 
 			processing = false;
 		});
+
+		// Hide the advanced section of the form on page load.
+		if ( $( '#salud-search-advanced' ).length ) {
+			// We leave it visible if any of the "more options" checkboxes are selected.
+			// Hide if none are selected.
+			if ( ! $( 'input[name="type[]"]:checked' ).length && ! $( 'input[name="topic[]"]:checked' ).length ) {
+				$( '#salud-search-advanced' ).hide();
+			}
+		}
+
+		// Toggle the advanced search part of the form.
+		$( "#toggle-advanced-search" ).click(function( e ) {
+			e.preventDefault();
+			$( '#salud-search-advanced' ).toggle();
+		});
+
+		// Interrupt the advanced search form submission so we can clean up the input.
+		$( "#salud-advanced-hub-search-submit" ).click(function( e ) {
+			e.preventDefault();
+
+		 	// Grab all the checked type checkboxes and concatenate them to a comma-separated string,
+		 	// then set that value to the form's hidden input.
+		 	var query_string = '';
+		 	var counter = 1;
+		 	$( 'input[name="type[]"]:checked' ).each(function() {
+		 		if ( counter > 1 ) {
+		 			query_string += ',';
+		 		}
+		 		query_string += $( this ).val();
+		 		counter++;
+		 	});
+		 	$( '#salud-hub-advanced-search #type' ).val( query_string );
+
+		 	// Same routine for topics
+		 	query_string = '';
+		 	counter = 1;
+		 	$( 'input[name="topic[]"]:checked' ).each(function() {
+		 		if ( counter > 1 ) {
+		 			query_string += ',';
+		 		}
+		 		query_string += $( this ).val();
+		 		counter++;
+		 	});
+		 	$( '#salud-hub-advanced-search #topic' ).val( query_string );
+
+		 	// Submit the form.
+		 	$( '#salud-hub-advanced-search' ).submit();
+		});
 	});
 
 	/**
