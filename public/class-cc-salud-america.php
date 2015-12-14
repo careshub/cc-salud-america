@@ -1103,7 +1103,7 @@ class CC_Salud_America {
 			// If location exists, attempt to get the long/lat from the Google geocoder.
 			$coordinates = $this->get_long_lat_from_location( $location );
 			if ( $coordinates ) {
-				$this->add_user_to_leader_map( $user_id, $coordinates );
+				$this->add_user_to_leader_map( $user_id, $coordinates, $location );
 
 				$towrite = PHP_EOL . 'Adding meta, coords: ' . print_r( $coordinates, true );
 				$fp = fopen('sa_geocoder_results.txt', 'a');
@@ -1192,7 +1192,7 @@ class CC_Salud_America {
 			// If the value of either control has changed, we need to update the meta value.
 			$coordinates = $this->get_long_lat_from_location( $new_values[$location_field_id]['value'] );
 			if ( $coordinates ) {
-				$this->add_user_to_leader_map( $user_id, $coordinates );
+				$this->add_user_to_leader_map( $user_id, $coordinates, $new_values[$location_field_id]['value'] );
 				$towrite = ' | Updating meta., coords: ' . print_r( $coordinates, true );
 				$fp = fopen('sa_geocoder_results.txt', 'a');
 				fwrite($fp, $towrite);
@@ -1214,7 +1214,7 @@ class CC_Salud_America {
 		}
 	}
 
-	public function add_user_to_leader_map( $user_id, $coordinates ) {
+	public function add_user_to_leader_map( $user_id, $coordinates, $location ) {
 		update_user_meta( $user_id, 'sa_leader_map_long_lat', $coordinates );
 
 		/**
@@ -1222,9 +1222,11 @@ class CC_Salud_America {
 		 *
 		 * @since 1.3.1
 		 *
-		 * @param int   $user_id   ID of the user.
+		 * @param int    $user_id     ID of the user.
+		 * @param string $location    Location field value.
+		 * @param string $coordinates Calculated coordinates based on location.
 		 */
-		do_action( 'sa_add_user_to_leader_map', $user_id );
+		do_action( 'sa_add_user_to_leader_map', $user_id, $location, $coordinates );
 	}
 
 	/**
