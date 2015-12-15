@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.5.0';
 
 	/**
 	 *
@@ -147,6 +147,15 @@ class CC_Salud_America {
 		// SEARCH
 		add_filter('relevanssi_prevent_default_request', array( $this, 'stop_relevanssi_on_sa_search' ) );
 
+		// NOTIFICATIONS
+		// Format the output of the "new user joined the leaders map" notifications.
+		add_filter( 'bp_groups_sa_leader_joined_map_notification', array( $this, 'leader_joined_map_notification_description' ), 10, 5 );
+
+		// When a new member adds himself to the leaders map, notify the curators.
+		add_action( 'sa_add_user_to_leader_map', array( $this, 'leader_joined_map_notification_handler' ) );
+
+		// When the curator visits the new leader's profile, mark the notification as read.
+		add_action( 'bp_before_member_header', array( $this, 'mark_leader_joined_map_notification_read' ) );
 	}
 
 
@@ -1389,6 +1398,99 @@ class CC_Salud_America {
 		    $run = false;
 		}
 		return $run;
+	}
+
+	// NOTIFICATIONS
+	/**
+	 *  Format the output of the "new user joined the leaders map" notifications.
+	 *
+ 	 *  @param  	object $notification
+ 	 *  @param  	int $item_id
+ 	 *  @param  	int $secondary_item_id
+  	 *  @param  	int $total_items
+  	 *  @param  	string $format Format to return the notification as.
+	 *  @return 	array|string The notification
+	 *  @since    	1.5.0
+	 */
+	public function leader_joined_map_notification_description( $notification, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+
+			if ( $total_items > 1 ) {
+				$text = 'New members have added themselves to the leaders map.';
+				$notification_link = bp_get_notifications_permalink();
+
+				if ( 'string' == $format ) {
+					return '<a href="' . $notification_link . '" title="Link to your notifications screen">' . $text . '</a>';
+				} else {
+					return array(
+						'link' => $notification_link,
+						'text' => $text
+					);
+				}
+
+			} else {
+				$new_member_id = $secondary_item_id;
+				$username = bp_core_get_username( $new_member_id );
+				$text = $username . ' joined the Salud Leaders map.';
+				$notification_link = add_query_arg( 'sanl', 1, bp_core_get_user_domain( $new_member_id ) );
+
+
+				if ( 'string' == $format ) {
+					return '<a href="' . $notification_link . '">' . $text . '</a>';
+				} else {
+					return array(
+						'link' => $notification_link,
+						'text' => $text
+					);
+				}
+			}
+	}
+
+	/**
+	 *  When a new member adds himself to the leaders map, notify the curators.
+	 *
+ 	 *  @param  	int $user_id ID of the user who added himself to the map.
+	 *  @return 	void
+	 *  @since    	1.5.0
+	 */
+	public function leader_joined_map_notification_handler( $user_id ) {
+		// For notifications:
+		// `user_id` is the notification recipient--the curators in this case.
+		// `item_id` is the group_id
+		// `secondary_item_id` is the user_id of the new leader--the param $user_id here.
+
+		$curators = get_option( 'sa_curator_user_ids' );
+		$group_id = sa_get_group_id();
+
+		foreach ( $curators as $curator_id ) {
+			bp_notifications_add_notification( array(
+				'user_id'           => $curator_id,
+				'item_id'           => $group_id,
+				'secondary_item_id' => $user_id,
+				'component_name'    => 'groups',
+				'component_action'  => 'sa_leader_joined_map'
+				)
+			);
+		}
+	}
+
+	/**
+	 * When the curator visits the new leader's profile, mark the notification as read.
+	 *
+	 * @since 1.5.0
+	 */
+	public function mark_leader_joined_map_notification_read() {
+
+		// Delete sa_leader_joined_map notifications for the user
+		if ( isset( $_GET['sanl'] ) && bp_is_active( 'notifications' ) ) {
+
+			// Get the necessary IDs
+			$user_id       = bp_loggedin_user_id();
+			$item_id       = sa_get_group_id();
+			$new_leader_id = bp_displayed_user_id();
+
+			// Mark notifications read
+			bp_notifications_mark_notifications_by_item_id( $user_id, $item_id, 'groups', 'sa_leader_joined_map', $new_leader_id );
+		}
 	}
 }
 $cc_salud_america = new CC_Salud_America();
