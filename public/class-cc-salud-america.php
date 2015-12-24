@@ -156,6 +156,9 @@ class CC_Salud_America {
 
 		// When the curator visits the new leader's profile, mark the notification as read.
 		add_action( 'bp_before_member_header', array( $this, 'mark_leader_joined_map_notification_read' ) );
+
+		// CC stats - report relationship with the SA hub.
+		add_filter( 'cc_stats_custom_plugins', array( $this, 'report_custom_plugin' ), 10, 2 );
 	}
 
 
@@ -1491,6 +1494,18 @@ class CC_Salud_America {
 			// Mark notifications read
 			bp_notifications_mark_notifications_by_item_id( $user_id, $item_id, 'groups', 'sa_leader_joined_map', $new_leader_id );
 		}
+	}
+
+	/**
+	 * Tell CC Stats that this plugin is associated with the SA hub..
+	 *
+	 * @since 1.5.0
+	 */
+	public function report_custom_plugin( $custom_plugins, $group_id ) {
+		if ( $group_id == sa_get_group_id() ) {
+			$custom_plugins[] = "CC Salud America";
+		}
+		return $custom_plugins;
 	}
 }
 $cc_salud_america = new CC_Salud_America();
