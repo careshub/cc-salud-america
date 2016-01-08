@@ -43,57 +43,59 @@ if ( $page_intro->have_posts() ) :
     // echo "<pre>"; var_dump( $custom ); echo "</pre>";
     ?>
         <article  id="post-<?php the_ID(); ?>" <?php post_class('advocacy_target_introduction'); ?>>
-            <?php
-            // Output the wide banner image, which is stored as a featured image.
-            if ( has_post_thumbnail() ) {
-                echo '<div class="content-row wrapper">';
-                the_post_thumbnail( 'full' );
-                echo '</div>';
-            } else {
-                ?>
-                <div class="screamer spacious wrapper <?php sa_the_topic_color( $tax_term->slug ); ?>">
-                    <strong style="font-size:1.4em;"><?php echo $tax_term->name; ?></strong>
-                </div>
-                <?php
-            }
+			<div class="clear">
+				<?php
+				// Output the wide banner image, which is stored as a featured image.
+				if ( has_post_thumbnail() ) {
+					echo '<div class="content-row wrapper">';
+					the_post_thumbnail( 'full' );
+					echo '</div>';
+				} else {
+					?>
+					<div class="screamer spacious wrapper <?php sa_the_topic_color( $tax_term->slug ); ?>">
+						<strong style="font-size:1.4em;"><?php echo $tax_term->name; ?></strong>
+					</div>
+					<?php
+				}
 
-            // Output the introductory videos
-            if ( ! empty( $custom[ 'sa_term_intro_video_english_url' ][0] ) ) {
-                $video_embed_english = wp_oembed_get( $custom[ 'sa_term_intro_video_english_url' ][0] );
-            }
-            if ( ! empty( $custom[ 'sa_term_intro_video_spanish_url' ][0] ) ) {
-                $video_embed_spanish = wp_oembed_get( $custom[ 'sa_term_intro_video_spanish_url' ][0] );
-            }
-            // If we have at least one video, output the video block
-            if ( ! empty( $video_embed_english ) || ! empty( $video_embed_spanish ) ) {
-            ?>
-                <div class="video-container-group video-right">
-                    <?php if ( ! empty( $video_embed_english ) ) { ?>
-                        <div class="video-container" id="englishVid">
-                            <?php echo $video_embed_english; ?>
-                        </div>
-                    <?php }
-                    if ( ! empty( $video_embed_spanish ) ) { ?>
-                        <div class="video-container" id="spanishVid">
-                            <?php echo $video_embed_spanish; ?>
-                        </div>
-                    <?php } ?>
-                    <figcaption>
-                        <?php if ( ! empty( $video_embed_english ) ) { ?>
-                            <input type="button" value="English Version (video)" id="englishButton" />
-                        <?php }
-                        if ( ! empty( $video_embed_spanish ) ) { ?>
-                            <input type="button" value="Spanish Version (video)" id="spanishButton" />
-                        <?php } ?>
-                    </figcaption>
-                </div>
-            <?php
-            } elseif ( ! empty( $custom[ 'sa_term_intro_fallback_image' ][0] ) ) {
-                // If there's no video, we use the fullsize fallback image for the term.
-                echo wp_get_attachment_image( $custom[ 'sa_term_intro_fallback_image' ][0], 'full', false, array( 'class' => 'attachment-full alignright' ) );
-            }
+				// Output the introductory videos
+				if ( ! empty( $custom[ 'sa_term_intro_video_english_url' ][0] ) ) {
+					$video_embed_english = wp_oembed_get( $custom[ 'sa_term_intro_video_english_url' ][0] );
+				}
+				if ( ! empty( $custom[ 'sa_term_intro_video_spanish_url' ][0] ) ) {
+					$video_embed_spanish = wp_oembed_get( $custom[ 'sa_term_intro_video_spanish_url' ][0] );
+				}
+				// If we have at least one video, output the video block
+				if ( ! empty( $video_embed_english ) || ! empty( $video_embed_spanish ) ) {
+				?>
+					<div class="video-container-group video-right">
+						<?php if ( ! empty( $video_embed_english ) ) { ?>
+							<div class="video-container" id="englishVid">
+								<?php echo $video_embed_english; ?>
+							</div>
+						<?php }
+						if ( ! empty( $video_embed_spanish ) ) { ?>
+							<div class="video-container" id="spanishVid">
+								<?php echo $video_embed_spanish; ?>
+							</div>
+						<?php } ?>
+						<figcaption>
+							<?php if ( ! empty( $video_embed_english ) ) { ?>
+								<input type="button" value="English Version (video)" id="englishButton" />
+							<?php }
+							if ( ! empty( $video_embed_spanish ) ) { ?>
+								<input type="button" value="Spanish Version (video)" id="spanishButton" />
+							<?php } ?>
+						</figcaption>
+					</div>
+				<?php
+				} elseif ( ! empty( $custom[ 'sa_term_intro_fallback_image' ][0] ) ) {
+					// If there's no video, we use the fullsize fallback image for the term.
+					echo wp_get_attachment_image( $custom[ 'sa_term_intro_fallback_image' ][0], 'full', false, array( 'class' => 'attachment-full alignright' ) );
+				}
 
-            the_content(); ?>
+				the_content(); ?>
+			</div>
 
             <div class="Grid Grid--full large-Grid--fit">
 
