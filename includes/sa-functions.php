@@ -476,11 +476,6 @@ function sa_get_query(){
 
     }
 
-        $towrite = PHP_EOL . 'sa_get_query: ' . print_r($query, TRUE);
-        $fp = fopen('sa_get_query.txt', 'a');
-        fwrite($fp, $towrite);
-        fclose($fp);
-
     return apply_filters( "sa_get_query", $query );
 }
 
@@ -986,4 +981,26 @@ function salud_get_bet_short_name( $term_slug ) {
             return $shorty;
         }
     }
+}
+
+/**
+ * Is the current or specified user a member of the Salud America hub?
+ *
+ * @since   1.5.0
+ * @param   int $user_id
+ *
+ * @return  bool
+ */
+function sa_is_current_user_a_member( $user_id = 0 ) {
+    $is_member = false;
+
+    if ( empty( $user_id )  ) {
+        $user_id = get_current_user_id();
+    }
+
+    if ( $user_id ) {
+        $is_member = (bool) groups_is_user_member( $user_id, sa_get_group_id() );
+    }
+
+    return $is_member;
 }

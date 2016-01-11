@@ -157,6 +157,10 @@ class CC_Salud_America {
 		// When the curator visits the new leader's profile, mark the notification as read.
 		add_action( 'bp_before_member_header', array( $this, 'mark_leader_joined_map_notification_read' ) );
 
+		// Member's list changes
+		// Add "Contact" button to send a member a private message.
+		add_action( 'bp_group_members_list_item_action', array( $this, 'add_contact_button_members_list' ), 12 );
+
 		// CC stats - report relationship with the SA hub.
 		add_filter( 'cc_stats_custom_plugins', array( $this, 'report_custom_plugin' ), 10, 2 );
 	}
@@ -1493,6 +1497,23 @@ class CC_Salud_America {
 
 			// Mark notifications read
 			bp_notifications_mark_notifications_by_item_id( $user_id, $item_id, 'groups', 'sa_leader_joined_map', $new_leader_id );
+		}
+	}
+
+	public function add_contact_button_members_list() {
+		// Only show this button in the SA group, and only if the visitor is a group member.
+		if ( bp_is_active( 'messages' ) && sa_is_sa_group() && sa_is_current_user_a_member() ) {
+			$listed_member_id = bp_get_group_member_id();
+			// This is for contacting others--not for talking to oneself.
+			if ( $listed_member_id != get_current_user_id() ) {
+				$nicename = bp_members_get_user_nicename( $listed_member_id );
+				$link = bp_loggedin_user_domain() . 'messages/compose/?r=' . $nicename;
+				?>
+				<div class="generic-button">
+					<a href="<?php echo $link; ?>" id="private-message-<?php echo $listed_member_id; ?>" title ="Send <?php echo $nicename; ?> a private message">Contact</a>
+				</div>
+				<?php
+			}
 		}
 	}
 
