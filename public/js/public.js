@@ -1,10 +1,11 @@
 (function ( $ ) {
 	"use strict";
-	var wp            = window.wp,
-    	sa_item_block = wp.template( "salud-recent-items-block" ),
-    	processing    = false,
-    	error         = false,
-        term_slug     = '';
+	var wp             = window.wp,
+		sa_item_block  = wp.template( "salud-recent-items-block" ),
+		sa_ticker_item = wp.template( "salud-ticker-items-block" ),
+		processing     = false,
+		error          = false,
+		term_slug      = '';
 
 	// Go when the DOM is ready.
 	$(function() {
@@ -42,10 +43,10 @@
 
 			// Fetch the script with the correct arguments
 			jQuery.ajax({
-			      url: base_map_widget_src + dimensions,
-			      dataType: "script",
-			      cache: true,
-			      crossDomain: true
+				url: base_map_widget_src + dimensions,
+				dataType: "script",
+				cache: true,
+				crossDomain: true
 			}).success(function( data, textStatus, jqxhr ) {
 				// console.log( data ); // Data returned
 				// console.log( textStatus ); // Success
@@ -96,48 +97,61 @@
 		$( "#salud-advanced-hub-search-submit" ).click(function( e ) {
 			e.preventDefault();
 
-		 	// Grab all the checked type checkboxes and concatenate them to a comma-separated string,
-		 	// then set that value to the form's hidden input.
-		 	var query_string = '';
-		 	var counter = 1;
-		 	$( 'input[name="type[]"]:checked' ).each(function() {
-		 		if ( counter > 1 ) {
-		 			query_string += ',';
-		 		}
-		 		query_string += $( this ).val();
-		 		counter++;
-		 	});
+			// Grab all the checked type checkboxes and concatenate them to a comma-separated string,
+			// then set that value to the form's hidden input.
+			var query_string = '';
+			var counter = 1;
+			$( 'input[name="type[]"]:checked' ).each(function() {
+				if ( counter > 1 ) {
+					query_string += ',';
+				}
+				query_string += $( this ).val();
+				counter++;
+			});
 
-		 	// Set the value if one exists.
-		 	if ( query_string ) {
-			 	$( '#salud-hub-advanced-search #type' ).val( query_string );
+			// Set the value if one exists.
+			if ( query_string ) {
+				$( '#salud-hub-advanced-search #type' ).val( query_string );
 			} else {
 				// If no value, disable the input so that the url is cleaner.
 				$( '#salud-hub-advanced-search #type' ).prop( 'disabled', true );
 			}
 
-		 	// Same routine for topics
-		 	query_string = '';
-		 	counter = 1;
-		 	$( 'input[name="topic[]"]:checked' ).each(function() {
-		 		if ( counter > 1 ) {
-		 			query_string += ',';
-		 		}
-		 		query_string += $( this ).val();
-		 		counter++;
-		 	});
+			// Same routine for topics
+			query_string = '';
+			counter = 1;
+			$( 'input[name="topic[]"]:checked' ).each(function() {
+				if ( counter > 1 ) {
+					query_string += ',';
+				}
+				query_string += $( this ).val();
+				counter++;
+			});
 
-		 	// Set the value if one exists.
-		 	if ( query_string ) {
-		 	$( '#salud-hub-advanced-search #topic' ).val( query_string );
+			// Set the value if one exists.
+			if ( query_string ) {
+			$( '#salud-hub-advanced-search #topic' ).val( query_string );
 			} else {
 				// If no value, disable the input so that the url is cleaner.
 				$( '#salud-hub-advanced-search #topic' ).prop( 'disabled', true );
 			}
 
-		 	// Submit the form.
-		 	$( '#salud-hub-advanced-search' ).submit();
+			// Submit the form.
+			$( '#salud-hub-advanced-search' ).submit();
 		});
+
+		// If the ticker marquee exists on this page, populate it.
+		if ( $( '#sa-ticker-marquee' ).length ) {
+			tickerInit();
+			$('#sa-ticker-marquee').hover(
+				function() { //mouse enter
+					$(this).addClass('pause-ticker');
+				},
+				function() { //mouse leave
+					$(this).removeClass('pause-ticker');
+				}
+			);
+		}
 	});
 
 	/**
@@ -190,17 +204,55 @@
 	 */
 	function refreshVisibleItems( term_slug ) {
 		// Fade out the currently visible blocks and fade in the new blocks.
-	    $( '.recent-item-cell .entry-content' ).filter( ':visible' ).fadeOut( 'fast', function() {
-	        $( '.recent-item-cell .entry-content.' + term_slug ).fadeIn('fast');
-	    });
+		$( '.recent-item-cell .entry-content' ).filter( ':visible' ).fadeOut( 'fast', function() {
+			$( '.recent-item-cell .entry-content.' + term_slug ).fadeIn('fast');
+		});
 
 		// Hide the loading indicator.
 		// This is kind of a weird place for this, but it covers some edge cases.
 		$( '#' + term_slug + ' .working-indicator.ajax-loading' ).removeClass( 'ajax-loading' );
 
-	    // Add the "active" class to the currently selected advocacy target.
-	    $( '.topic-selector a.active' ).removeClass('active');
-	    $( '.topic-selector a#' + term_slug ).addClass('active');
+		// Add the "active" class to the currently selected advocacy target.
+		$( '.topic-selector a.active' ).removeClass('active');
+		$( '.topic-selector a#' + term_slug ).addClass('active');
+	}
+
+	/**
+	 * Initiates the SA ticker.
+	 * Data from successful requests is passed to the success callback: addRecentItem()
+	 *
+	 * @param string term_slug the slug of the requested taxonomy term.
+	 */
+	function tickerInit() {
+		$.ajax( {
+			url: '/wp-json/wp/v2/sa_ticker_items?filter[posts_per_page]=6',
+			cache: false
+		} ).done(
+			function( data ){
+				$.each( data, function( index, data ) {
+					$( '#sa-ticker-marquee' ).append( sa_ticker_item( data ) );
+				});
+				// Begin the animation.
+				$( '.sa-ticker-placeholder' ).slideUp( function() {
+					$( this ).remove();
+				} );
+				setInterval( function() { scrollTicker() }, 8000 );
+			}
+		);
+	}
+
+	/**
+	 * Show the most recent ticker items, if the ticker container exists.
+	 *
+	 * @param string term_slug the slug of the requested taxonomy term.
+	 */
+	function scrollTicker() {
+		// Only scroll if the user isn't hovering over the item.
+		if ( ! $( '#sa-ticker-marquee' ).hasClass( 'pause-ticker' ) ) {
+			$( '#sa-ticker-marquee li:first' ).slideUp( function() {
+				$( this ).appendTo( $( '#sa-ticker-marquee' ) ).slideDown();
+			});
+		}
 	}
 
 }(jQuery));

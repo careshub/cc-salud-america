@@ -1051,3 +1051,22 @@
 .background-saorange {
 	background-color: @saorange;
 }
+// Ticker
+.sa-ticker-list {
+	background-color: #EEE;
+	border: 1px solid #DDD;
+	height: 4.4em;
+	overflow: hidden;
+	transition: all 0.2s;
+	&.pause-ticker {
+		background-color: lighten(@sagreen, 50%);
+		border-color: lighten(@sagreen, 30%);
+	}
+	.sa-ticker-item {
+		// .font-size(1.2);
+		height: 2.2em;
+		margin: 0 .2em;
+		padding: .6em;
+		list-style-type: none;
+	}
+}

@@ -960,3 +960,28 @@ function salud_hub_search_form( $placeholder = "Search" ) {
     <?php
 }
 
+/**
+ * Output html for the ticker marquee on the group's home page.
+ *
+ * @since   1.6.0
+ *
+ * @return  html
+ */
+function sa_ticker() {
+    ?>
+    <div class="content-row" style="margin-top:2em;">
+        <ul id="sa-ticker-marquee" class="sa-ticker-list">
+            <li class="sa-ticker-placeholder sa-ticker-item">&hellip;</li>
+        </ul>
+    </div>
+    <?php /* We include the following template file for use by JS */ ?>
+    <script type="text/html" id="tmpl-salud-ticker-items-block">
+        <li id="sa-ticker-item-{{data.id}}" class="sa-ticker-item">
+            {{data.title.rendered}}
+            <# if ( data.sa_ticker_item_link ) { #>
+                <a href="{{{data.sa_ticker_item_link}}}">Read More</a>
+            <# } #>
+        </li>
+    </script>
+    <?php
+}

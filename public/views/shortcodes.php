@@ -205,3 +205,17 @@ function sa_the_homepage_notices_shortcode() {
     return ob_get_clean();
 }
 add_shortcode( 'sa_homepage_notices', 'sa_the_homepage_notices_shortcode' );
+
+/**
+ * Output html for the ticker used on the group home page.
+ *
+ * @since   1.6.0
+ *
+ * @return  html
+ */
+function sa_ticker_shortcode() {
+    ob_start();
+    sa_ticker();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_ticker', 'sa_ticker_shortcode' );

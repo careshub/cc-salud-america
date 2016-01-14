@@ -53,7 +53,7 @@ function sa_class_init() {
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-take-action-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-tweetchats-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-term-intros-cpt-tax.php' );
-
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-ticker-items-cpt-tax.php' );
 
     // Admin and dashboard functionality
     // if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
