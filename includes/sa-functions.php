@@ -99,6 +99,7 @@ function sa_get_tab_slug( $section = 'policies' ) {
             $slug = 'tweetchats';
             break;
         case 'big_bets':
+        case 'big-bets':
             $slug = 'big-bets';
             break;
         case 'search':
@@ -220,6 +221,9 @@ function sa_get_section_by_cpt( $cpt = 'sapolicies' ) {
             break;
         case 'sa_tweetchats':
             $section = 'tweetchats';
+            break;
+        case 'sa_term_introduction':
+            $section = 'big-bets';
             break;
         default:
             $section = "policies";

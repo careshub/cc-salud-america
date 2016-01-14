@@ -400,7 +400,7 @@ class CC_Salud_America {
 	public function cpt_permalink_filter( $permalink, $post ) {
 		$post_type = get_post_type( $post );
 
-		if ( in_array( $post_type, array( 'saresources', 'sa_success_story', 'sa_take_action', 'sapolicies', 'sa_video_contest' ) ) ) {
+		if ( in_array( $post_type, array( 'saresources', 'sa_success_story', 'sa_take_action', 'sapolicies', 'sa_video_contest', 'sa_term_introduction' ) ) ) {
 			$section = sa_get_section_by_cpt( $post_type );
 			$section_permalink = sa_get_section_permalink( $section );
 			// If the post is published, a post name will exist
