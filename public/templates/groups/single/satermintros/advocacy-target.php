@@ -97,7 +97,7 @@ if ( $page_intro->have_posts() ) :
 				the_content(); ?>
 			</div>
 
-            <div class="Grid Grid--full large-Grid--fit">
+            <div class="Grid Grid--full large-Grid--fit sa-term-intro-resources">
 
                     <?php if ( ! empty( $custom[ 'sa_term_intro_research_review' ][0] ) ) : ?>
                         <div class="Grid-cell aligncenter">
@@ -106,7 +106,7 @@ if ( $page_intro->have_posts() ) :
                                 echo wp_get_attachment_image( $custom[ 'sa_term_intro_research_review_icon' ][0], 'detail', false, $small_icon_attr );
                             }
                             ?><strong>Research Review</strong>
-                            <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_research_review' ][0] ); ?>" class="button aligncenter">Download</a></p></div>
+                            <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_research_review' ][0] ); ?>" class="button aligncenter sa-term-info-link">Download</a></p></div>
                         </div>
                     <?php endif; ?>
                     <?php if ( ! empty( $custom[ 'sa_term_intro_issue_brief_english' ][0] ) || ! empty( $custom[ 'sa_term_intro_issue_brief_spanish' ][0] ) ) : ?>
@@ -119,12 +119,12 @@ if ( $page_intro->have_posts() ) :
                             <?php
                             if ( ! empty( $custom[ 'sa_term_intro_issue_brief_english' ][0] ) ) {
                             ?>
-                                <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_issue_brief_english' ][0] ); ?>" class="button aligncenter">Download in English</a></div>
+                                <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_issue_brief_english' ][0] ); ?>" class="button aligncenter sa-term-info-link">Download in English</a></div>
                             <?php
                             }
                             if ( ! empty( $custom[ 'sa_term_intro_issue_brief_spanish' ][0] ) ) {
                             ?>
-                                <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_issue_brief_spanish' ][0] ); ?>" class="button aligncenter">Download in Spanish</a></div>
+                                <div class="pad"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_issue_brief_spanish' ][0] ); ?>" class="button aligncenter sa-term-info-link">Download in Spanish</a></div>
                             <?php
                             }
                             ?>
@@ -153,12 +153,12 @@ if ( $page_intro->have_posts() ) :
                                 <?php
                                 if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_english' ][0] ) ) {
                                 ?>
-                                    <div class="pad" style="margin:4px;"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_' . $meta_key . '_english' ][0] ); ?>" class="button aligncenter">Download in English</a></div>
+                                    <div class="pad" style="margin:4px;"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_' . $meta_key . '_english' ][0] ); ?>" class="button aligncenter sa-term-info-link">Download in English</a></div>
                                 <?php
                                 }
                                 if ( ! empty( $custom[ 'sa_term_intro_' . $meta_key . '_spanish' ][0] ) ) {
                                 ?>
-                                    <div class="pad" style="margin:4px;"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_' . $meta_key . '_spanish' ][0] ); ?>" class="button aligncenter">Download in Spanish</a></div>
+                                    <div class="pad" style="margin:4px;"><a href="<?php echo wp_get_attachment_url( $custom[ 'sa_term_intro_' . $meta_key . '_spanish' ][0] ); ?>" class="button aligncenter sa-term-info-link">Download in Spanish</a></div>
                                 <?php
                                 }
                                 ?>
