@@ -167,6 +167,11 @@ if ( $page_intro->have_posts() ) :
                     } // end foreach;
                     ?>
            </div>
+           <?php
+               if ( function_exists('bp_share_post_button') ) {
+                    bp_share_post_button();
+                }
+            ?>
        </article>
     <?php
     // Clear $tax_term if the loop has to run again.
