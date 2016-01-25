@@ -1148,22 +1148,10 @@ class CC_Salud_America {
 	 * @param array $new_values Values to be used in update.
 	 */
 	public function set_user_lat_lon_at_profile_update( $user_id, $posted_field_ids = array(), $errors = false, $old_values = array(), $new_values = array() ) {
-		$towrite = PHP_EOL . print_r( date('Y-m-d H:i:s'), TRUE ) . ' | profile updated';
-		$fp = fopen('sa_geocoder_results.txt', 'a');
-		fwrite($fp, $towrite);
-		fclose($fp);
+		$user_joined_map = false;
 
 		if ( empty( $user_id ) ) {
-			$towrite = ' | User ID is empty';
-			$fp = fopen('sa_geocoder_results.txt', 'a');
-			fwrite($fp, $towrite);
-			fclose($fp);
 			return false;
-		} else {
-			$towrite = ' | User ID: ' . print_r( $user_id, TRUE );
-			$fp = fopen('sa_geocoder_results.txt', 'a');
-			fwrite($fp, $towrite);
-			fclose($fp);
 		}
 
 		// Get the xprofile field ids; we'll need them several times.
@@ -1176,21 +1164,9 @@ class CC_Salud_America {
 			return;
 		}
 
-		// Troubleshooting
-		$towrite = PHP_EOL . 'posted_field_ids: ' . print_r( $posted_field_ids, TRUE );
-		$towrite .= PHP_EOL . 'old values: ' . print_r( $old_values, TRUE );
-		$towrite .= PHP_EOL . 'new values: ' . print_r( $new_values, TRUE );
-		$fp = fopen('sa_geocoder_results.txt', 'a');
-		fwrite($fp, $towrite);
-		fclose($fp);
-
 		// If the user has unchecked the "opt-in" checkbox, we delete the meta value.
 		if ( in_array( $map_optin_field_id, $posted_field_ids ) && empty( $new_values[$map_optin_field_id]['value'] ) ) {
 			$removed = delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
-			$towrite = ' | Removing meta, opt-in is empty.';
-			$fp = fopen('sa_geocoder_results.txt', 'a');
-			fwrite($fp, $towrite);
-			fclose($fp);
 			// And we stop here.
 			return;
 		}
@@ -1198,10 +1174,6 @@ class CC_Salud_America {
 		// If the location used to be populated, but is now empty, we delete the meta value.
 		if ( empty( $new_values[$location_field_id]['value'] ) && ! empty( $old_values[$location_field_id]['value'] ) ) {
 			$removed = delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
-			$towrite = ' | Removing meta, new value is empty.';
-			$fp = fopen('sa_geocoder_results.txt', 'a');
-			fwrite($fp, $towrite);
-			fclose($fp);
 
 		} elseif ( ( $old_values[$location_field_id]['value'] !== $new_values[$location_field_id]['value'] )
 				|| ( $old_values[$map_optin_field_id]['value'] != $new_values[$map_optin_field_id]['value'] ) ) {
@@ -1209,24 +1181,11 @@ class CC_Salud_America {
 			$coordinates = $this->get_long_lat_from_location( $new_values[$location_field_id]['value'] );
 			if ( $coordinates ) {
 				$this->add_user_to_leader_map( $user_id, $coordinates, $new_values[$location_field_id]['value'] );
-				$towrite = ' | Updating meta., coords: ' . print_r( $coordinates, true );
-				$fp = fopen('sa_geocoder_results.txt', 'a');
-				fwrite($fp, $towrite);
-				fclose($fp);
 			} else {
 				// If no coords were returned, we should delete any value that exists.
 				$removed = delete_user_meta( $user_id, 'sa_leader_map_long_lat' );
-				$towrite = ' | Removing meta, geocoder error.';
-				$fp = fopen('sa_geocoder_results.txt', 'a');
-				fwrite($fp, $towrite);
-				fclose($fp);
 			}
 
-		} else {
-			$towrite = ' | No change to meta.';
-			$fp = fopen('sa_geocoder_results.txt', 'a');
-			fwrite($fp, $towrite);
-			fclose($fp);
 		}
 	}
 
