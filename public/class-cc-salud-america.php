@@ -1054,7 +1054,7 @@ class CC_Salud_America {
 			case 'edit_post':
 			case 'delete_post':
 				// Only act on attachments.
-				if ( 'attachment' == get_post_type( $args[0] ) ) {
+				if ( isset( $args[0] ) && 'attachment' == get_post_type( $args[0] ) ) {
 					// If an SA curator was the author of this post, then replace the primitive cap with one that sa curators all have: edit_others_sapoliciess.
 					$curators = get_option( 'sa_curator_user_ids' );
 					// Was the media item created by an sa_curator?
