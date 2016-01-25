@@ -151,7 +151,7 @@ class CC_Salud_America {
 		// NOTIFICATIONS
 		// We send a notification to the curators when a member updates his profile.
 		// Do this after the earlier profile update action so that notifications aren't duplicated.
-		add_action( 'xprofile_updated_profile', array( $this, 'leader_updated_profile_create_notification' ), 90, 1 );
+		add_action( 'xprofile_updated_profile', array( $this, 'leader_updated_profile_create_notification' ), 90, 5 );
 
 		// When a new member adds himself to the leaders map, notify the curators.
 		add_action( 'sa_add_user_to_leader_map', array( $this, 'leader_joined_map_create_notification' ) );
@@ -1471,19 +1471,39 @@ class CC_Salud_America {
 	 *  @return 	void
 	 *  @since    	1.6.0
 	 */
-	public function leader_updated_profile_create_notification( $user_id ) {
+	public function leader_updated_profile_create_notification( $user_id, $posted_field_ids = array(), $errors = false, $old_values = array(), $new_values = array() ) {
 		// For notifications:
 		// `user_id` is the notification recipient--the curators in this case.
 		// `item_id` is the group_id
 		// `secondary_item_id` is the user_id of the new leader--the param $user_id here.
+		if ( ! function_exists( 'grpf_get_associated_field_groups' ) ) {
+			return;
+		}
+		// Only fire this off if the posted field IDs are part of the SA-related profile field group.
+		$sa_group_id = sa_get_group_id();
+		$salud_field_group_id = grpf_get_associated_field_groups( $sa_group_id );
+		$salud_field_group = bp_xprofile_get_groups( array(
+			'profile_group_id'       => $salud_field_group_id,
+			'fetch_fields'           => true,
+			'update_meta_cache'      => false,
+		) );
+		$sa_fields = array();
+		if ( isset( $salud_field_group[0] ) ) {
+			$sa_fields = wp_list_pluck( $salud_field_group[0]->fields, 'id' );
+		}
+
+		$field_comparison = array_intersect( $sa_fields, $posted_field_ids );
+		// If none of the posted fields apply, bail out.
+		if ( empty( $field_comparison ) ) {
+			return;
+		}
 
 		// Check for a recent "joined map" notification about this member to avoid dupes.
 		// Joined map is more interesting, so we let that be the notification.
 		$curators = get_option( 'sa_curator_user_ids' );
-		$group_id = sa_get_group_id();
 		$notifications = BP_Notifications_Notification::get( array(
 			'user_id'           => $curators,
-			'item_id'           => $group_id,
+			'item_id'           => $sa_group_id,
 			'secondary_item_id' => $user_id,
 			'component_name'    => 'groups',
 			'component_action'  => 'sa_leader_joined_map'
@@ -1509,7 +1529,7 @@ class CC_Salud_America {
 		// Joined group is also more interesting, so we let that be the notification.
 		$notifications = BP_Notifications_Notification::get( array(
 			'user_id'           => $curators,
-			'item_id'           => $group_id,
+			'item_id'           => $sa_group_id,
 			'secondary_item_id' => $user_id,
 			'component_name'    => 'groups',
 			'component_action'  => 'sa_leader_joined_group'
@@ -1534,7 +1554,7 @@ class CC_Salud_America {
 		foreach ( $curators as $curator_id ) {
 			bp_notifications_add_notification( array(
 				'user_id'           => $curator_id,
-				'item_id'           => $group_id,
+				'item_id'           => $sa_group_id,
 				'secondary_item_id' => $user_id,
 				'component_name'    => 'groups',
 				'component_action'  => 'sa_leader_updated_profile'
