@@ -2,6 +2,9 @@
 $custom_fields = get_post_meta( get_the_ID() );
 if ( sa_is_single_post() ) {
     $size = 'feature-front';
+    // Show the whole post, not just the excerpt.
+    global $more;
+    $more = 1;
 } else {
     $size = 'feature-front-sub';
 }
