@@ -90,7 +90,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Current and past video contests held in the Salud America group.',
-	        'supports' => array( 'title', 'editor', 'author', 'comments', 'thumbnail' ),
+	        'supports' => array( 'title', 'editor', 'excerpt', 'author', 'comments', 'thumbnail' ),
 	        'taxonomies' => array( 'sa_advocacy_targets', 'sa_policy_tags' ),
 	        'public' => true,
 	        'show_ui' => true,
@@ -169,7 +169,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	 *
 	 * @return   alters $query variable by reference
 	 */
-	function sortable_columns_orderby( $query ) {
+	public function sortable_columns_orderby( $query ) {
 			if ( ! is_admin() ) {
 				return;
 			}
@@ -185,18 +185,28 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	}
 
 	/**
-	 * Modify the SA Policies edit screen.
+	 * Modify the SA Video Contests edit screen.
 	 * - Add meta boxes for policy meta and geography.
+	 * - Modify the post_excerpt input box to use TinyMCE editor.
 	 *
 	 * @since    1.0.0
 	 *
 	 * @return   void
 	 */
-	//Building the input form in the WordPress admin area
-	function add_meta_box() {
-		add_meta_box( 'sa_video_contest_meta_box', 'Video Contest Details', array( $this, 'sa_video_contest_meta_box' ), $this->post_type, 'normal', 'high' );   ;
+	public function add_meta_box() {
+		// Customize the post_excerpt box by unsetting it and rebuilding it.
+		remove_meta_box( 'postexcerpt', $this->post_type, 'side' );
+		add_meta_box('postexcerpt', __('Short View Description'), array( $this, 'contest_excerpt_meta_box' ), $this->post_type, 'normal', 'high');
+		// Add the custom meta box.
+		add_meta_box( 'sa_video_contest_meta_box', 'Video Contest Details', array( $this, 'sa_video_contest_meta_box' ), $this->post_type, 'normal', 'high' );
 	}
-		function sa_video_contest_meta_box( $post ) {
+		/**
+		 * Modify the SA Video Contests edit screen.
+		 * - Add meta boxes for policy meta and geography.
+		 *
+		 * @since    1.0.0
+		 */
+		public function sa_video_contest_meta_box( $post ) {
 			$custom = get_post_custom( $post->ID );
 			$end_date = maybe_unserialize( $custom[ 'sa_expiry_date' ][0] );
 			$stem_sentence = $custom[ 'sa_notice_box_stem' ][0];
@@ -298,6 +308,23 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			<?php
 
 			}
+
+		/**
+		 * Modify the SA Video Contests edit screen.
+		 * - Modify the post_excerpt input box to use TinyMCE editor.
+		 *
+		 * @since    1.6.0
+		 */
+		public function contest_excerpt_meta_box( $post ) {
+			wp_editor( html_entity_decode( stripcslashes( $post->post_excerpt ) ), 'excerpt', array(
+				'media_buttons' => false,
+				'teeny' => true,
+				'editor_height' => 200,
+				) );
+				?>
+			<p>This text will be shown in the compact format, used to create the list at <code>/take-action/</code>, for instance.</p>
+			<?php
+		}
 
 	/**
 	 * Save resources extra meta.

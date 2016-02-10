@@ -37,7 +37,11 @@ if ( $is_active ) {
             <?php salud_the_target_icons(); ?>
         </header>
         <?php // The content is the description of the contest in this case.
-        the_content();
+        if ( has_excerpt() ) {
+            echo wpautop( wptexturize( $post->post_excerpt ) );
+        } else {
+            the_content();
+        }
         ?>
         <a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark" class="button"><?php
         if ( $is_active ) {

@@ -8,6 +8,9 @@ $user_vote = sa_video_contest_get_current_user_vote( get_the_ID() );
 
 $end_date = sa_convert_to_human_date( $custom_fields['sa_expiry_date'][0] );
 
+// Show the whole post, not just the excerpt.
+global $more;
+$more = 1;
 // echo '<pre>'; var_dump( get_post_meta( get_the_ID(), 'sa_video_contest_votes', true ) ); echo '</pre>';
 
 $post_class = 'sa-video-contest';
@@ -75,11 +78,28 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
             }
             salud_the_target_icons(); ?>
         </header>
-        <?php // The content is the description of the contest in this case.
-        the_content();
+        <div class="video-contest-intro-text">
+            <?php // The content is the description of the contest in this case.
+            the_content();
+            ?>
+        </div>
+        <?php
 
         // If the contest is active, then we present the videos in order 1-6.
         if ( $is_active ) {
+            // Add the contest rules.
+            ?>
+            <div id="video-contest-rules">
+                <a href="#" class="button toggle">Click for Contest Rules</a>
+                <p class="rules">
+                    This contest is open to everyone (except <em>Salud America!</em> staff or grantees). The contest begins on <?php echo get_the_date(); ?>, and ends at 11:59 p.m. CST on <?php echo $end_date; ?>. To enter, individuals must first register with the <em>Salud America!</em> website, and then click to vote for their favorite video among the potential choices. Each registered user may cast only one vote. Casting a vote enters the registered user into a drawing for a T-shirt and jump rope package. The drawing&rsquo;s winner will be notified via email. The winner must contact us directly at <a href="mailto:saludamerica@uthscsa.edu">saludamerica@uthscsa.edu</a> to claim their prize package. Entry into drawing is subject to all applicable laws and regulations.
+
+                </p>
+            </div>
+
+            <div class="video-contest-container clear">
+            <?php
+
             // Add the voting form wrapper and controls if the user can vote
             if ( $user_can_vote ) {
                 ?>
@@ -126,12 +146,18 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
                 </form>
                 <?php
             } // End $user_can_vote
+            ?>
+            </div> <!-- .video-contest-container -->
+            <?php
         } else { // $is_active is false
             // If the contest is finished, show the winner first
             $vote_results = sa_video_contest_count_votes( get_the_ID() );
             $first_video = true;
             $open_runner_up_div = true;
             $close_runner_up_div = false;
+            ?>
+            <div class="video-contest-container">
+            <?php
             foreach ( $vote_results as $i => $num_votes ) {
                 if ( ! empty( $custom_fields[ 'sa_video_contest_title_' . $i ][0] ) && ! empty( $custom_fields[ 'sa_video_contest_url_' . $i ][0] ) ) {
                         $video_title = apply_filters( 'the_title', $custom_fields[ 'sa_video_contest_title_' . $i ][0] );
@@ -143,7 +169,7 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
                                 $second_video = true;
                                 ?>
                                 <div class="winning-video">
-                                    <h4>WINNER: <?php echo $video_title; ?></h4>
+                                    <h4 class="winning-video">WINNER: <?php echo $video_title; ?></h4>
                                     <div class="video-container-group">
                                         <figure class="video-container">
                                             <?php echo $video_embed_code; ?>
@@ -179,8 +205,10 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
             if ( $close_runner_up_div ) {
                 echo '</div>'; // Close the div we opened after the first video
             }
+            ?>
+            </div> <!-- .video-contest-container -->
+            <?php
         } // End $is_active check
-
         ?>
     </div><!-- .entry-content -->
     <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>

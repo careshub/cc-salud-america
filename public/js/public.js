@@ -152,6 +152,16 @@
 				}
 			);
 		}
+
+		// Toggle contest rules on video contest pages.
+		// Hide on page load
+		$( '#video-contest-rules .rules' ).toggle();
+		// Toggle on click
+		$( '#video-contest-rules .toggle' ).on( 'click', function(e){
+			e.preventDefault();
+			$( '#video-contest-rules .rules' ).slideToggle( 'fast' );
+		} );
+
 	});
 
 	/**
