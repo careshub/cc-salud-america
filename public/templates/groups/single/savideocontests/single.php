@@ -1,10 +1,11 @@
 <?php
-$custom_fields = get_post_meta( get_the_ID() );
+$post_id = get_the_ID();
+$custom_fields = get_post_meta( $post_id );
 // echo '<pre>'; print_r( $custom_fields ); echo '</pre>';
-$is_active = sa_video_contest_is_active( get_the_ID() );
-$user_can_vote = sa_video_contest_current_user_can_vote( get_the_ID() );
+$is_active = sa_video_contest_is_active( $post_id );
+$user_can_vote = sa_video_contest_current_user_can_vote( $post_id );
 // Has the user already voted?
-$user_vote = sa_video_contest_get_current_user_vote( get_the_ID() );
+$user_vote = sa_video_contest_get_current_user_vote( $post_id );
 
 $end_date = sa_convert_to_human_date( $custom_fields['sa_expiry_date'][0] );
 
@@ -138,7 +139,7 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
             ?>
                     <input type="hidden" name="video_contest_id" value="<?php the_ID(); ?>" />
                     <?php
-                    $nonce_value = 'sa_video_contest_vote_' . get_the_ID() . '_' . get_current_user_id();
+                    $nonce_value = 'sa_video_contest_vote_' . $post_id . '_' . get_current_user_id();
                     wp_nonce_field( 'sa_video_contest_vote', $nonce_value );
                     ?>
                     <input type="hidden" id="sa_video_contest_submit_referrer" name="sa_video_contest_submit_referrer" value="<?php echo ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
@@ -151,7 +152,7 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
             <?php
         } else { // $is_active is false
             // If the contest is finished, show the winner first
-            $vote_results = sa_video_contest_count_votes( get_the_ID() );
+            $vote_results = sa_video_contest_count_votes( $post_id );
             $first_video = true;
             $open_runner_up_div = true;
             $close_runner_up_div = false;
@@ -209,9 +210,32 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
             </div> <!-- .video-contest-container -->
             <?php
         } // End $is_active check
-        ?>
+        // Show other contests in a list.
+            $videos = new WP_Query( array(
+                'post_type' => 'sa_video_contest' ,
+                'posts_per_page' => -1,
+                'posts__not_in' => array( $post_id ),
+
+            ) );
+            if ( $videos->have_posts() ) :
+                ?>
+                <div class="other-video-contests clear">
+                    <h5>Check Out Our Other Video Contests!</h5>
+                    <ul class="previous-video-contests no-bullets compact">
+                    <?php
+                    while ( $videos->have_posts() ) : $videos->the_post();
+                    ?>
+                        <li><a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'twentytwelve' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a></li>
+                    <?php
+                    endwhile;
+                    ?>
+                    </ul>
+                </div>
+                <?php
+            endif;
+            ?>
     </div><!-- .entry-content -->
-    <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', get_the_ID() ); ?>
+    <?php edit_post_link('Edit This Post', '<footer class="entry-meta"><span class="edit-link">', '</span></footer>', $post_id ); ?>
 </article><!-- #post -->
 <script type="text/javascript">
     jQuery(document).ready(function(){
