@@ -106,6 +106,12 @@ class CC_Salud_America {
 		// Add the Salud America interest query string to the register link on SA pages
 		add_filter( 'registration_form_interest_query_string', array( $this, 'add_registration_interest_parameter' ), 12, 1 );
 
+		// PROFILE FIELDS
+		// Verify the value of the ZIP code input.
+		add_action('bp_signup_validate', array( $this, 'verify_sa_registration_fields') );
+		//Verify the Zip code updated on the profile page, too.
+		add_filter(	'xprofile_data_is_valid_field', array( $this, 'validate_profile_fields' ), 10, 2 );
+
 		// If a user is deleted, we'll need to clean up any post associations.
 		// @TODO: We may want to do this when a member is removed/leaves the group. Not sure.
 		add_action( 'deleted_user', array( $this, 'cleanup_sa_related_leaders' ) );
@@ -752,6 +758,71 @@ class CC_Salud_America {
 		}
 
 	    return $user_id;
+	}
+
+	/**
+	 * Verify the value of the ZIP code input on the registration form.
+	 *
+	 * @since 1.6.1
+	 *
+	 * @return buddypress registration form error notice
+	 */
+	public function verify_sa_registration_fields() {
+		// ZIP is field_470 on dev, staging and root.
+		$field_name = 'field_' . $this->get_location_field_id();
+		if ( isset( $_POST[$field_name] ) && ( empty( $_POST[$field_name] ) || ! preg_match( "/^([0-9]{5})(-[0-9]{4})?$/i", $_POST[$field_name] ) ) ) {
+			buddypress()->signup->errors[$field_name] = 'Please enter a 5-digit ZIP code.';
+		}
+	}
+
+	/**
+	 * Verify the value of the ZIP code input on the profile update form.
+	 *
+	 * @since 1.6.1
+	 *
+	 * @param bool                    $valid Whether or not data is valid.
+	 * @param BP_XProfile_ProfileData $field Instance of the current BP_XProfile_ProfileData class.
+	 *
+	 * @return bool $valid
+	 */
+	public function validate_profile_fields( $valid, $field ) {
+
+		// Check that the SA ZIP Code profile field is a ZIP code
+		if ( $field->field_id == $this->get_location_field_id() ) {
+			if ( ! preg_match( "/^([0-9]{5})(-[0-9]{4})?$/i", $field->value ) ) {
+				$valid = false;
+			}
+		}
+		return $valid;
+	}
+
+	/**
+	 * Helper function to get the field id of the location (ZIP) field.
+	 *
+	 * @since 1.6.1
+	 *
+	 * @return int ID of the SA ZIP code field
+	 */
+	public function get_location_field_id() {
+		$site = get_site_url();
+	    switch ( $site ) {
+	        case 'http://commonsdev.local':
+	            $field_id = 98;
+	            break;
+	        case 'http://dev.communitycommons.org':
+	            $field_id = 0;
+	            break;
+	        case 'http://staging.communitycommons.org':
+            	$field_id =  949;
+	            break;
+	        case 'http://www.communitycommons.org':
+	           $field_id =  1314;
+	            break;
+	        default:
+	            $field_id = 98;
+	            break;
+	    }
+	    return $field_id;
 	}
 
 	public function add_registration_interest_parameter( $interests ) {
