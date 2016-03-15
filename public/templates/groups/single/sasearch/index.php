@@ -90,7 +90,7 @@ $query_topic_ids = array();
 
     <?php
     // Build the query, based on our query args.
-    $args = array();
+    $args = array( 'orderby' => 'date');
 
     // Search terms
     if ( ! empty( $search_terms ) ) {

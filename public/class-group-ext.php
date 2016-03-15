@@ -164,7 +164,7 @@ class CC_Salud_America_Search extends BP_Group_Extension {
             'name' => 'Search',
             'nav_item_position' => 92,
             // Enable, but don't show this tab. We'll add a search form elsewhere.
-            'access' => $this->enable_cc_sa_big_bets_tab() ? 'anyone' : 'noone',
+            'access' => $this->enable_cc_search_tab() ? 'anyone' : 'noone',
             'show_tab' => 'noone',
         );
         parent::init( $args );
@@ -174,7 +174,7 @@ class CC_Salud_America_Search extends BP_Group_Extension {
         bp_get_template_part( 'groups/single/sasearch/index' );
     }
 
-    function enable_cc_sa_big_bets_tab() {
+    function enable_cc_search_tab() {
         $setting = sa_is_sa_group();
         return apply_filters( 'enable_cc_sa_search_tab', $setting );
     }

@@ -108,7 +108,7 @@ class CC_Salud_America {
 
 		// PROFILE FIELDS
 		// Verify the value of the ZIP code input.
-		add_action('bp_signup_validate', array( $this, 'verify_sa_registration_fields') );
+		add_action( 'bp_signup_validate', array( $this, 'verify_sa_registration_fields' ) );
 		//Verify the Zip code updated on the profile page, too.
 		add_filter(	'xprofile_data_is_valid_field', array( $this, 'validate_profile_fields' ), 10, 2 );
 
