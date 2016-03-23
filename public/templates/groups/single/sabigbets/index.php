@@ -45,6 +45,9 @@ if ( sa_is_section_front() ) {
         echo $tax_term->name;
         echo ': What&lsquo;s New?';
         ?></h3>
+        <div class="archive-filter-container background-light-gray">
+            See <a href="<?php sa_the_cpt_tax_intersection_link( 'changes', 'sa_advocacy_targets', $tax_term->slug ); ?>">Changes</a>, <a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $tax_term->slug ); ?>">Resources</a>, or <a href="<?php sa_the_cpt_tax_intersection_link( 'heroes', 'sa_advocacy_targets', $tax_term->slug ); ?>">Heroes</a> in this topic.
+        </div>
         <?php
         // print_r( sa_get_query() );
         $items = new WP_Query( sa_get_query() );
