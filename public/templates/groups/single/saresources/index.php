@@ -61,6 +61,8 @@ if ( sa_is_section_front() ) {
 
 	<!-- Begin secondary loop for most recently added resources -->
 	<div class="content-row taxonomy-policies">
+        <?php sa_post_type_archive_big_bet_filters( 'resources' ); ?>
+
 		<?php bp_get_template_part( 'groups/single/saresources/resource-loop' ); ?>
 	</div>
 <?php

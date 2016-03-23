@@ -551,6 +551,35 @@ function sa_post_terms_meta( $post_id, $post_type ) {
     }
 
 /**
+ * Output a list of links to post-type/advocacy-target intersection views.
+ *
+ * @since 1.6.1
+ *
+ * @param string $section Which tab the links should point to.
+ *
+ * @return string HTML Unordered list of links.
+ */
+function sa_post_type_archive_big_bet_filters( $section = 'changes' ) {
+    ?>
+    <div class="archive-filter-container background-light-gray">
+        <h5 class="filter-label">Filter by topic:</h5>
+        <ul class="topic-filter-links">
+    <?php
+        $advocacy_targets = get_terms( 'sa_advocacy_targets' );
+        foreach ( $advocacy_targets as $advo_target ) {
+            ?>
+            <li>
+                <a href="<?php sa_the_cpt_tax_intersection_link( $section, 'sa_advocacy_targets', $advo_target->slug ); ?>"><span class="target-icon"><span class="<?php echo $advo_target->slug; ?>x30" title="<?php echo $advo_target->name; ?>"></span><?php echo $advo_target->name; ?></a>
+            </li>
+            <?php
+        }
+    ?>
+        </ul>
+    </div>
+    <?php
+}
+
+/**
  * Create a human readable "posted by" string
  *
  * @since 1.2.0

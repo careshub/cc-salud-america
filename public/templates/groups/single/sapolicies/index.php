@@ -58,10 +58,11 @@ if ( sa_is_section_front() ) {
     <hr />
 
     <?php } // end if ( $paged = 1 ) ?>
+
         <div class="content-row">
-            <?php
-                bp_get_template_part( 'groups/single/sapolicies/policy-loop' );
-            ?>
+            <?php sa_post_type_archive_big_bet_filters( 'changes' ); ?>
+
+            <?php bp_get_template_part( 'groups/single/sapolicies/policy-loop' ); ?>
         </div>
 <?php
 

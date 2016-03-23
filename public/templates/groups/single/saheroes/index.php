@@ -71,6 +71,8 @@ if ( sa_is_section_front() ) {
         } // end if ( $paged = 1 )
         ?>
         <div class="content-row">
+            <?php sa_post_type_archive_big_bet_filters( 'heroes' ); ?>
+
             <?php bp_get_template_part( 'groups/single/saheroes/hero-loop' ); ?>
         </div>
         <?php
