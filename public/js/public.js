@@ -246,7 +246,7 @@
 				$( '.sa-ticker-placeholder' ).slideUp( function() {
 					$( this ).remove();
 				} );
-				setInterval( function() { scrollTicker() }, 8000 );
+				setInterval( function() { scrollTicker() }, 5000 );
 			}
 		);
 	}

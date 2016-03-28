@@ -24,6 +24,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	private $nonce_value = 'sa_ticker_items_meta_box_nonce';
 	private $nonce_name = 'sa_ticker_items_meta_box';
 	private $post_type = 'sa_ticker_items';
+	private $tax_name = 'sa_ticker_item_types';
 
 	/**
 	 * Initialize the extension class
@@ -34,6 +35,9 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 
 		// Register Policy custom post type
 		add_action( 'init', array( $this, 'register_ticker_items_cpt' ) );
+
+		// Register related taxonomies
+		add_action( 'init', array( $this, 'register_ticker_item_types_tax' ) );
 
 		// Handle saving policies
 		add_action( 'save_post', array( $this, 'save' ) );
@@ -85,7 +89,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 			'hierarchical' => false,
 			'show_in_menu' => true,//'salud_america',
 			'menu_position' => 58,
-			// 'taxonomies' => array('sa_advocacy_targets', 'sa_resource_cat', 'sa_resource_type'),
+			'taxonomies' => array( 'sa_ticker_item_type' ),
 			// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 			'supports' => array('title'),
 			'show_in_rest' => true,
@@ -95,6 +99,50 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 		);
 
 		register_post_type( $this->post_type, $args );
+	}
+
+	public function register_ticker_item_types_tax() {
+
+		$labels = array(
+				'name' => __( 'Ticker Item Types', $this->plugin_slug ),
+				'singular_name' => __( 'Ticker Item Type', $this->plugin_slug  ),
+				'search_items' => __( 'Search Ticker Item Types', $this->plugin_slug ),
+				'popular_items' => __( 'Popular Ticker Item Types', $this->plugin_slug ),
+				'all_items' => __( 'All Ticker Item Types', $this->plugin_slug ),
+				'parent_item' => __( 'Parent Ticker Item Type', $this->plugin_slug ),
+				'parent_item_colon' => __( 'Parent Ticker Item Type:', $this->plugin_slug ),
+				'edit_item' => __( 'Edit Ticker Item Type', $this->plugin_slug ),
+				'update_item' => __( 'Update Ticker Item Type', $this->plugin_slug ),
+				'add_new_item' => __( 'Add New Ticker Item Type', $this->plugin_slug ),
+				'new_item_name' => __( 'New Ticker Item Type', $this->plugin_slug ),
+				'separate_items_with_commas' => __( 'Separate types with commas', $this->plugin_slug ),
+				'add_or_remove_items' => __( 'Add or remove Ticker Item Types', $this->plugin_slug ),
+				'choose_from_most_used' => __( 'Choose from most used Ticker Item Types', $this->plugin_slug ),
+				'menu_name' => __( 'Ticker Item Types', $this->plugin_slug ),
+		);
+
+		$args = array(
+				'labels' => $labels,
+				'public' => true,
+				'show_in_nav_menus' => true,
+				'show_ui' => true,
+				'show_in_menu' => true,
+				'capabilities' => array(
+					'manage_terms' => 'edit_sapoliciess',
+					'delete_terms' => 'edit_sapoliciess',
+					'edit_terms' => 'edit_sapoliciess',
+					'assign_terms' => 'edit_sapoliciess'
+				),
+				'show_tagcloud' => true,
+				'show_admin_column' => true,
+				'hierarchical' => true,
+
+				'rewrite' => true,
+				// 'rewrite' => array( 'slug' => 'salud/sa_advocacy_targets', 'with_front' => false),
+				'query_var' => true
+		);
+
+		register_taxonomy( $this->tax_name, array( $this->post_type ), $args );
 	}
 
 	/**
@@ -251,6 +299,14 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	            'schema'          => null,
 	        )
 	    );
+	    register_rest_field( $this->post_type,
+	        'item_type_term',
+	        array(
+	            'get_callback'    => array( $this, 'get_ticker_item_type_term' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
 	}
 
 	/**
@@ -264,6 +320,59 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	 */
 	public function get_ticker_meta( $object, $field_name, $request ) {
 	    return get_post_meta( $object[ 'id' ], $field_name, true );
+	}
+
+	/**
+	 * Get the value of the requested meta field.
+	 *
+	 * @param array $object Details of current post.
+	 * @param string $field_name Name of field.
+	 * @param WP_REST_Request $request Current request
+	 *
+	 * @return mixed
+	 */
+	public function get_ticker_item_type_term( $object, $field_name, $request ) {
+		// Set a default value.
+		$value = array(
+				'term_id' => 0,
+	            'name' => 'The Latest',
+	            'slug' => '',
+	            'color' => '#0088CF',
+	        );
+		$terms = get_the_terms( $object[ 'id' ], $this->tax_name );
+		if ( is_array( $terms ) ) {
+			$term = current( $terms );
+			$value = array(
+				'term_id' => $term->term_id,
+	            'name' => $term->name,
+	            'slug' => $term->slug,
+	        );
+	        // Add the term color to the response.
+			if ( $color = get_term_meta( $term->term_id, 'color', true ) ) {
+				$value['color'] = $color;
+			}
+		}
+	    return $value;
+	}
+
+	/**
+	 * Get the value of the requested meta field for a post's term.
+	 *
+	 * @param array $object Details of current post.
+	 * @param string $field_name Name of field.
+	 * @param WP_REST_Request $request Current request
+	 *
+	 * @return mixed
+	 */
+	public function get_ticker_term_meta( $object, $field_name, $request ) {
+		// Set a default value.
+		$value = '';
+		$terms = get_the_terms( $object[ 'id' ], $this->tax_name );
+		if ( is_array( $terms ) ) {
+			$term_id = current( $terms )->term_id;
+			$value = get_term_meta( $term_id, $field_name, true );
+		}
+	    return $value;
 	}
 
 } //End class CC_SA_Resources_CPT_Tax

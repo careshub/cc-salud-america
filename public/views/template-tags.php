@@ -1000,16 +1000,19 @@ function sa_ticker() {
     ?>
     <div class="content-row" style="margin-top:2em;">
         <ul id="sa-ticker-marquee" class="sa-ticker-list">
-            <li class="sa-ticker-placeholder sa-ticker-item">&hellip;</li>
+            <li class="sa-ticker-placeholder sa-ticker-item"><span class="sa-ticker-item-content">&hellip;</span></li>
         </ul>
     </div>
     <?php /* We include the following template file for use by JS */ ?>
     <script type="text/html" id="tmpl-salud-ticker-items-block">
         <li id="sa-ticker-item-{{data.id}}" class="sa-ticker-item">
-            {{data.title.rendered}}
-            <# if ( data.sa_ticker_item_link ) { #>
-                <a href="{{{data.sa_ticker_item_link}}}">Read More</a>
-            <# } #>
+            <span class="sa-ticker-item-type-label" style="background-color:{{data.item_type_term.color}}">{{data.item_type_term.name}}</span>
+            <span class="sa-ticker-item-content">
+                {{data.title.rendered}}
+                <# if ( data.sa_ticker_item_link ) { #>
+                    <a href="{{{data.sa_ticker_item_link}}}">Read More</a>
+                <# } #>
+            </span>
         </li>
     </script>
     <?php
