@@ -45,7 +45,7 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
-		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 20 );
+		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 12 );
 
 	}
 

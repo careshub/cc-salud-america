@@ -56,7 +56,7 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		add_action( 'bp_init', array( $this, 'capture_vote_submission'), 78 );
 		add_action( 'bp_init', array( $this, 'capture_join_group_submission'), 78 );
 
-		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 10 );
+		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 11 );
 
 
 	}

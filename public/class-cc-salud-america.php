@@ -565,7 +565,7 @@ class CC_Salud_America {
 				<div class="Grid Grid--gutters Grid--full large-Grid--fit Grid--flexCells">
 					<?php
 					// Sort the notices in descending order so the most recent is first.
-					krsort( $notices );
+					// krsort( $notices );
 					foreach ( $notices as $key => $notice ) {
 					?>
 						<div class="Grid-cell sa-notice-item notice-<?php echo $key; ?><?php

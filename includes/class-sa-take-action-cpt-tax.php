@@ -53,7 +53,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
-		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 20 );
+		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 10 );
 
 	}
 
@@ -298,8 +298,22 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	public function add_notices( $notices ) {
 		$args = array(
             'post_type' 		=> $this->post_type,
-            // 'posts_per_page' 	=> 1,
-            'meta_key'			=> 'sa_take_action_highlight'
+			'meta_query' => array(
+	            'relation' => 'AND',
+	            // Must have the highlighted box checked.
+	            array(
+	                'key' => 'sa_take_action_highlight',
+	                'value' => 1,
+	                'compare' => '=',
+	                ),
+	            // Must not be expired.
+	            array(
+	                'key' => 'sa_expiry_date', // Check the start date field.
+	                'value' => date("Ymd"), // Set today's date (note the format)
+	                'compare' => '>=', // Return the ones greater than today's date
+	                'type' => 'NUMERIC,' // Let WordPress know we're working with numbers
+	                ),
+            ),
         );
         $petition = new WP_Query( $args );
 
