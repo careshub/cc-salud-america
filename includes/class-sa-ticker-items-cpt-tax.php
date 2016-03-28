@@ -307,6 +307,14 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	            'schema'          => null,
 	        )
 	    );
+	    register_rest_field( $this->post_type,
+	        'nice_date',
+	        array(
+	            'get_callback'    => array( $this, 'get_short_human_date' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
 	}
 
 	/**
@@ -373,6 +381,19 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 			$value = get_term_meta( $term_id, $field_name, true );
 		}
 	    return $value;
+	}
+
+	/**
+	 * Get the value of the requested meta field for a post's term.
+	 *
+	 * @param array $object Details of current post.
+	 * @param string $field_name Name of field.
+	 * @param WP_REST_Request $request Current request
+	 *
+	 * @return mixed
+	 */
+	public function get_short_human_date( $object, $field_name, $request ) {
+	    return get_the_date( 'M j', $object[ 'id' ] );
 	}
 
 } //End class CC_SA_Resources_CPT_Tax
