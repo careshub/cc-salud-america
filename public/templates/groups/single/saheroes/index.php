@@ -94,7 +94,7 @@ if ( sa_is_section_front() ) {
         echo ( $tax_term->taxonomy == 'sa_policy_tags' ? ' tag' : ' topic' )
         ?></h3>
         <div class="archive-filter-container background-light-gray">
-            See <a href="<?php sa_the_cpt_tax_intersection_link( 'changes', 'sa_advocacy_targets', $tax_term->slug ); ?>">Changes</a>, <a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $tax_term->slug ); ?>">Resources</a>, or <a href="<?php echo trailingslashit( sa_get_section_permalink( 'big_bets' ) ) . $tax_term->slug; ?>">all posts</a> in this topic.
+            See&emsp;<a href="<?php sa_the_cpt_tax_intersection_link( 'changes', 'sa_advocacy_targets', $tax_term->slug ); ?>" class="post-type-flag sapolicies">SA! Changes</a> <a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $tax_term->slug ); ?>" class="post-type-flag saresources">SA! Resources</a> or <a href="<?php echo trailingslashit( sa_get_section_permalink( 'big_bets' ) ) . $tax_term->slug; ?>">all posts</a> in this topic.
         </div>
         <?php bp_get_template_part( 'groups/single/saheroes/hero-loop' ); ?>
     </div>

@@ -46,7 +46,7 @@ if ( sa_is_section_front() ) {
         echo ': What&lsquo;s New?';
         ?></h3>
         <div class="archive-filter-container background-light-gray">
-            See <a href="<?php sa_the_cpt_tax_intersection_link( 'changes', 'sa_advocacy_targets', $tax_term->slug ); ?>">Changes</a>, <a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $tax_term->slug ); ?>">Resources</a>, or <a href="<?php sa_the_cpt_tax_intersection_link( 'heroes', 'sa_advocacy_targets', $tax_term->slug ); ?>">Heroes</a> in this topic.
+            See&emsp;<a href="<?php sa_the_cpt_tax_intersection_link( 'changes', 'sa_advocacy_targets', $tax_term->slug ); ?>" class="post-type-flag sapolicies">SA! Changes</a> <a href="<?php sa_the_cpt_tax_intersection_link( 'resources', 'sa_advocacy_targets', $tax_term->slug ); ?>" class="post-type-flag saresources">SA! Resources</a> <a href="<?php sa_the_cpt_tax_intersection_link( 'heroes', 'sa_advocacy_targets', $tax_term->slug ); ?>" class="post-type-flag sa_success_story">Salud Heroes</a> in this topic.
         </div>
         <?php
         // print_r( sa_get_query() );
