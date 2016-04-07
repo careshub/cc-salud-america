@@ -15,7 +15,7 @@
  * Plugin Name:       CC Salud America
  * Plugin URI:        @TODO
  * Description:       Adds SA functionality to CC site
- * Version:           1.6.2
+ * Version:           1.7.0
  * Author:            David Cavins
  * Author URI:        @TODO
  * Text Domain:       plugin-name-locale
@@ -54,6 +54,7 @@ function sa_class_init() {
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-tweetchats-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-term-intros-cpt-tax.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-ticker-items-cpt-tax.php' );
+    require_once( plugin_dir_path( __FILE__ ) . 'includes/class-sa-open-graph-meta.php' );
 
     // Admin and dashboard functionality
     // if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {

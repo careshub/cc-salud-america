@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.6.2';
+	const VERSION = '1.7.0';
 
 	/**
 	 *
