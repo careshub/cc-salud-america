@@ -162,6 +162,18 @@
 			$( '#video-contest-rules .rules' ).slideToggle( 'fast' );
 		} );
 
+		// Handle controls for spanish/english videos
+        $( ".video-container-group.bilingual-video" ).each( function(){
+        	// Default to the english language version if it exists.
+        	if ( $( this ).find( ".video-in-english" ).length ) {
+        		$( this ).find( ".video-in-spanish" ).hide();
+        	}
+        });
+
+        $( ".show-english-video, .show-spanish-video" ).on( "click", function(){
+        	$( this ).parents( ".bilingual-video" ).find( ".video-in-spanish, .video-in-english" ).toggle();
+        });
+
 	});
 
 	/**

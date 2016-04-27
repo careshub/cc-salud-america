@@ -68,23 +68,23 @@ if ( $page_intro->have_posts() ) :
 				// If we have at least one video, output the video block
 				if ( ! empty( $video_embed_english ) || ! empty( $video_embed_spanish ) ) {
 				?>
-					<div class="video-container-group video-right">
+					<div class="video-container-group video-right bilingual-video">
 						<?php if ( ! empty( $video_embed_english ) ) { ?>
-							<div class="video-container" id="englishVid">
+							<div class="video-container video-in-english">
 								<?php echo $video_embed_english; ?>
 							</div>
 						<?php }
 						if ( ! empty( $video_embed_spanish ) ) { ?>
-							<div class="video-container" id="spanishVid">
+							<div class="video-container video-in-spanish">
 								<?php echo $video_embed_spanish; ?>
 							</div>
 						<?php } ?>
 						<figcaption>
 							<?php if ( ! empty( $video_embed_english ) ) { ?>
-								<input type="button" value="English Version (video)" id="englishButton" />
+								<input type="button" value="English Version (video)" class="show-english-video" />
 							<?php }
 							if ( ! empty( $video_embed_spanish ) ) { ?>
-								<input type="button" value="Spanish Version (video)" id="spanishButton" />
+								<input type="button" value="Spanish Version (video)" class="show-spanish-video" />
 							<?php } ?>
 						</figcaption>
 					</div>
@@ -179,17 +179,3 @@ if ( $page_intro->have_posts() ) :
     endwhile; // end of the loop.
 endif;
 wp_reset_query();
-?>
-<script type="text/javascript">
-    jQuery(document).ready(function($) {
-        $('#spanishVid').hide();
-        $( "#spanishButton" ).click(function() {
-            $('#englishVid').hide();
-            $('#spanishVid').show();
-        });
-        $( "#englishButton" ).click(function() {
-            $('#englishVid').show();
-            $('#spanishVid').hide();
-        });
-    });
-</script>
