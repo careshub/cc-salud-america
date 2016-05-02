@@ -385,8 +385,8 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 
 			//Walk up the geographies taxonomy from the selected geography
 			//Get the Geography term for this post
-			$geo_tax = wp_get_object_terms( $post->ID, 'geographies' );
-			$geo_tax_id = $geo_tax[0]->term_id;
+			$geo_tax = get_the_terms( $post->ID, 'geographies' );
+			$geo_tax_id = isset( $geo_tax[0] ) ? $geo_tax[0]->term_id : 0;
 
 			//Helper function returns the type of geography we're working with.
 			$geo_type = cc_get_the_geo_tax_type( $post->ID );
@@ -466,7 +466,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 													if ( $terms ) {
 																	foreach ( $terms as $term ) {
 																		 echo '<option value="' . $term->term_id . '"' ;
-																			if (!empty( $geo_tax_id )) {
+																			if ( $geo_tax_id ) {
 																				echo ( ( $geo_tax_id == $term->term_id )  ? ' selected="selected"' : '' );
 																			}
 																			echo '>'. $term->name . '</option>';
@@ -504,29 +504,29 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 */
 	public function sa_policy_meta_box( $post ) {
 			$custom = get_post_custom($post->ID);
-			$sapolicy_type = $custom["sa_policytype"][0];
-			$sapolicy_stage = $custom["sa_policystage"][0];
-			$pre1 = $custom["sa_pre1"][0];
-			$pre2 = $custom["sa_pre2"][0];
-			$pre3 = $custom["sa_pre3"][0];
-			$dev1 = $custom["sa_dev1"][0];
-			$dev2 = $custom["sa_dev2"][0];
-			$dev3 = $custom["sa_dev3"][0];
-			$enact1 = $custom["sa_enact1"][0];
-			$enact2 = $custom["sa_enact2"][0];
-			$enact3 = $custom["sa_enact3"][0];
-			$post1 = $custom["sa_post1"][0];
-			$post2 = $custom["sa_post2"][0];
-			$post3 = $custom["sa_post3"][0];
-			$dateenacted = $custom["sa_dateenacted"][0];
-			$dateimplemented = $custom["sa_dateimplemented"][0];
-			$emergencedatestg = $custom["sa_emergencedate_stg"][0];
-			$developmentdatestg = $custom["sa_developmentdate_stg"][0];
-			$enactmentdatestg = $custom["sa_enactmentdate_stg"][0];
-			$implementationdatestg = $custom["sa_implementationdate_stg"][0];
-			$featured_video_url = $custom["sa_featured_video_url"][0];
+			$sapolicy_type = isset( $custom["sa_policytype"][0] ) ? $custom["sa_policytype"][0] : '';
+			$sapolicy_stage = isset( $custom["sa_policystage"][0] ) ? $custom["sa_policystage"][0] : '';
+			$pre1 = isset( $custom["sa_pre1"][0] ) ? $custom["sa_pre1"][0] : '';
+			$pre2 = isset( $custom["sa_pre2"][0] ) ? $custom["sa_pre2"][0] : '';
+			$pre3 = isset( $custom["sa_pre3"][0] ) ? $custom["sa_pre3"][0] : '';
+			$dev1 = isset( $custom["sa_dev1"][0] ) ? $custom["sa_dev1"][0] : '';
+			$dev2 = isset( $custom["sa_dev2"][0] ) ? $custom["sa_dev2"][0] : '';
+			$dev3 = isset( $custom["sa_dev3"][0] ) ? $custom["sa_dev3"][0] : '';
+			$enact1 = isset( $custom["sa_enact1"][0] ) ? $custom["sa_enact1"][0] : '';
+			$enact2 = isset( $custom["sa_enact2"][0] ) ? $custom["sa_enact2"][0] : '';
+			$enact3 = isset( $custom["sa_enact3"][0] ) ? $custom["sa_enact3"][0] : '';
+			$post1 = isset( $custom["sa_post1"][0] ) ? $custom["sa_post1"][0] : '';
+			$post2 = isset( $custom["sa_post2"][0] ) ? $custom["sa_post2"][0] : '';
+			$post3 = isset( $custom["sa_post3"][0] ) ? $custom["sa_post3"][0] : '';
+			$dateenacted = isset( $custom["sa_dateenacted"][0] ) ? $custom["sa_dateenacted"][0] : '';
+			$dateimplemented = isset( $custom["sa_dateimplemented"][0] ) ? $custom["sa_dateimplemented"][0] : '';
+			$emergencedatestg = isset( $custom["sa_emergencedate_stg"][0] ) ? $custom["sa_emergencedate_stg"][0] : '';
+			$developmentdatestg = isset( $custom["sa_developmentdate_stg"][0] ) ? $custom["sa_developmentdate_stg"][0] : '';
+			$enactmentdatestg = isset( $custom["sa_enactmentdate_stg"][0] ) ? $custom["sa_enactmentdate_stg"][0] : '';
+			$implementationdatestg = isset( $custom["sa_implementationdate_stg"][0] ) ? $custom["sa_implementationdate_stg"][0] : '';
+			$featured_video_url = isset( $custom["sa_featured_video_url"][0] ) ? $custom["sa_featured_video_url"][0] : '';
 
-			if ( $sapolicy_type == null ){
+			if ( ! $sapolicy_type ){
 					$ptdef = "---Select a Policy Type---";
 			} else {
 					$ptdef = $sapolicy_type;

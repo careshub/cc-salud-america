@@ -20,7 +20,7 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
         $video_embed_code = wp_oembed_get( $video_url );
     }
 
-    $geo_terms = get_the_terms( $post_id, 'geographies' );
+    $geo_terms = get_the_terms( $main_post_id, 'geographies' );
     // Get the GeoID if possible, else use the whole US
     $geo_id = ( ! empty( $geo_terms ) ) ? current( $geo_terms )->description : '01000US';
     ?>

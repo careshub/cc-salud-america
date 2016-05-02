@@ -258,6 +258,9 @@ function salud_the_policy_target_icons( $post_id = 0 ) {
         }
 
         $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
+        if ( ! is_array( $terms ) ) {
+            return;
+        }
         $num_terms = count( $terms );
 
         // What we return depends on how many terms there are.
@@ -757,6 +760,8 @@ function sa_single_post_header_meta( $post_id = 0 ) {
     }
     // Get the post_type
     $post_type = get_post_type( $post_id );
+    $user_id = get_current_user_id();
+    $is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
 
     // Default map buffer setting
     $buffer = 10;
