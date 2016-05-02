@@ -448,45 +448,6 @@ function sa_insert_random_content_after_paragraph( $insertion, $paragraph_id, $c
 	return implode( '', $paragraphs );
 }
 
-// add_filter( 'embed_oembed_html', 'success_story_oembed_filter', 10, 4 ) ;
-function success_story_oembed_filter($html, $url, $attr, $post_ID) {
-	// $towrite = PHP_EOL . '$html: ' . print_r($html, TRUE);
-	// $towrite .= PHP_EOL . '$url: ' . print_r($url, TRUE);
-	// $towrite .= PHP_EOL . '$attr: ' . print_r($attr, TRUE);
-	// $towrite .= PHP_EOL . '$post_id: ' . print_r($post_ID, TRUE);
-	// $fp = fopen('oembed_bits.txt', 'a');
-	// fwrite($fp, $towrite);
-	// fclose($fp);
-
-	if ( is_singular('sa_success_story') ) {
-	    $html = '<figure class="video-container">'.$html.'</figure>';
-	}
-    return $html;
-}
-
-// customize embed settings
-function youtube_hide_controls_filter($html){
-    if( strpos($html, 'youtu.be') !== false || strpos($html, 'youtube.com') !== false ){
-  //   	$towrite = PHP_EOL . '$html, before: ' . print_r($html, TRUE);
-		// $fp = fopen('oembed_bits.txt', 'a');
-		// fwrite($fp, $towrite);
-		// fclose($fp);
-        $html = preg_replace("@src=\"(.+?)\?(.+?)\"\s@", "src=\"$1?$2&showinfo=0&rel=0&autohide=1\" ", $html);
-  //   	$towrite = PHP_EOL . '$html, after: ' . print_r($html, TRUE);
-		// $fp = fopen('oembed_bits.txt', 'a');
-		// fwrite($fp, $towrite);
-		// fclose($fp);
-        return $html;
-    }
-    return $html;
-}
-
-// add_filter('embed_handler_html', 'custom_youtube_settings');
-//This filter handles embeds in content, etc.
-add_filter('embed_oembed_html', 'youtube_hide_controls_filter', 77);
-//This filter handles embeds fetched via wp_oembed_get.
-add_filter('oembed_result', 'youtube_hide_controls_filter', 77);
-
 function sa_get_youtube_video_metadata( $url ) {
 
 	//Get the important part of the $video_url
