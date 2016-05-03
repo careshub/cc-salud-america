@@ -1011,7 +1011,7 @@ function sa_ticker() {
     <?php /* We include the following template file for use by JS */ ?>
     <script type="text/html" id="tmpl-salud-ticker-items-block">
         <li id="sa-ticker-item-{{data.id}}" class="sa-ticker-item">
-            <span class="sa-ticker-item-type-label" style="background-color:{{data.item_type_term.color}}">{{data.item_type_term.name}}</span>
+            <span class="sa-ticker-item-type-label" style="background-color:{{data.sa_ticker_item_leader_color}}">{{data.sa_ticker_item_leader_text}}</span>
             <span class="sa-ticker-item-content">
                 <span class="date">{{data.nice_date}}</span> {{data.title.rendered}}
                 <# if ( data.sa_ticker_item_link ) { #>

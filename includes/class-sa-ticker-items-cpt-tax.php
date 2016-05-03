@@ -24,7 +24,6 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	private $nonce_value = 'sa_ticker_items_meta_box_nonce';
 	private $nonce_name = 'sa_ticker_items_meta_box';
 	private $post_type = 'sa_ticker_items';
-	private $tax_name = 'sa_ticker_item_types';
 
 	/**
 	 * Initialize the extension class
@@ -36,9 +35,6 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 		// Register Policy custom post type
 		add_action( 'init', array( $this, 'register_ticker_items_cpt' ) );
 
-		// Register related taxonomies
-		add_action( 'init', array( $this, 'register_ticker_item_types_tax' ) );
-
 		// Handle saving policies
 		add_action( 'save_post', array( $this, 'save' ) );
 
@@ -46,6 +42,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 		// add_filter( 'manage_sapolicies_posts_custom_column', array( $this, 'manage_admin_columns') );
 		// add_filter( 'manage_edit-sapolicies_sortable_columns', array( $this, 'register_sortable_columns' ) );
 		// add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
 
@@ -89,7 +86,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 			'hierarchical' => false,
 			'show_in_menu' => true,//'salud_america',
 			'menu_position' => 58,
-			'taxonomies' => array( 'sa_ticker_item_type' ),
+			'taxonomies' => array(),
 			// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 			'supports' => array('title'),
 			'show_in_rest' => true,
@@ -99,50 +96,6 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 		);
 
 		register_post_type( $this->post_type, $args );
-	}
-
-	public function register_ticker_item_types_tax() {
-
-		$labels = array(
-				'name' => __( 'Ticker Item Types', $this->plugin_slug ),
-				'singular_name' => __( 'Ticker Item Type', $this->plugin_slug  ),
-				'search_items' => __( 'Search Ticker Item Types', $this->plugin_slug ),
-				'popular_items' => __( 'Popular Ticker Item Types', $this->plugin_slug ),
-				'all_items' => __( 'All Ticker Item Types', $this->plugin_slug ),
-				'parent_item' => __( 'Parent Ticker Item Type', $this->plugin_slug ),
-				'parent_item_colon' => __( 'Parent Ticker Item Type:', $this->plugin_slug ),
-				'edit_item' => __( 'Edit Ticker Item Type', $this->plugin_slug ),
-				'update_item' => __( 'Update Ticker Item Type', $this->plugin_slug ),
-				'add_new_item' => __( 'Add New Ticker Item Type', $this->plugin_slug ),
-				'new_item_name' => __( 'New Ticker Item Type', $this->plugin_slug ),
-				'separate_items_with_commas' => __( 'Separate types with commas', $this->plugin_slug ),
-				'add_or_remove_items' => __( 'Add or remove Ticker Item Types', $this->plugin_slug ),
-				'choose_from_most_used' => __( 'Choose from most used Ticker Item Types', $this->plugin_slug ),
-				'menu_name' => __( 'Ticker Item Types', $this->plugin_slug ),
-		);
-
-		$args = array(
-				'labels' => $labels,
-				'public' => true,
-				'show_in_nav_menus' => true,
-				'show_ui' => true,
-				'show_in_menu' => true,
-				'capabilities' => array(
-					'manage_terms' => 'edit_sapoliciess',
-					'delete_terms' => 'edit_sapoliciess',
-					'edit_terms' => 'edit_sapoliciess',
-					'assign_terms' => 'edit_sapoliciess'
-				),
-				'show_tagcloud' => true,
-				'show_admin_column' => true,
-				'hierarchical' => true,
-
-				'rewrite' => true,
-				// 'rewrite' => array( 'slug' => 'salud/sa_advocacy_targets', 'with_front' => false),
-				'query_var' => true
-		);
-
-		register_taxonomy( $this->tax_name, array( $this->post_type ), $args );
 	}
 
 	/**
@@ -161,8 +114,8 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 		$closing_set = array_slice( $columns, - 2 );
 
 		$insert_set = array(
-			'type' => __( 'Type' ),
-			'stage' => __( 'Stage' )
+			// 'type' => __( 'Type' ),
+			// 'stage' => __( 'Stage' )
 			);
 
 		$columns = array_merge( $opening_set, $insert_set, $closing_set );
@@ -202,8 +155,8 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	 * @return   array of columns to display
 	 */
 	public function register_sortable_columns( $columns ) {
-					$columns["type"] = "type";
-					$columns["stage"] = "stage";
+					// $columns["type"] = "type";
+					// $columns["stage"] = "stage";
 					//Note: Advo targets can't be sortable, because the value is a string.
 					return $columns;
 	}
@@ -224,14 +177,28 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 
 			switch ( $orderby ) {
 				case 'stage':
-						$query->set( 'meta_key','sa_policystage' );
-						$query->set( 'orderby','meta_value' );
+						// $query->set( 'meta_key','sa_policystage' );
+						// $query->set( 'orderby','meta_value' );
 					break;
 				case 'type':
-						$query->set( 'meta_key','sa_policytype' );
-						$query->set( 'orderby','meta_value' );
+						// $query->set( 'meta_key','sa_policytype' );
+						// $query->set( 'orderby','meta_value' );
 					break;
 			}
+	}
+
+	public function enqueue_admin_scripts() {
+		$screen = get_current_screen();
+		if ( $this->post_type == $screen->id ) {
+			wp_enqueue_script( 'wp-color-picker' );
+			wp_enqueue_style( 'wp-color-picker' );
+
+			// Enqueue fancy coloring; includes quick-edit
+			wp_enqueue_script( 'salud-admin', plugins_url( '../admin/assets/js/admin.js', __FILE__ ), array( 'wp-color-picker', 'jquery', 'wp-util' ), $this::VERSION, true );
+
+			// Enqueue fancy coloring; includes quick-edit
+		    wp_enqueue_style( $this->plugin_slug . '-ticker-styles', plugins_url( '../public/css/ticker.css', __FILE__ ), array(), $this::VERSION );
+		}
 	}
 
 	/**
@@ -248,15 +215,27 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	}
 		function meta_box_html( $post ) {
 			$custom = get_post_custom( $post->ID );
-			$sa_ticker_item_link = ( ! empty( $custom["sa_ticker_item_link"][0] ) ) ? $custom["sa_ticker_item_link"][0] : '';
-			// $saresource_policy = $custom["saresource_policy"][0];
-			// $saresource_promote = $custom["saresource_promote"][0];
+			$sa_ticker_item_link = isset( $custom["sa_ticker_item_link"][0] ) ? $custom["sa_ticker_item_link"][0] : '';
+			$sa_ticker_item_leader_text = isset( $custom["sa_ticker_item_leader_text"][0] ) ? $custom["sa_ticker_item_leader_text"][0] : 'The Latest';
+			$sa_ticker_item_leader_color = isset( $custom["sa_ticker_item_leader_color"][0] ) ? $custom["sa_ticker_item_leader_color"][0] : '#EB008B';
 
 			// Add a nonce field so we can check for it later.
 			wp_nonce_field( $this->nonce_name, $this->nonce_value );
 			?>
+			<label for="sa_ticker_item_leader_text"><h4>Leader Block Text</h4></label>
+			<input type='text' name='sa_ticker_item_leader_text' id='sa_ticker_item_leader_text' value='<?php echo $sa_ticker_item_leader_text; ?>'/>
+			<label for="sa_ticker_item_leader_color"><h4>Leader Block Background Color</h4></label>
+			<input type='text' name='sa_ticker_item_leader_color' id='sa_ticker_item_leader_color' value='<?php echo $sa_ticker_item_leader_color; ?>'/>
 			<label for="sa_ticker_item_link"><h4>Link (optional)</h4></label>
-				<input type='text' name='sa_ticker_item_link' id='sa_ticker_item_link' value='<?php	echo $sa_ticker_item_link; ?>'/>
+			<input type='text' name='sa_ticker_item_link' id='sa_ticker_item_link' value='<?php	echo $sa_ticker_item_link; ?>'/>
+			<hr style="margin-top:2em;" />
+			<h4>Ticker Item Preview</h4>
+			<div id="ticker-preview">
+		        <?php
+		        // Drop the JS template we use on the front end in here.
+		        echo sa_ticker();
+		        ?>
+			<div>
 			<?php
 			}
 
@@ -278,7 +257,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 		}
 
 		// Save meta
-		$meta_fields = array( 'sa_ticker_item_link' );
+		$meta_fields = array( 'sa_ticker_item_leader_text', 'sa_ticker_item_leader_color', 'sa_ticker_item_link' );
 		$meta_success = $this->save_meta_fields( $post_id, $meta_fields );
 
 	}
@@ -292,7 +271,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	 */
 	public function rest_read_meta() {
 	    register_rest_field( $this->post_type,
-	        'sa_ticker_item_link',
+	        'sa_ticker_item_leader_text',
 	        array(
 	            'get_callback'    => array( $this, 'get_ticker_meta' ),
 	            'update_callback' => null,
@@ -300,9 +279,17 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	        )
 	    );
 	    register_rest_field( $this->post_type,
-	        'item_type_term',
+	        'sa_ticker_item_leader_color',
 	        array(
-	            'get_callback'    => array( $this, 'get_ticker_item_type_term' ),
+	            'get_callback'    => array( $this, 'get_ticker_meta' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	    register_rest_field( $this->post_type,
+	        'sa_ticker_item_link',
+	        array(
+	            'get_callback'    => array( $this, 'get_ticker_meta' ),
 	            'update_callback' => null,
 	            'schema'          => null,
 	        )
@@ -328,39 +315,6 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 	 */
 	public function get_ticker_meta( $object, $field_name, $request ) {
 	    return get_post_meta( $object[ 'id' ], $field_name, true );
-	}
-
-	/**
-	 * Get the value of the requested meta field.
-	 *
-	 * @param array $object Details of current post.
-	 * @param string $field_name Name of field.
-	 * @param WP_REST_Request $request Current request
-	 *
-	 * @return mixed
-	 */
-	public function get_ticker_item_type_term( $object, $field_name, $request ) {
-		// Set a default value.
-		$value = array(
-				'term_id' => 0,
-	            'name' => 'The Latest',
-	            'slug' => '',
-	            'color' => '#0088CF',
-	        );
-		$terms = get_the_terms( $object[ 'id' ], $this->tax_name );
-		if ( is_array( $terms ) ) {
-			$term = current( $terms );
-			$value = array(
-				'term_id' => $term->term_id,
-	            'name' => $term->name,
-	            'slug' => $term->slug,
-	        );
-	        // Add the term color to the response.
-			if ( $color = get_term_meta( $term->term_id, 'color', true ) ) {
-				$value['color'] = $color;
-			}
-		}
-	    return $value;
 	}
 
 	/**

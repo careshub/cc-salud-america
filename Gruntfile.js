@@ -42,7 +42,8 @@ module.exports = function(grunt) {
 			},
 			files: {
 				'public/css/public.css': 'public/less/public.less',
-                'public/css/public-ie.css': 'public/less/public-ie.less'
+                'public/css/public-ie.css': 'public/less/public-ie.less',
+                'public/css/ticker.css': 'public/less/ticker.less'
 			}
 		  }
 		},
