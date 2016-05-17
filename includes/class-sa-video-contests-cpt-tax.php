@@ -504,8 +504,9 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 			 *
 			 * @param int   $post_id   ID of the contest the user voted in.
 			 * @param int   $user_id   ID of the voter.
+			 * @param int   $video_id  ID of the selected video
 			 */
-			do_action( 'sa_count_video_contest_vote', $post_id, $user_id );
+			do_action( 'sa_count_video_contest_vote', $post_id, $user_id, $video_id );
 		}
 
 		return $success;
