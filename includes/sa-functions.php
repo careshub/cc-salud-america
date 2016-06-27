@@ -32,6 +32,7 @@ function sa_get_group_id(){
             $group_id = 583;
             break;
         case 'http://www.communitycommons.org':
+        case 'http://abydos.cares.missouri.edu':
             $group_id = 678;
             break;
         default:
