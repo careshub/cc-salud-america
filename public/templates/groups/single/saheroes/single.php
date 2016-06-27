@@ -65,6 +65,8 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
             }
             ?>
 
+            <?php sa_post_date_author( $main_post_id, 'p' ); ?>
+
             <?php the_content(); ?>
 
             <?php if ( ! empty( $advocacy_targets ) ) { ?>
