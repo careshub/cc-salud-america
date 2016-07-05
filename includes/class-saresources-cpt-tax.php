@@ -308,7 +308,7 @@ class CC_SA_Resources_CPT_Tax extends CC_Salud_America {
 			$saresource_date = isset( $custom["saresource_date"][0] ) ? $custom["saresource_date"][0] : '';
 			$saresource_policy = isset( $custom["saresource_policy"][0] ) ? $custom["saresource_policy"][0] : '';
 			$saresource_promote = isset( $custom["saresource_promote"][0] ) ? $custom["saresource_promote"][0] : '';
-			$featured_video_url = isset( $custom["featured_video_url"][0] ) ? $custom["featured_video_url"][0] : '';
+			$featured_video_url = isset( $custom["sa_featured_video_url"][0] ) ? $custom["sa_featured_video_url"][0] : '';
 
 			// Add a nonce field so we can check for it later.
 			wp_nonce_field( $this->nonce_name, $this->nonce_value );
