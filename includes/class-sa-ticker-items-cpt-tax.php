@@ -88,7 +88,7 @@ class CC_SA_Ticker_Items_CPT_Tax extends CC_Salud_America {
 			'menu_position' => 58,
 			'taxonomies' => array(),
 			// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
-			'supports' => array('title'),
+			'supports' => array('title', 'author'),
 			'show_in_rest' => true,
 			'has_archive' => true,
 			'capability_type' => $this->post_type,

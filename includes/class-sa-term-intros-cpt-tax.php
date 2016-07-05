@@ -175,7 +175,7 @@ class CC_SA_Term_Intros_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Introductory content used at the top of Salud America advocacy target archive pages',
-	        'supports' => array( 'title', 'editor', 'thumbnail' ),
+	        'supports' => array( 'title', 'editor', 'thumbnail', 'author' ),
 			'taxonomies' => array( 'sa_advocacy_targets' ),
 	        'public' => true,
 	        'show_ui' => true,

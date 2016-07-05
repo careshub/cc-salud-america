@@ -100,7 +100,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					'taxonomies' => array('sa_advocacy_targets', 'sa_policy_tags'),
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,
-					'supports' => array('title','editor','comments', 'thumbnail'),
+					'supports' => array('title','editor','comments', 'thumbnail', 'author'),
 					'capability_type' => $this->post_type,
 					'map_meta_cap' => true
 			);

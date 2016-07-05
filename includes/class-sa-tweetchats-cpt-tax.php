@@ -78,7 +78,7 @@ class CC_SA_Tweetchats_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Tweetchats sponsored by Salud America',
-	        'supports' => array( 'title', 'thumbnail' ),
+	        'supports' => array( 'title', 'thumbnail', 'author' ),
 	        'public' => true,
 	        'show_ui' => true,
 	        'show_in_menu' => true, //'salud_america',

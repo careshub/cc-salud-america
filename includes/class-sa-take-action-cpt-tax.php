@@ -86,7 +86,7 @@ class CC_SA_Take_Action_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Petition campaigns run by Salud America',
-	        'supports' => array( 'title', 'editor', 'thumbnail' ),
+	        'supports' => array( 'title', 'editor', 'thumbnail', 'author' ),
 	        'public' => true,
 	        'show_ui' => true,
 	        'show_in_menu' => true, //'salud_america',

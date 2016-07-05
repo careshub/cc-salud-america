@@ -89,7 +89,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 	        'labels' => $labels,
 	        'hierarchical' => false,
 	        'description' => 'Used to highlight policies that went well and can serve as a model for change in other places.',
-	        'supports' => array( 'title', 'editor', 'thumbnail', 'comments', 'excerpt' ),
+	        'supports' => array( 'title', 'editor', 'thumbnail', 'comments', 'excerpt', 'author' ),
 	        'taxonomies' => array( 'sa_advocacy_targets' ),
 	        'public' => true,
 	        'show_ui' => true,
