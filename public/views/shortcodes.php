@@ -219,3 +219,17 @@ function sa_ticker_shortcode() {
     return ob_get_clean();
 }
 add_shortcode( 'sa_ticker', 'sa_ticker_shortcode' );
+
+/**
+ * Output html for the SA leader report.
+ *
+ * @since   1.8.0
+ *
+ * @return  html
+ */
+function sa_leader_report_shortcode() {
+    ob_start();
+    sa_leader_report();
+    return ob_get_clean();
+}
+add_shortcode( 'sa_leader_report', 'sa_leader_report_shortcode' );

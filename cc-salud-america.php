@@ -40,6 +40,7 @@ function sa_class_init() {
     require_once( plugin_dir_path( __FILE__ ) . 'includes/sa-functions.php' );
     // Template output functions
     require_once( plugin_dir_path( __FILE__ ) . 'public/views/template-tags.php' );
+    require_once( plugin_dir_path( __FILE__ ) . 'public/views/leader-report.php' );
     require_once( plugin_dir_path( __FILE__ ) . 'public/views/shortcodes.php' );
 
     // The main class
