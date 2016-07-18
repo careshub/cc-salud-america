@@ -104,6 +104,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,
 					'supports' => array('title','editor','comments', 'thumbnail', 'author'),
+					'show_in_rest' => true,
 					'capability_type' => $this->post_type,
 					'map_meta_cap' => true
 			);
@@ -146,10 +147,13 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 				'show_tagcloud' => true,
 				'show_admin_column' => true,
 				'hierarchical' => true,
-
 				'rewrite' => true,
 				// 'rewrite' => array( 'slug' => 'salud/sa_advocacy_targets', 'with_front' => false),
-				'query_var' => true
+				'query_var' => true,
+				// WP REST API
+				'show_in_rest' => true,
+				'rest_base' => 'sa_advocacy_targets',
+				'rest_controller_class' => 'WP_REST_Terms_Controller',
 		);
 
 		register_taxonomy( 'sa_advocacy_targets', array( $this->post_type ), $args );

@@ -98,6 +98,7 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 	        'show_in_nav_menus' => true,
 	        'publicly_queryable' => true,
 	        'exclude_from_search' => false,
+			'show_in_rest' => true,
 	        'has_archive' => true,
 	        'query_var' => true,
 	        'can_export' => true,
