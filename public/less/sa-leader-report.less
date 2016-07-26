@@ -1,0 +1,356 @@
+﻿/*** Salud report card ***/
+#sa-report-selection{
+    margin: 20px 0;
+    div#select-county {
+        font-weight: 700; 
+        line-height: 150%;
+        margin-bottom: 10px;
+     }
+    #county-list {
+        display: none;
+    }
+    #report-wait-message{
+        display: none;
+        color: #f00;
+        font-weight: 700;
+        font-size: 1.5em;
+        padding-left: 10px;
+    }
+}
+#sa-report-content {
+    background-color: #fff;
+    margin: 0 auto;
+    font-family: inherit; 
+    th, td{
+        font-size: 14px;
+        color: #333;
+        border: 0;
+    }
+    table {
+        margin: 0;
+        border: 0;
+    }
+    p {
+        margin: 0 0 10px 0;
+        line-height: 1.4;
+    }
+    div {
+      line-height: 135%;
+      box-sizing: border-box;
+    }
+    .page-break {
+      clear: both;
+      page-break-after: always;
+    }
+    .float-left {
+        float: left;
+    }
+    .float-right {
+      float: right;
+    }
+    .right-align {
+      text-align: right;
+    }
+    .center-align {
+      text-align: center;
+    }
+    .sa-report-header {
+      border-bottom: 1px solid #aaa;
+      clear: both;
+      margin: 20px 0;
+      padding-top: 10px;
+    }
+    .sa-text-orange {
+      color: #E46C0A;
+    }
+    .sa-text-green {
+      color: #00B058;
+    }
+    .sa-text-purple {
+      color: #5F497A;
+    }
+    .sa-text-capital {
+      text-transform: uppercase;
+    }
+    .sa-text-bold {
+      font-weight: bold;
+    }
+    .sa-report-title {
+      background: #E46C0A;
+      color: #fff;
+      text-align: center;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    .sa-report-font-large {
+      font-size: 40px;
+      font-weight: 700;
+    }
+    .sa-report-font-2 {
+      font-size: 21px;
+    }
+    .sa-report-font-3 {
+      font-size: 30px;
+      font-weight: 600;
+    }
+    .sa-report-font-4 {
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 100%;
+    }
+    .sa-report-icons img {
+      height: 30px;
+      vertical-align: middle;
+      margin-left: 20px;
+    }
+    .sa-report-changes img {
+      width: 80px;
+      margin: 50px 10px 0 10px;
+    }
+    .sa-report-page-header {
+      margin: 20px 0;
+    }
+    .sa-report-page-header p {
+      font-size: 14px;
+    }
+    .sa-report-page-header div,
+    .sa-report-page-header p {
+      color: #fff;
+    }
+    .sa-background-darkgray {
+      height: 130px;
+      color: #fff;
+      background: #808080;
+    }
+    .sa-img {
+      padding: 10px;
+      white-space: pre-line;
+      min-width: 80px;
+    }
+    .sa-img img {
+      width: 80px;
+      margin-right: 10px;
+    }
+    .sa-background-darkgray a img {
+      width: 110px;
+    }
+    .sa-page-title {
+      margin-top: -10px;
+    }
+    .sa-report-spacing1,
+    .sa-report-spacing2,
+    .sa-report-spacing-htm {
+      clear: both;
+      display: inline-block;
+    }
+    .sa-report-spacing1 {
+        margin: 10px 0;
+    }
+    .sa-report-spacing2,
+    .sa-report-spacing-htm {
+      margin: 20px 0;
+    }
+    .sa-report-indicator-title {
+      text-decoration: underline;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .sa-report-dial {
+      width: 250px;
+      height: 350px;
+      background: #ddd;
+    }
+    .sa-report-sociobarriers {
+      min-width: 70% ;
+      max-width: 700px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+    .sa-report-sociobarriers td {
+      border: 1px solid #444;
+      padding: 2px;
+    }
+    td.sa-report-sociobarriers-area {
+      padding-left: 15px;
+    }
+    .sa-background-gray {
+      background: #C0C0C0;
+    }
+    .sa-vulnerable-header {
+      background: #C0504D;
+      padding: 10px;
+      color: #fff;
+      clear: left;
+      margin: 10px 0 0 0;
+    }
+    #sa-vulnerable-map {
+        position: relative; 
+        display: inline-block;
+        width: 100%;
+        height: 450px;
+        margin-bottom: 20px;
+    }
+    #sa-vulnerable-map img {
+       width: 100%;
+       height: 450px;
+      position: absolute; 
+      left: 0; 
+      top: 0;
+      border: 1px solid #bbb;
+    }
+    #sa-vulnerable-sidebar {
+      clear: left;
+      margin: 0 auto;
+      padding: 0;
+    }
+    #sa-vulnerable-maplegend {
+      border: 1px solid #bbb;
+      padding: 5px;
+      margin: 0 5px 5px 5px;
+    }
+    .sa-vulnerable-map-legend {
+      padding-left: 2.2em;
+      text-indent: -2.2em;
+      margin-top: 5px;
+    }
+    #sa-vulnerable-maplegend span {
+      display: inline-block;
+      height: 15px;
+      margin-right: 5px;
+      vertical-align: middle;
+      width: 20px;
+    }
+    #sa-vulnerable-contact {
+      border: 1px solid #bbb;
+      font-weight: 600;
+      padding: 5px;
+      margin: 15px 5px;
+    }
+    #sa-reference {
+      font-size: 10pt;
+    }
+    #sa-reference #footer {
+      border-bottom: 1px solid #000;
+      width: 200px;
+      margin: 10px 0 5px;
+    }
+    .sa-list p {
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+    #sa-reference .sa-list p {
+      font-size: 9pt;
+      margin-bottom: 8px;
+    }
+    .sa-report-cols {
+      width: 100%;
+    }
+    .sa-report-cols td {
+      vertical-align: top;
+      padding: 0 10px;
+    }
+    .sa-report-cols td.col2 {
+      width: 50%;
+    }
+    .sa-report-cols td.col3 {
+      width: 33%;
+    }
+    .w3-row::after, .w3-clear::after {
+      clear: both;
+      content: "";
+      display: table;
+    }
+    .w3-half,   
+    .w3-third,
+    .w3-threequarter, 
+    .w3-quarter {
+      float: left;
+      width: 99.99999%;
+      padding: 0 8px;
+      margin-bottom: 10px;
+    }
+    .w3-rest {
+        overflow: hidden;
+    }
+      .sa-col-media {
+        max-width: 260px;
+      }
+      .sa-col-middle {
+        min-width: 223px;
+      }
+    .sa-col-end {
+      padding: 0;
+    }
+    .sa-col-1 {
+      padding-right: 10px;
+    }
+    .sa-col-2 {
+      padding: 0 5px;
+    }
+    .sa-col-3 {
+      padding-left: 10px;
+    }
+    .sa-report-indicator-food {
+      min-height: 240px;
+    }
+    .sa-report-indicator-physical {
+      min-height: 250px;
+    }
+    .sa-report-indicator-health {
+      min-height: 220px;
+    }
+}
+#sa-report-export {
+    margin: 20px 0;
+}
+
+@media screen and (min-width: 601px) {
+    #sa-report-content{
+        .w3-third {
+            width: 33.3333%;
+            margin: 0;
+            padding: 0;
+        }
+        .w3-half {
+            width: 49.99999%;
+            margin: 0;
+            padding: 0;
+        }
+        .w3-threequarter{
+            width:74.99999%;
+        }
+        .sa-col-media {
+            max-width: none;
+        }
+        .sa-img{
+            white-space: nowrap;
+        }
+        .sa-vulnerable-header {
+            margin-left: 215px;
+            height: 140px;
+            clear: none;
+        }
+        #sa-vulnerable-map,
+        #sa-vulnerable-map img {
+            width: 600px;
+            height: 610px;
+            margin: 0;
+        }
+        #sa-vulnerable-sidebar{
+           clear: none;
+           padding-left: 10px;
+        }
+    }
+}
+@media screen and (min-width: 801px) {
+    #sa-report-content{
+        .sa-col-media {
+          min-width: 260px;
+        }
+        .sa-col-middle {
+          padding: 0 10px;
+          min-width: 223px;
+        }
+    }
+  }
