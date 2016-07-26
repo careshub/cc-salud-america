@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
+	pkg: grunt.file.readJSON('package.json'),
 
         // watch for changes and trigger sass, jshint, uglify and livereload
         watch: {
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
                 tasks: ['uglify']
             },
             styles: {
-				files: ['public/less/*.less'],
+		files: ['public/less/*.less'],
                 tasks: ['less:cleancss', 'autoprefixer']
             },
             // cssautoprefix: {
@@ -42,8 +42,9 @@ module.exports = function(grunt) {
 			},
 			files: {
 				'public/css/public.css': 'public/less/public.less',
-                'public/css/public-ie.css': 'public/less/public-ie.less',
-                'public/css/ticker.css': 'public/less/ticker.less'
+				'public/css/public-ie.css': 'public/less/public-ie.less',
+				'public/css/ticker.css': 'public/less/ticker.less',
+				'public/css/sa-leader-report.css': 'public/less/sa-leader-report.less'
 			}
 		  }
 		},
@@ -92,15 +93,15 @@ module.exports = function(grunt) {
 
         // uglify to concat, minify, and make source maps
         uglify: {
-			options: {
-				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-						'<%= grunt.template.today("yyyy-mm-dd") %> */'
-			},
-			common: {
-				files: {
-					'public/js/public.min.js': 'public/js/public.js'
-                }
-			}
+		options: {
+			banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+				'<%= grunt.template.today("yyyy-mm-dd") %> */'
+		},
+		common: {
+			files: {
+				'public/js/public.min.js': 'public/js/public.js'
+                	}
+		}
         },
         // image optimization
         imagemin: {
