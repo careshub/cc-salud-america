@@ -164,16 +164,153 @@
 
 		// Handle controls for spanish/english videos
         $( ".video-container-group.bilingual-video" ).each( function(){
-        	// Default to the english language version if it exists.
-        	if ( $( this ).find( ".video-in-english" ).length ) {
-        		$( this ).find( ".video-in-spanish" ).hide();
-        	}
+            // Default to the english language version if it exists.
+            if ( $( this ).find( ".video-in-english" ).length ) {
+                $( this ).find( ".video-in-spanish" ).hide();
+            }
         });
 
         $( ".show-english-video, .show-spanish-video" ).on( "click", function(){
-        	$( this ).parents( ".bilingual-video" ).find( ".video-in-spanish, .video-in-english" ).toggle();
+            $( this ).parents( ".bilingual-video" ).find( ".video-in-spanish, .video-in-english" ).toggle();
         });
 
+	    // Handle state-list selection
+        $("#state-list").on("change", function () {
+            var state = $("#state-list option:selected").text();
+            console.log(state)
+            var post = { "geo_key": "050", "state": state };
+            $.ajax({
+                type: "get",
+                url: "http://services.communitycommons.org/api-location/v1/geoid-list",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                crossDomain: true,
+                data: post,
+                success: function (data) {
+                    console.log(data)
+                    $("#county-list").show();
+
+                    // remove any previous county list
+                    $("#county-list option").each(function () {
+                        if ($(this).val() !== "") $(this).remove();
+                    });
+
+                    // append new counties
+                    $.each(data, function (i, v) {
+                        $("#county-list").append($("<option></option>").val(v.geoid).html(v.name));
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+	    // Handle county selection for leader report
+        $("#county-list").on("change", function () {
+            var countyGeoId = $("#county-list").val();
+            if (countyGeoId !== "") {
+                $("#report-wait-message").show();
+                document.location = document.location.href.split("?")[0] + "?geoid=" + countyGeoId;
+            }
+        });
+
+	    //Handle sa leader report PDF export
+        var popup;
+        $("#sa-report-export").on("click", function () {
+            var pageFont = "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700&#038;subset=latin,latin-ext";
+
+            // local methods - dependent on popup window being set
+            // ** display a message
+            var popupMsg = function (s) {
+                var msg = "<link type='text/css' rel='stylesheet' href='" + pageFont + "' />";
+                msg += "<div style='font-family: Open Sans, Helvetica, Arial, sans-serif; text-align:center; line-height: 250%;'>";
+                msg += "<h2>" + s + "</h2>";
+                msg += "</div>";
+                popup.document.body.innerHTML = msg;
+            }
+            // ** move the popup window to screen center
+            var popupCenter = function(width, height) {
+                    popup.resizeTo(width, height);
+                    popup.moveTo((screen.width - width) / 2, (screen.height - height) / 2);
+            };
+
+            // open a new window for displaying PDF document later - set popup as global variable
+            if (typeof popup !== "undefined" && popup.location) {
+                popup.close();
+            }
+            popup = window.open("", "newwin", "width=500,height=300");
+            popupMsg("Converting leader report to Adobe PDF format. Please wait...");
+            popupCenter(550, 400);
+
+            // remove ".sa-report-spacing-htm" elements - they are for html spacing only.
+            var contentId = "sa-report-content";
+            var pageContent = $("#"+contentId).html();
+
+            // get contents without the spacing
+            $(".sa-report-spacing-htm").remove();
+            var content = $("#"+contentId).html();
+
+            // restore page contents with spacing
+            $("#"+contentId).html(pageContent);
+                 
+            // compile html contents
+            var htmContent = "<!DOCTYPE html><html><head>";
+
+            // add font and css files
+            var hostname = location.protocol;
+            hostname += "//" + document.location.hostname + "/";
+            $.each([pageFont,
+                    hostname + "wp-content/themes/twentytwelve/style.css",
+                    hostname + "wp-content/themes/CommonsRetheme/style.css",
+                    hostname + "wp-content/plugins/cc-salud-america/public/css/sa-leader-report.css"], function (i, css_file) {
+                    htmContent += "<link type='text/css' rel='stylesheet' href='" + css_file + "' />";
+                });
+
+            // add page content
+            content = content.replace(/src=("|')\//g, 'src="' + hostname);         // append hostname to any relative links
+            htmContent += "</head><body class='custom-font-enabled'>" +
+                "<div id='" + contentId + "'>" +
+                content +
+                "</div></body></html>";
+
+            // post to the converter API -- logo_list must point to images saved on API server as HiQPdf can only add local images to header/footer
+            var apiHost = "http://services.communitycommons.org/";
+            var post = {
+                "content": htmContent,
+                "pdf": {
+                    "file_name": "SaludReportCard",
+                    "show_pagenumber": true,
+                    "is_landscape": false,
+                    "page_width": 780,          // to remove extra blank page
+                    "logo_list": [apiHost + "assets/images/logo-salud.png",
+                        apiHost + "assets/images/logo-rwjf.png"]
+                }
+            };
+            $.ajax({
+                type: "POST",
+                url: apiHost + "api-converter/v1/htm2pdf/content",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                crossDomain: true,
+                data: JSON.stringify(post),
+                success: function (pdfUrl) {
+                    if (pdfUrl) {
+                        popupMsg("Loading PDF File...");
+                        popup.location = pdfUrl;
+
+                        // resize and move PDF popup to screen center
+                        popupCenter(1000, screen.height);
+                    } else {
+                        popupMsg("An error has occurred during PDF conversion.");
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                    popupMsg("An error has occurred during PDF conversion.");
+                }
+            });
+        });
 	});
 
 	/**
