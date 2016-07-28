@@ -227,9 +227,9 @@ add_shortcode( 'sa_ticker', 'sa_ticker_shortcode' );
  *
  * @return  html
  */
-function sa_leader_report_shortcode() {
+function sa_report_card_shortcode() {
     ob_start();
-    sa_leader_report();
+    sa_report_card();
     return ob_get_clean();
 }
-add_shortcode( 'sa_leader_report', 'sa_leader_report_shortcode' );
+add_shortcode( 'sa_report_card', 'sa_report_card_shortcode' );
