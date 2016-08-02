@@ -174,39 +174,57 @@
             $( this ).parents( ".bilingual-video" ).find( ".video-in-spanish, .video-in-english" ).toggle();
         });
 
-	    // Handle state-list selection
-        $("#state-list").on("change", function () {
-            var state = $("#state-list option:selected").text();
-            console.log(state)
-            var post = { "geo_key": "050", "state": state };
+	    /**************** Report Card **********************/
+        var apiHost = "http://services.communitycommons.org/";
+
+        // ajax call to get geoid list
+        var getGeoidList = function (api_param, callback) {
             $.ajax({
                 type: "get",
-                url: "http://services.communitycommons.org/api-location/v1/geoid-list",
+                url: apiHost + "api-location/v1/geoid-list/" + api_param,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 crossDomain: true,
-                data: post,
-                success: function (data) {
-                    console.log(data)
-                    $("#county-list").show();
-
-                    // remove any previous county list
-                    $("#county-list option").each(function () {
-                        if ($(this).val() !== "") $(this).remove();
-                    });
-
-                    // append new counties
-                    $.each(data, function (i, v) {
-                        $("#county-list").append($("<option></option>").val(v.geoid).html(v.name));
-                    });
-                },
+                success: callback,
                 error: function (err) {
                     console.log(err);
                 }
             });
+        };
+
+        // Populate state list
+        if ($("#state-list").length) {
+            getGeoidList("040", function (data) {
+                // append new items -- exclude territories since we don't have data to generate report for those
+                $.each(data, function (i, v) {
+                    var stateCode = v.geoid.substr(v.geoid.length - 2);
+                    if (parseInt(stateCode) < 60) {
+                        $("#state-list").append($("<option></option>").val(v.geoid).html(v.name));
+                    }
+                });
+            });
+        }
+
+	    // Handle state-list selection for report card
+        $("#state-list").on("change", function () {
+            var state = $("#state-list option:selected").text();
+
+            getGeoidList("050?state=" + state, function (data) {
+                $("#county-list").show();
+
+                // remove any previous county list
+                $("#county-list option").each(function () {
+                    if ($(this).val() !== "") $(this).remove();
+                });
+
+                // append new counties
+                $.each(data, function (i, v) {
+                    $("#county-list").append($("<option></option>").val(v.geoid).html(v.name));
+                });
+            });
         });
 
-	    // Handle county selection for leader report
+	    // Handle county selection for report card
         $("#county-list").on("change", function () {
             var countyGeoId = $("#county-list").val();
             if (countyGeoId !== "") {
@@ -215,7 +233,7 @@
             }
         });
 
-	    //Handle sa leader report PDF export
+	    //Handle PDF export for report card
         var popup;
         $("#sa-report-export").on("click", function () {
             var pageFont = "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700&#038;subset=latin,latin-ext";
@@ -242,17 +260,6 @@
             popup = window.open("", "newwin", "width=500,height=300");
             popupMsg("Converting report card to Adobe PDF format. Please wait...");
             popupCenter(550, 400);
-
-            // remove ".sa-report-spacing-htm" elements - they are for html spacing only.
-            var contentId = "sa-report-content";
-            var pageContent = $("#"+contentId).html();
-
-            // get contents without the spacing
-            $(".sa-report-spacing-htm").remove();
-            var content = $("#"+contentId).html();
-
-            // restore page contents with spacing
-            $("#"+contentId).html(pageContent);
                  
             // compile html contents
             var htmContent = "<!DOCTYPE html><html><head>";
@@ -267,15 +274,14 @@
                     htmContent += "<link type='text/css' rel='stylesheet' href='" + css_file + "' />";
                 });
 
-            // add page content
-            content = content.replace(/src=("|')\//g, 'src="' + hostname);         // append hostname to any relative links
+            // add report content
+            var contentId = "sa-report-content";
+            var reportContent = $("#"+contentId).html();
+            reportContent = reportContent.replace(/src=("|')\//g, 'src="' + hostname);         // append hostname to any relative links
             htmContent += "</head><body class='custom-font-enabled'>" +
-                "<div id='" + contentId + "'>" +
-                content +
-                "</div></body></html>";
+                "<div id='" + contentId + "'>" + reportContent + "</div></body></html>";
 
             // post to the converter API -- logo_list must point to images saved on API server as HiQPdf can only add local images to header/footer
-            var apiHost = "http://services.communitycommons.org/";
             var post = {
                 "content": htmContent,
                 "pdf": {
@@ -287,6 +293,8 @@
                         apiHost + "assets/images/logo-rwjf.png"]
                 }
             };
+
+            var errMsg = "Conversion to PDF failed. Please try again or contact us.";
             $.ajax({
                 type: "POST",
                 url: apiHost + "api-converter/v1/htm2pdf/content",
@@ -302,12 +310,12 @@
                         // resize and move PDF popup to screen center
                         popupCenter(1000, screen.height);
                     } else {
-                        popupMsg("An error has occurred during PDF conversion.");
+                        popupMsg(errMsg);
                     }
                 },
                 error: function (err) {
                     console.log(err);
-                    popupMsg("An error has occurred during PDF conversion.");
+                    popupMsg(errMsg);
                 }
             });
         });

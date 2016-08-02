@@ -80,29 +80,19 @@ function sa_report_card() {
                 ?>
                         <p>Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in">log in</a> 
                             to see your report card. 
-                            If you don't have a Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>">register</a>.</p>
+                            If you don't have a Community Commons account and would like to join us, please 
+                            <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>">register</a>.</p>
                 <?php
                 else:
-               ?>
-
+                ?>
                     <div id="select-county">Select your state and county to see your own report card.</div>
                     <select id="state-list">
-                        <option>--- Select a State ---</option>
-                        <?php
-                            // get a list of states - exclude territories since we don't have data to generate report for
-                            $json_states = sa_report_get_api('api-location/v1/geoid-list?geo_key=040');
-                            foreach ($json_states as $state){
-                                if ((int)$state->geoid < 60){
-                                    echo '<option id="' . $state->geoid . '">' . $state->name . '</option>'; 
-                                }
-                            }
-                        ?>
+                        <option value="" selected>--- Select a State ---</option>
                     </select>
                     <select id="county-list">
                         <option value="" selected>--- Select a County ---</option>
                     </select>
                     <span id="report-wait-message">Preparing your report card, please wait...</span>
-
                 <?php
                 endif
                 ?>
@@ -158,6 +148,11 @@ function sa_report_card() {
                        margin: 0 auto;
                 }
             }
+            @media only screen {
+                #sa-report-content .page-break {
+                  margin-top: 40px;
+                }
+            }
         </style>
          <div id="sa-report-content">
              <div id="cover-page">
@@ -207,7 +202,6 @@ function sa_report_card() {
                     <a href="<?php echo $group_url?>big-bets/sa-health-equity" title="Link to Big Bet archive: Health Equity">
                     <img src="<?php echo $image_url?>sa-health-equity.png" /></a>
                 </div>
-                <div class="sa-report-spacing-htm"></div>
                 <div class="page-break"></div>
             </div>
 
@@ -280,7 +274,6 @@ function sa_report_card() {
                         </div>
                 </div>
 
-                <div class="sa-report-spacing-htm"></div>
                 <div class="page-break"></div>
             </div>
 
@@ -367,7 +360,6 @@ function sa_report_card() {
                  </div>
              </div>
 
-                <div class="sa-report-spacing-htm"></div>
                <div class="page-break"></div>
          </div>
 
@@ -443,7 +435,6 @@ function sa_report_card() {
                     </div>
                     </div>
 
-                    <div class="sa-report-spacing-htm"></div>
                    <div class="page-break"></div>
              </div>
 
@@ -553,7 +544,6 @@ function sa_report_card() {
                         <td class="sa-text-bold"><?php echo $health_equity_page->pct_nonlatino_ins3 ?></td>
                     </tr>
                 </table>
-                <div class="sa-report-spacing-htm"></div>
                 <div class="page-break"></div>
              </div>
              <?php if ($vulnerable_population_page->pct_white != -1) :?>
@@ -592,7 +582,6 @@ function sa_report_card() {
                     </div>
                 </div>
 
-                <div class="sa-report-spacing-htm"></div>
                 <div class="page-break"></div>
             </div>
              <?php endif ?>
@@ -670,17 +659,12 @@ function console_log( $data ){
 }
 
 // get json object from API service
-function sa_report_get_api($api){
-    $api_url = 'http://services.communitycommons.org/' . $api;
+function sa_report_get_json($fips, $id='', $param = '', $api_name ='indicator'){
+    $api_url = 'http://services.communitycommons.org/api-report/v1/' . $api_name . '/Salud/';
+    $api_url .= $id . '?area_type=county&area_ids=' . $fips . $param;
     console_log($api_url);
     $result = file_get_contents($api_url);
     return json_decode($result);
-}
-
-function sa_report_get_json($fips, $id='', $param = '', $api_name ='indicator'){
-    $api = 'api-report/v1/';
-    $api .= $api_name . '/Salud/' . $id . '?area_type=county&area_ids=' . $fips . $param;
-    return sa_report_get_api($api);
 }
 
 // get indicator dial
