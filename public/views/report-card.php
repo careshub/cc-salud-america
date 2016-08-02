@@ -132,6 +132,9 @@ function sa_report_card() {
             // get data for fast food page
             $fast_food_page = sa_report_food_access_page($fips);
 
+            // get data for physical activity page
+            $physical_activity_page = sa_report_physical_activity_page($fips);
+
             // get data for health equity page
             $health_equity_page = sa_report_health_equity_page($fips);
 
@@ -367,6 +370,83 @@ function sa_report_card() {
                 <div class="sa-report-spacing-htm"></div>
                <div class="page-break"></div>
          </div>
+
+             <div id="physical-activity-issues-page">
+                <table class="sa-report-page-header sa-background-darkgray"><tr>
+                    <td class="sa-img">
+                    <a href="<?php echo $group_url?>big-bets/sa-active-spaces" title="Link to Big Bet archive: Active Spaces">
+                    <img src="<?php echo $image_url?>sa-active-spaces.png" /></a>
+                    </td>
+                    <td class="sa-page-title">
+                        <div class="sa-report-font-4">Physical Activity Issues</div>
+                        <p>Latino children and adults face less access to recreational facilities and lower activity rates. </p>
+                        <a href="<?php echo $group_url ?>big-bets/sa-active-spaces/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
+                    </td>
+                       </tr>
+                </table>
+
+                <div class="w3-row">
+                    <div class="w3-third sa-col-1">
+                        <div class="sa-report-indicator-physical">
+                            <p><span class="sa-report-indicator-title">Recreation and Fitness Facility Access</span> <sup>8</sup></p>
+                            <p>This indicator reports the number per 100,000 population of recreation facilities in 
+                                <span class="sa-text-green sa-text-capital"><?php echo $cover_page->county_name ?> OVERALL</span>.  
+                                This indicator is relevant because access to recreation facilities encourages physical activity and healthy behaviors.</p>
+                        </div>
+                        <?php echo $physical_activity_page->dial_recreation ?>
+                    </div>
+                    <div class="w3-third sa-col-1">
+                        <div class="sa-report-indicator-physical">
+                        <p><span class="sa-report-indicator-title">Physical Inactivity</span> <sup>6</sup></p>
+                        <p>In <span class="sa-text-green sa-text-capital"><?php echo $cover_page->county_name ?> OVERALL</span>, 
+                            <?php echo $physical_activity_page->total_physical?> or <?php echo $physical_activity_page->pct_physical?>
+                        of adults aged 20+ self-report no leisure time for activity, 
+                        based on the question: "During the past month, other than your regular job, 
+                        did you participate in any physical activities or exercises such as running, calisthenics, golf, gardening, or walking for exercise?"</p>
+                        </div>
+                        <?php echo $physical_activity_page->dial_physical ?>
+                    </div>
+                    <div class="w3-third sa-col-1">
+                        <div class="sa-report-indicator-physical">
+                        <p><span class="sa-report-indicator-title">Pedestrian-Motor Vehicle Accidents</span> <sup>7</sup></p>
+                        <p><span class="sa-text-green sa-text-capital"><?php echo $cover_page->county_name ?> OVERALL</span> had 50 pedestrian deaths from 2011-13. 
+                        This indicator shows the pedestrian deaths by motor vehicles per 100,000 people. 
+                        These preventable deaths may be associated with a lack of safe routes (sidewalks, crosswalks, walkable spaces) and narrow traffic lanes/roads. </p>
+                        </div>
+                        <?php echo $physical_activity_page->dial_pedestrian ?>
+                    </div>
+                </div>
+
+                <div class="sa-report-spacing2"></div>
+
+                      <div class="w3-row">
+                     <div class="w3-third sa-col-end sa-col-media center-align">
+                            <a href="https://youtu.be/CJfaMmsCzNo" target="_blank">
+                            <img src="<?php echo $image_url?>icon-policy.png" height="52" /><br />
+                            <p class="sa-report-font-2">Policy<br />Solutions</p>
+                            <p><img src="<?php echo $image_url?>physical-policy.jpg" /></p>
+                            </a>
+                    </div>
+                     <div class="w3-third sa-col-middle sa-col-media center-align">
+                            <a href="<?php echo $group_url ?>big-bets/sa-active-spaces/" target="_blank">
+                            <img src="<?php echo $image_url?>icon-research.png" height="52" /><br />
+                            <p class="sa-report-font-2">Research <br />and Infographics</p>
+                            <p><img src="<?php echo $image_url?>physical-research.jpg" /></p>
+                            </a>
+                    </div> 
+                    <div class="w3-third sa-col-end sa-col-media center-align">
+                            <a href="<?php echo $group_url ?>heroes/move-el-paso-walking-trails-encourage-local-residents-to-get-up-get-walking/" target="_blank">
+                            <img src="<?php echo $image_url?>icon-stories.png" height="52" /><br />
+                            <p class="sa-report-font-2">Salud Heroes: How to Start Local Trails</p>
+                            <p><img src="<?php echo $image_url?>physical-stories.jpg" /></p>
+                            </a>
+                    </div>
+                    </div>
+
+                    <div class="sa-report-spacing-htm"></div>
+                   <div class="page-break"></div>
+             </div>
+
 
              <div id="health-equity-page">
                 <table class="sa-report-page-header sa-background-darkgray"><tr>

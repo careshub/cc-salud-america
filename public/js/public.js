@@ -240,7 +240,7 @@
                 popup.close();
             }
             popup = window.open("", "newwin", "width=500,height=300");
-            popupMsg("Converting leader report to Adobe PDF format. Please wait...");
+            popupMsg("Converting report card to Adobe PDF format. Please wait...");
             popupCenter(550, 400);
 
             // remove ".sa-report-spacing-htm" elements - they are for html spacing only.
@@ -263,7 +263,7 @@
             $.each([pageFont,
                     hostname + "wp-content/themes/twentytwelve/style.css",
                     hostname + "wp-content/themes/CommonsRetheme/style.css",
-                    hostname + "wp-content/plugins/cc-salud-america/public/css/sa-leader-report.css"], function (i, css_file) {
+                    hostname + "wp-content/plugins/cc-salud-america/public/css/sa-report-card.css"], function (i, css_file) {
                     htmContent += "<link type='text/css' rel='stylesheet' href='" + css_file + "' />";
                 });
 
@@ -282,7 +282,7 @@
                     "file_name": "SaludReportCard",
                     "show_pagenumber": true,
                     "is_landscape": false,
-                    "page_width": 780,          // to remove extra blank page
+                    "page_width": 770,          // change to remove extra blank page
                     "logo_list": [apiHost + "assets/images/logo-salud.png",
                         apiHost + "assets/images/logo-rwjf.png"]
                 }
