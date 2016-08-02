@@ -54,6 +54,9 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		add_action( 'pre_get_posts', array( $this, 'sortable_columns_orderby' ) );
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
+		// Use Chosen.js on the policies edit screen.
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_chosen_js' ), 10, 1 );
+
 		// Let BP know that policies have activity items
 		// add_action( 'bp_register_activity_actions', array( $this, 'sapolicies_register_activity_actions' ) );
 
@@ -101,6 +104,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					// 'supports' => array('title','editor','excerpt','trackbacks','custom-fields','comments','revisions','thumbnail','author','page-attributes',),
 					'has_archive' => true,
 					'supports' => array('title','editor','comments', 'thumbnail', 'author'),
+					'show_in_rest' => true,
 					'capability_type' => $this->post_type,
 					'map_meta_cap' => true
 			);
@@ -143,10 +147,13 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 				'show_tagcloud' => true,
 				'show_admin_column' => true,
 				'hierarchical' => true,
-
 				'rewrite' => true,
 				// 'rewrite' => array( 'slug' => 'salud/sa_advocacy_targets', 'with_front' => false),
-				'query_var' => true
+				'query_var' => true,
+				// WP REST API
+				'show_in_rest' => true,
+				'rest_base' => 'sa_advocacy_targets',
+				'rest_controller_class' => 'WP_REST_Terms_Controller',
 		);
 
 		register_taxonomy( 'sa_advocacy_targets', array( $this->post_type ), $args );
@@ -350,6 +357,22 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	}
 
 	/**
+	 * Register and enqueue scripts and styles for chosen js select list helper.
+	 *
+	 * @since    1.8.0
+	 */
+	public function enqueue_chosen_js( $hook ) {
+	    global $post;
+
+	    if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
+	        if ( $this->post_type === $post->post_type ) {
+				wp_enqueue_style( 'chosen-js-styles', 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css', array(), '1.4.2' );
+				wp_enqueue_script( 'chosen-js-script', 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js', array( 'jquery' ), '1.4.2' );
+			}
+	    }
+	}
+
+	/**
 	 * Modify the SA Policies edit screen.
 	 * - Add meta boxes for policy meta and geography.
 	 *
@@ -372,27 +395,17 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	 * @return   html
 	 */
 	function sa_geog_meta_box( $post ) {
-		 //  $custom = get_post_custom($post->ID);
-		 //  $geog = $custom["sa_geog"][0];
-		 //  $state = $custom["sa_state"][0];
-		 //  $selectedgeog = $custom["sa_finalgeog"][0];
-		 //  $sa_latitude = $custom["sa_latitude"][0];
-		 //  $sa_longitude = $custom["sa_longitude"][0];
-		 //  $sa_nelat = $custom["sa_nelat"][0];
-		 //  $sa_nelng = $custom["sa_nelng"][0];
-			// $sa_swlat = $custom["sa_swlat"][0];
-		 //  $sa_swlng = $custom["sa_swlng"][0];
 
-			//Walk up the geographies taxonomy from the selected geography
-			//Get the Geography term for this post
-			$geo_tax = get_the_terms( $post->ID, 'geographies' );
-			$geo_tax_id = isset( $geo_tax[0] ) ? $geo_tax[0]->term_id : 0;
+		//Walk up the geographies taxonomy from the selected geography
+		//Get the Geography term for this post
+		$geo_tax = get_the_terms( $post->ID, 'geographies' );
+		$geo_tax_id = isset( $geo_tax[0] ) ? $geo_tax[0]->term_id : 0;
 
-			//Helper function returns the type of geography we're working with.
-			$geo_type = cc_get_the_geo_tax_type( $post->ID );
+		//Helper function returns the type of geography we're working with.
+		$geo_type = cc_get_the_geo_tax_type( $post->ID );
 
-			//Get the state name in human-readable format
-			$geo_tax_state = cc_get_the_geo_tax_state( $post->ID );
+		//Get the state name in human-readable format
+		$geo_tax_state = cc_get_the_geo_tax_state( $post->ID );
 
 	?>
 	<style type="text/css">
@@ -414,84 +427,84 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	</div>
 
 	<div id="rightcolumn">
-			<div id="states">
+		<div id="states">
 		<?php
-			//Set up geographies
-			//Get the terms, starting by finding the starting pointsave
-			$geo_tax_top_level_term_id = get_geo_tax_top_level_term_id();
-			//Populate States selectbox, states are direct descendants of the top level geography term
-			$state_args = array(
-										'parent' => $geo_tax_top_level_term_id,
-										'hide_empty' => 0
-			);
-			$state_terms = get_terms( 'geographies', $state_args );
+		// Set up geographies
+		// Get the terms, starting by finding the term_id of the very top level term.
+		$geo_tax_top_level_term_id = get_geo_tax_top_level_term_id();
 
-			if ( $state_terms ) {
-				echo '<select name="sa_state" id="sa_state" class="sa_state">';
-
+		// Populate States selectbox, states are direct descendants of the top level geography term.
+		$state_args = array(
+			'parent'     => $geo_tax_top_level_term_id,
+			'hide_empty' => 0,
+			'orderby'    => 'slug',
+		);
+		$state_terms = get_terms( 'geographies', $state_args );
+		if ( $state_terms && ! is_wp_error( $state_terms ) ) {
+			?>
+			<p><select name="sa_state" id="sa_state" class="sa_state chosen-select" data-placeholder="Select your state." >
+				<!-- Include an empty option for chosen.js support-->
+				<option></option>
+				<?php
 				foreach ( $state_terms as $state_term ) {
-					echo '<option value="' . $state_term->term_id . '"' ;
-					if (! empty( $geo_tax_state ) ) {
-						echo ( ( $geo_tax_state == $state_term->name ) ? ' selected="selected"' : '' );
-					}
-					echo '>'. $state_term->name . '</option>';
-				}
-
-				echo '</select>';
-			} else {
-				print('no terms');
-			}
-
 					?>
+					<option value="<?php echo $state_term->term_id; ?>" <?php selected( $geo_tax_state, $state_term->name ); ?>> <?php echo $state_term->name; ?></option>
+					<?php
+				}
+				?>
+			</select></p>
+			<?php
+		} else {
+			print('no terms');
+		}
+		?>
 
-					</div>
-					<div id="moregeog">
-							<div id="selgeog">
-								<!-- If a selection exists (editing an existing policy), set up the option list on page load. We also need to be able to generate it on the fly in the case of a new policy. -->
-									<select name="sa_selectedgeog" id="sa_selectedgeog" class="sa_selectedgeog">
-									<?php
-									//Don't bother to try to load options if the geog value is empty or national or state.
-									 if ( ! empty( $geo_type ) && ! in_array( $geo_type, array( 'National', 'State' ) ) ) {
-											$geog_str_prefix = sa_get_geography_prefix($geo_type);
+		</div>
+		<div id="moregeog">
+			<div id="selgeog">
+				<!-- If a selection exists (editing an existing policy), set up the option list on page load. We also need to be able to generate it on the fly in the case of a new policy. -->
+				<p><select name="sa_selectedgeog" id="sa_selectedgeog" class="sa_selectedgeog chosen-select" data-placeholder="Select your geography.">
+					<?php
+					// Don't bother to try to load options if the geog value is empty or national or state.
+					if ( ! empty( $geo_type ) && ! in_array( $geo_type, array( 'National', 'State' ) ) ) {
+						$geog_str_prefix = sa_get_geography_prefix( $geo_type );
+						$geo_search_slug = $geog_str_prefix . $geo_tax_state;
+						$geoterm = get_term_by( 'slug', $geo_search_slug, 'geographies' );
+						$args = array(
+								'parent'     => $geoterm->term_id,
+								'hide_empty' => 0,
+								'orderby'    => 'slug',
+						);
+						$terms = get_terms( 'geographies', $args );
 
-											$geo_search_slug = $geog_str_prefix . $geo_tax_state;
-											$geoterm = get_term_by( 'slug', $geo_search_slug, 'geographies' );
-											$tid = $geoterm->term_id;
-													$args = array(
-																	'parent' => $tid,
-																	'hide_empty' => 0,
-													);
-													$terms = get_terms( 'geographies', $args );
-													//The old way stored the final choice as text.
-													if ( $terms ) {
-																	foreach ( $terms as $term ) {
-																		 echo '<option value="' . $term->term_id . '"' ;
-																			if ( $geo_tax_id ) {
-																				echo ( ( $geo_tax_id == $term->term_id )  ? ' selected="selected"' : '' );
-																			}
-																			echo '>'. $term->name . '</option>';
-																			}
-															}
-											}
-									 ?>
-
-									</select>
-									<!-- <input id="sa_finalgeog" value="<?php echo $selectedgeog; ?>" name="sa_finalgeog" />
-									<input id="sa_state-check" disabled="disabled" value="<?php echo $state; ?>" name="sa_finalgeog" /> -->
-									<!-- <div id="geography_coords">
-										<input id="sa_latitude" value="<?php echo $sa_latitude; ?>" name="sa_latitude">
-										<input id="sa_longitude" value="<?php echo $sa_longitude; ?>" name="sa_longitude">
-										<input id="sa_nelat" value="<?php echo $sa_nelat; ?>" name="sa_nelat">
-										<input id="sa_nelng" value="<?php echo $sa_nelng; ?>" name="sa_nelng">
-										<input id="sa_swlat" value="<?php echo $sa_swlat; ?>" name="sa_swlat">
-										<input id="sa_swlng" value="<?php echo $sa_swlng; ?>" name="sa_swlng">
-									</div> -->
-							</div>
-					</div>
+						if ( $terms && ! is_wp_error( $terms ) ) {
+							?>
+							<!-- Include an empty option for chosen.js support-->
+							<option></option>
+							<?php
+							foreach ( $terms as $term ) {
+								?>
+								<option value="<?php echo $term->term_id; ?>" <?php selected( $geo_tax_id, $term->term_id ); ?>><?php echo $term->name; ?></option>
+								<?php
+							}
+						}
+					}
+					?>
+				</select></p>
+				<!-- <input id="sa_finalgeog" value="<?php echo $selectedgeog; ?>" name="sa_finalgeog" />
+				<input id="sa_state-check" disabled="disabled" value="<?php echo $state; ?>" name="sa_finalgeog" /> -->
+				<!-- <div id="geography_coords">
+					<input id="sa_latitude" value="<?php echo $sa_latitude; ?>" name="sa_latitude">
+					<input id="sa_longitude" value="<?php echo $sa_longitude; ?>" name="sa_longitude">
+					<input id="sa_nelat" value="<?php echo $sa_nelat; ?>" name="sa_nelat">
+					<input id="sa_nelng" value="<?php echo $sa_nelng; ?>" name="sa_nelng">
+					<input id="sa_swlat" value="<?php echo $sa_swlat; ?>" name="sa_swlat">
+					<input id="sa_swlng" value="<?php echo $sa_swlng; ?>" name="sa_swlng">
+				</div> -->
+			</div>
+		</div>
 	</div>
-
-	<div style="clear:both"></div>
-
+	<div style="clear:both;"></div>
 	<?php
 	}
 
@@ -687,24 +700,26 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 	<script type="text/javascript">
 	//Handle the geography input form
 	jQuery(document).ready(function(){
-				//On page load, update the inputs that are enabled
-					refresh_sa_policy_enable_geog_inputs();
+		// On page load, update the inputs that are enabled
+		refresh_sa_policy_enable_geog_inputs();
+		// Bind the chosen.js library to the inputs.
+		jQuery( '.chosen-select' ).chosen({});
 
-				//On change, refresh the option list and option list visibility
-				//The page load setup is handled via php, so the js only has to handle the updates
-					jQuery('#sa_geog_select').on( 'change', function() {
-							refresh_sa_policy_enable_geog_inputs();
-							refresh_sa_policy_geographies();
-						});
+		// On change, refresh the option list and option list visibility
+		// The page load setup is handled via php, so the js only has to handle the updates
+		jQuery('#sa_geog_select').on( 'change', function() {
+			refresh_sa_policy_enable_geog_inputs();
+			refresh_sa_policy_geographies();
+		});
 
-					jQuery('#sa_state').on( 'change', function() {
-							refresh_sa_policy_geographies();
-						});
+		jQuery('#sa_state').chosen().change( function() {
+			refresh_sa_policy_geographies();
+		});
 	});
 
 	function refresh_sa_policy_enable_geog_inputs() {
 		//First, disable the inputs, then enable the needed inputs
-		jQuery('#sa_state,#sa_selectedgeog').prop('disabled', true);
+		jQuery('#sa_state,#sa_selectedgeog').chosen().prop('disabled', true);
 
 		var sa_major_geography = jQuery('#sa_geog_select').find('input:checked').val();
 			switch ( sa_major_geography ) {
@@ -713,10 +728,10 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					//Leave inputs disabled
 					break;
 				case ('State'):
-					jQuery('#sa_state').prop('disabled', false);
+					jQuery('#sa_state').chosen().prop('disabled', false);
 					break;
 				default:
-					jQuery('#sa_state,#sa_selectedgeog').prop('disabled', false);
+					jQuery('#sa_state,#sa_selectedgeog').chosen().prop('disabled', false);
 			}
 
 	}
@@ -725,7 +740,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		//First, hide them all, then show the one that is selected
 		// jQuery('.policy_stage_details').hide();
 				var sa_major_geography = jQuery('#sa_geog_select').find('input:checked').val();
-				var sa_state_geography = jQuery("#sa_state").val();
+				var sa_state_geography = jQuery("#sa_state").chosen().val();
 				// console.log(sa_major_geography);
 				// console.log(sa_state_geography);
 
@@ -747,7 +762,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 											// post_attachment_to_delete: <?php echo $post->ID; ?>,
 											selstate: sa_state_geography,
 											geog: sa_major_geography,
-											security: '<?php echo wp_create_nonce( 'get_geographies_list' ); ?>'
+											security: "<?php echo wp_create_nonce( 'get_geographies_list' ); ?>"
 										};
 									 // since WP 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 										jQuery.post(
@@ -758,6 +773,7 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 														if ( response != -1 ) {
 															//If we got a response, update the geography select.
 														 jQuery("#sa_selectedgeog").html(response);
+														 jQuery('#sa_selectedgeog').trigger("chosen:updated");
 														}
 													}
 												);
@@ -864,7 +880,7 @@ function ajax_get_geographies_list() {
 
 		if( wp_verify_nonce( $_REQUEST['security'], 'get_geographies_list' ) ) {
 
-			$selstate = (int)$_POST['selstate'];
+			$selstate = (int) $_POST['selstate'];
 			$result = '';
 
 			if ( $selstate ) {
@@ -876,13 +892,14 @@ function ajax_get_geographies_list() {
 				if ( ! empty( $_POST['geog'] ) ) {
 					$thisid = sa_get_geography_prefix( $_POST['geog'] ) . $state_clean;
 					$geoterm = get_term_by('slug', $thisid, 'geographies');
-					$tid = $geoterm->term_id;
 					$args = array(
-						'parent' => $tid,
+						'parent'     => $geoterm->term_id,
 						'hide_empty' => 0,
+						'orderby'    => 'slug',
 					);
 					$terms = get_terms( 'geographies', $args );
 					if ( $terms ) {
+						$result .= '<option value="' . $term->term_id . '">' . $term->name . '</option> ';
 						foreach ( $terms as $term ) {
 							$result .= '<option value="' . $term->term_id . '">' . $term->name . '</option> ';
 						}
