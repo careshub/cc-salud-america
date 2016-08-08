@@ -900,19 +900,30 @@ function sa_get_the_home_page_join_pitch_box( $user_id = null, $is_sa_member = n
     }
 
 ?>
-    <div class="sa-join-group-prop background-sapink" style="padding:0.8em;">
+    <div class="sa-join-group-prop background-sablue" style="">
         <?php if ( ! $user_id ) : ?>
-            <div class="aligncenter sa-login-register-cta"><a href="/register/?salud-america=1" title="Register Now">Register</a> or <a href="<?php echo wp_login_url( sa_get_group_permalink() ); ?>" title="Log in">Login</a> Now<br/> as a Salud Leader!</div>
+            <span class="sa-login-register-cta"><a href="/register/?salud-america=1" title="Register Now">Register</a> or login</a> now&hellip;</span>
+            <form name="login-form" id="salud-front-page-login-form" class="salud-front-page-login-form standard-form" action="<?php echo esc_url( site_url( 'wp-login.php', 'login_post' ) ); ?>" method="post">
+                <label><?php _e( 'Username or email', 'buddypress' ) ?><br />
+                <input type="text" name="log" id="front-page-user-login" class="full-width-input input" value="" tabindex="" /></label>
+
+                <label><?php _e( 'Password', 'buddypress' ) ?><br />
+                <input type="password" name="pwd" id="front-page-user-pass" class="full-width-input input" value="" tabindex="" /></label>
+
+                <input type="submit" name="wp-submit" id="front-page-wp-submit" value="<?php _e( 'Log In', 'buddypress' ); ?>" tabindex="100" />
+                <input type="hidden" name="redirect_to" value="<?php echo ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ?>" />
+            </form>
         <?php elseif ( ! $is_sa_member ) : ?>
             <div class="aligncenter" style="text-shadow:none;"><?php bp_group_join_button(); ?></div>
             <hr />
         <?php endif; ?>
-        <ol class="sa-join-group-reasons">
-            <li>Get your name on our map!</li>
-            <li>Connect with other Leaders in your town for support!</li>
-            <li>Tell us about your change. We might write it up, publish it, promote it nationally, and move you from Leader to Hero!</li>
-            <li>Get a free, customized report of obesity in your area!</li>
-        </ol>
+        <span class="sa-login-register-cta">&hellip;get tools for healthy change.</span>
+        <ul class="sa-join-group-reasons no-bullets">
+            <?php /* ?><li><span class="li-customize-data"></span>&emsp;<a href="/groups/salud-america/report-card/">Customize data for you</a>!</li><?php */ ?>
+            <li><span class="li-map-connect"></span>&emsp;<a href="http://maps.communitycommons.org/policymap/">Hop on our map and connect</a>!</li>
+            <li><span class="li-changes-heroes"></span>&emsp;See new <a href="/groups/salud-america/changes/">changes</a> and <a href="/groups/salud-america/heroes/">heroes</a>!</li>
+            <li><span class="li-share-story"></span>&emsp;<a href="/groups/salud-america/share-your-story/">Share your change</a>!</li>
+        </ul>
     </div>
 <?php
 }

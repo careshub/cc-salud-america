@@ -1,6 +1,5 @@
 //Salud America subsection
 .group-salud-america {
-
     // "Archive" pages
     .sa-archive-navigation {
         margin-bottom: 2em;
@@ -541,24 +540,50 @@
 			margin-bottom: 0;
 		}
 	}
+	.sa-join-group-prop {
+		padding: .8em .1em;
+	}
 	.sa-login-register-cta {
-		background-color: @sablue;
-	    padding: .4em;
-	    margin-bottom: 1.2em;
+		// background-color: @sablue;
+	    // padding: .4em;
+	    // margin-bottom: 1.2em;
 	    .font-size(1.1);
-		a {
-			color: white;
-			&:visited {
-				color: white;
-			}
-		}
+	    padding: .8em;
+		// a {
+		// 	color: white;
+		// 	&:visited {
+		// 		color: white;
+		// 	}
+		// }
 	}
 	.sa-join-group-reasons {
+		margin-top: .8em;
 		margin-bottom: 0;
 		line-height: 1.4;
 		li {
 			margin-left: 2em;
 			margin-bottom: .5em;
+		}
+	}
+	// Front page-specific login layout
+	.salud-front-page-login-form {
+		margin: 1em 0;
+		padding: .5em;
+		background-color: lighten( desaturate( @sablue, 45% ), 50% );
+		label {
+			margin-bottom: .4em;
+			color: @sablue;
+			text-shadow: none;
+			input {
+				// margin-top: .4em;
+			}
+			.full-width-input {
+				width: 90%;
+				width: ~"calc(100% - 1em)";
+			}
+		}
+		input[type="submit"] {
+			margin-top: .4em;
 		}
 	}
 	// Home page "recent items section"
@@ -764,7 +789,7 @@
 }
 
 .sa-active-playx30, .sa-active-spacesx30, .sa-better-food-in-neighborhoodsx30, .sa-healthier-school-snacksx30, .sa-healthier-marketingx30, .sa-sugary-drinksx30, .sa-healthy-weightx30, .sa-healthier-schoolsx30, .sa-health-equityx30  {
-	background: url(../images/sa-sprites.png) no-repeat;
+	background: url( "../images/sa-sprites.png?version=@{cache-version}" ) no-repeat;
 	display: block;
 	float: left;
 	margin-right: 2%;
@@ -774,7 +799,7 @@
 
 .sa-active-playx60, .sa-active-spacesx60, .sa-better-food-in-neighborhoodsx60, .sa-healthier-school-snacksx60,
 .sa-sugary-drinksx60, .sa-healthy-weightx60, .sa-healthier-schoolsx60, .sa-health-equityx60, .sa-healthier-marketingx60 {
-	background: url(../images/sa-sprites.png) no-repeat;
+	background: url( "../images/sa-sprites.png?version=@{cache-version}" ) no-repeat;
 	display: block;
 	float: left;
 	margin-right: 4%;
@@ -783,7 +808,7 @@
 }
 
 .sa-active-playx90, .sa-active-spacesx90, .sa-better-food-in-neighborhoodsx90, .sa-healthier-marketingx90, .sa-healthier-school-snacksx90, .sa-sugary-drinksx90, .sa-healthier-schoolsx90, .sa-health-equityx90, .sa-healthy-weightx90, .sa-active-play-whx90, .sa-active-spaces-whx90, .sa-better-food-in-neighborhoods-whx90, .sa-healthier-marketing-whx90, .sa-healthier-school-snacks-whx90, .sa-sugary-drinks-whx90 {
-	background: url(../images/sa-sprites.png) no-repeat;
+	background: url( "../images/sa-sprites.png?version=@{cache-version}" ) no-repeat;
 	display: inline-block;
 	vertical-align: middle;
 	// float: left;
@@ -793,14 +818,21 @@
 }
 
 .facebook-whx26, .twitter-whx26, .youtube-whx26, .sa-blog-wh-26x54{
-	background: url(../images/sa-sprites.png) no-repeat;
+	background: url( "../images/sa-sprites.png?version=@{cache-version}" ) no-repeat;
 	display: inline-block;
 	vertical-align: middle;
 	margin-right: 2%;
 	margin-top: -5px;
 }
-.sa-instagramx28, .sa-facebookx28, .sa-twitterx28, .sa-youtubex28 {
-	background: url(../images/sa-sprites.png) no-repeat;
+.sa-instagramx28,
+.sa-facebookx28,
+.sa-twitterx28,
+.sa-youtubex28,
+.li-customize-data,
+.li-map-connect,
+.li-changes-heroes,
+.li-share-story {
+	background: url( "../images/sa-sprites.png?version=@{cache-version}" ) no-repeat;
 	display: inline-block;
 	vertical-align: middle;
 	// margin-right: 2%;
@@ -819,6 +851,30 @@
 .sa-youtubex28 {
 	background-position: -408px -108px ;
 }
+.li-customize-data {
+	background-position: -450px 0;
+	width: 24px;
+	height: 24px;
+}
+
+.li-map-connect {
+	background-position: -450px -40px ;
+	width: 24px;
+	height: 24px;
+}
+
+.li-changes-heroes {
+	background-position: -450px -80px ;
+	width: 24px;
+	height: 24px;
+}
+
+.li-share-story {
+	background-position: -453px -120px ;
+	width: 24px;
+	height: 24px;
+}
+
 .sa-active-playx60{
 	background-position: -140px -70px ;
 }
@@ -1099,14 +1155,29 @@
 }
 
 .background-sapink,
-.background-saorange {
+.background-saorange,
+.background-sablue,
+.background-sagreen {
 	color: @white;
 	font-weight: 700;
 	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+	a {
+		color: @white;
+		&:visited,
+		&:hover {
+			color: @white !important;
+		}
+	}
 }
 .background-sapink {
 	background-color: @sapink;
 }
 .background-saorange {
 	background-color: @saorange;
+}
+.background-sablue {
+	background-color: @sablue;
+}
+.background-sagreen {
+	background-color: @sagreen;
 }
