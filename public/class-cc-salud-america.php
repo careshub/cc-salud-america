@@ -179,6 +179,10 @@ class CC_Salud_America {
 
 		// CC stats - report relationship with the SA hub.
 		add_filter( 'cc_stats_custom_plugins', array( $this, 'report_custom_plugin' ), 10, 2 );
+
+		// Welcome email. Filter the content for SA groups.
+		add_filter( 'ass_welcome_email', array( $this, 'customize_welcome_email' ), 20, 3 );
+
 	}
 
 
@@ -1827,6 +1831,41 @@ class CC_Salud_America {
 			$custom_plugins[] = "CC Salud America";
 		}
 		return $custom_plugins;
+	}
+
+	/**
+	 * Customize the content of the SA hub welcome email
+	 *
+	 * @since 1.8.0
+	 */
+	public function customize_welcome_email( $message_data, $group_id, $user ) {
+		global $wp_better_emails;
+
+		if ( sa_get_group_id() == $group_id ) {
+			$user_id = (int) $user->ID;
+
+			// Use the welcome email template
+			$wp_better_emails->options['template'] = sa_welcome_email_template();
+
+			// Get user lat long.
+			$long_lat = get_user_meta( $user_id, 'sa_leader_map_long_lat', true );
+
+			// Fall back to the user's primary location.
+			if ( empty( $long_lat ) ) {
+				$long_lat = get_user_meta( $user_id, 'long_lat', true );
+			}
+
+			if ( ! empty( $long_lat ) ) {
+				$long_lat = explode( ',', $long_lat );
+
+				$api_url = "http://services.communitycommons.org/api-location/v1/geoid/050?lat={$long_lat[1]}&lon={$long_lat[0]}";
+				$geoid_resp = wp_remote_get( $api_url,  array( 'headers' => array( 'Accept' => 'application/json' ) ) );
+				$geoid = json_decode( wp_remote_retrieve_body( $geoid_resp ) );
+				$message_data['content'] = str_replace( '/groups/salud-america/report-card/', '/groups/salud-america/report-card/?geoid=' . $geoid, $message_data['content'] );
+			}
+		}
+
+		return $message_data;
 	}
 }
 $cc_salud_america = new CC_Salud_America();
