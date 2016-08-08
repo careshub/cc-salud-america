@@ -1024,7 +1024,7 @@ function sa_ticker() {
         <li id="sa-ticker-item-{{data.id}}" class="sa-ticker-item">
             <span class="sa-ticker-item-type-label" style="background-color:{{data.sa_ticker_item_leader_color}}">{{data.sa_ticker_item_leader_text}}</span>
             <span class="sa-ticker-item-content">
-                <span class="date">{{data.nice_date}}</span> {{data.title.rendered}}
+                <span class="date">{{{data.nice_date}}}</span> {{{data.title.rendered}}}
                 <# if ( data.sa_ticker_item_link ) { #>
                     <a href="{{{data.sa_ticker_item_link}}}">Read More</a>
                 <# } #>
