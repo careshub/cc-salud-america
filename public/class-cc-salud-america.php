@@ -179,6 +179,13 @@ class CC_Salud_America {
 
 		// CC stats - report relationship with the SA hub.
 		add_filter( 'cc_stats_custom_plugins', array( $this, 'report_custom_plugin' ), 10, 2 );
+
+		// Welcome email. Filter the content for SA groups.
+		add_filter( 'ass_welcome_email', array( $this, 'customize_welcome_email' ), 20, 3 );
+
+		// Save SA leader reports to the docs library
+		add_action( 'wp_ajax_save-leader-report-as-doc', array( $this, 'ajax_save_leader_report_as_doc' ) );
+
 	}
 
 
@@ -1827,6 +1834,128 @@ class CC_Salud_America {
 			$custom_plugins[] = "CC Salud America";
 		}
 		return $custom_plugins;
+	}
+
+	/**
+	 * Customize the content of the SA hub welcome email
+	 *
+	 * @since 1.8.0
+	 */
+	public function customize_welcome_email( $message_data, $group_id, $user ) {
+		global $wp_better_emails;
+
+		if ( sa_get_group_id() == $group_id ) {
+			$user_id = (int) $user->ID;
+
+			// Use the welcome email template
+			$wp_better_emails->options['template'] = sa_welcome_email_template();
+
+			// Get user lat long.
+			$long_lat = get_user_meta( $user_id, 'sa_leader_map_long_lat', true );
+
+			// Fall back to the user's primary location.
+			if ( empty( $long_lat ) ) {
+				$long_lat = get_user_meta( $user_id, 'long_lat', true );
+			}
+
+			if ( ! empty( $long_lat ) ) {
+				$long_lat = explode( ',', $long_lat );
+
+				$api_url = "http://services.communitycommons.org/api-location/v1/geoid/050?lat={$long_lat[1]}&lon={$long_lat[0]}";
+				$geoid_resp = wp_remote_get( $api_url,  array( 'headers' => array( 'Accept' => 'application/json' ) ) );
+				$geoid = json_decode( wp_remote_retrieve_body( $geoid_resp ) );
+				$message_data['content'] = str_replace( '/groups/salud-america/report-card/', '/groups/salud-america/report-card/?geoid=' . $geoid, $message_data['content'] );
+			}
+		}
+
+		return $message_data;
+	}
+
+	/**
+	 * Create a report-style doc via AJAX from the report card tab.
+	 *
+	 * @since 1.8.0
+	 */
+	public function ajax_save_leader_report_as_doc() {
+		// Do our dependencies exist?
+		if ( ! class_exists( 'CC_MRAD' ) || ! function_exists( 'bp_docs_get_post_type_name' ) ) {
+			wp_send_json_error( 'Software dependencies are not met.' );
+		}
+
+		// Is the nonce any good?
+		check_ajax_referer( 'save-leader-report-' . bp_loggedin_user_id() );
+
+		// Can the user do this?
+		if ( ! current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) {
+			wp_send_json_error( 'User is not allowed to take this action.' );
+		}
+
+		// Sanitize incoming POST data.
+		$county = $state = $geoid = null;
+		if ( ! empty( $_POST['county'] ) ) {
+			$county = sanitize_text_field( $_POST['county'] );
+		}
+		if ( ! empty( $_POST['state'] ) ) {
+			$state = sanitize_text_field( $_POST['state'] );
+		}
+		if ( ! empty( $_POST['geoid'] ) ) {
+			// These are county level and take the form 05000US05013
+			if ( preg_match( "/^05000US([0-9]{5})$/i", $_POST['geoid'] ) ) {
+				$geoid = $_POST['geoid'];
+			}
+		}
+		if ( empty( $geoid ) ) {
+			wp_send_json_error( 'A location must be specified and be of the correct format.' );
+		}
+
+		// First, check to see if this user has already "saved" this exact report.
+		$dupe_check_args = array(
+			'post_type'  => bp_docs_get_post_type_name(),
+			'author'     => bp_loggedin_user_id(),
+			'meta_key'   => 'geoid',
+			'meta_value' => $geoid,
+			'fields'     => 'ids',
+		);
+		$dupes = new WP_Query( $dupe_check_args );
+		if ( $dupes->posts ) {
+			// Return the post ID. Should this be a success or a failure?
+			wp_send_json_success( current( $dupes->posts ) );
+		}
+
+		if ( $county && $state ) {
+			$title = "Salud America! Leaders Report for {$county}, {$state}";
+		} else {
+			$title = 'Salud America! Leaders Report';
+		}
+
+		$content = '<a href="/groups/salud-america/report-card/?geoid=' . $geoid . '" title="Link to report" class="button report-link"><span class="icon reportx24"></span>View Report Card</a>';
+
+		$args = array(
+			'title'			=> $title,
+			'content' 		=> $content,
+			'author_id'     => bp_loggedin_user_id(),
+			'group_id'		=> sa_get_group_id(),
+			'is_auto'		=> 0,
+			'settings'		=> array(   'read' => 'group-members',
+										'edit' => 'creator',
+										'read_comments' => 'group-members',
+										'post_comments' => 'group-members',
+										'view_history' => 'creator'
+									),
+			'parent_id'		=> 0,
+		);
+
+		$instance = new CC_MRAD_BP_Doc_Save;
+		$post_id = $instance->save( $args );
+
+		if ( $post_id ) {
+			$mrad_class = new CC_MRAD;
+			wp_set_object_terms( $post_id, 'report', $mrad_class->get_taxonomy_name() );
+			// Set the GeoID as post_meta so we can check for uniqueness in the future.
+			add_post_meta( $post_id, 'geoid', $geoid );
+		}
+
+		wp_send_json_success( $post_id );
 	}
 }
 $cc_salud_america = new CC_Salud_America();
