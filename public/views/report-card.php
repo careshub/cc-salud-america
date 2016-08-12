@@ -33,13 +33,38 @@ function sa_report_card() {
         if (! $geoid):
         ?>
 
-        <div class="third-block spans-2">
-            <h2 class="screamer sablue no-top-margin">Salud Report Card: See How Your Area Stacks Up in Obesity, Food Access, Physical Activity &amp; Equity</h2>
+            <h2 class="screamer sablue no-top-margin">See How Your Area Stacks Up in Obesity, Food Access, Physical Activity &amp; Equity</h2>
+
             <p>
                 The <em>Salud America!</em> Salud Report Card highlights health issues in your county (vs. state + nation) with data, policy solutions, research, 
                 and stories so you can start and support healthy changes for Latino kids.
             </p>
             
+           <div id="sa-report-selection">
+                <?php
+            // User isn't logged in.
+            if (! get_current_user_id()) :
+                ?>
+                        Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><b>log in</b></a> 
+                            to see your report card. 
+                            If you don't have a Community Commons account and would like to join us, please 
+                            <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><b>register</b></a>.
+                <?php
+            else:
+                ?>
+                    <div id="select-county">Select your state and county to see your own report card:</div>
+                    <select id="state-list">
+                        <option value="" selected>--- Select a State ---</option>
+                    </select>
+                    <select id="county-list">
+                        <option value="" selected>--- Select a County ---</option>
+                    </select>
+                    <span id="report-wait-message">Preparing your report card, please wait...</span>
+                <?php
+            endif
+                ?>
+            </div>
+
             <p><strong>How can you use it?</strong></p>
             <p>Let people know what health issues are important to you!</p>
             Email the link to:
@@ -68,37 +93,6 @@ function sa_report_card() {
             Email our Salud America! digital curators, Eric, Lisa, and Amanda at <a href="mailto:saludamerica@uthscsa.edua">saludamerica@uthscsa.edu</a>.
             They can answer questions and help you access information and data/maps on many other topics.
             </p>
-        
-        </div>
-        <div class="third-block fill-height">
-            <div class="background-saorange" style="padding:0.8em;">
-                <h4 class="aligncenter" style="color:white;margin:0">See your report card!</h4>
-                <div id="sa-report-selection">
-                <?php
-                    // User isn't logged in.
-                    if (! get_current_user_id()) :
-                ?>
-                        <p>Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in">log in</a> 
-                            to see your report card. 
-                            If you don't have a Community Commons account and would like to join us, please 
-                            <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>">register</a>.</p>
-                <?php
-                else:
-                ?>
-                    <div id="select-county">Select your state and county to see your own report card.</div>
-                    <select id="state-list">
-                        <option value="" selected>--- Select a State ---</option>
-                    </select>
-                    <select id="county-list">
-                        <option value="" selected>--- Select a County ---</option>
-                    </select>
-                    <span id="report-wait-message">Preparing your report card, please wait...</span>
-                <?php
-                endif
-                ?>
-                </div>
-            </div>
-        </div>
 
         <?php
         else:
@@ -643,10 +637,19 @@ function sa_report_card() {
              </div>
          </div>
 
-         <input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
+        <div id="sa-report-action">
+             <input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
+             <input type="button" class="button sa-report-save" id="sa-report-save" value="Save Report to My Library" />
+             <div id="report-save-message">Saving your report card, please wait...</div>
+             <input type="hidden" id="report-card-geoid" value="<?php echo $geoid ?>" />
+             <input type="hidden" id="report-card-county" value="<?php echo $cover_page->county_name ?>" />
+             <input type="hidden" id="report-card-state" value="<?php echo $cover_page->state_name ?>" />
+             <input type="hidden" id="report-card-wpnonce" value="<?php echo wp_create_nonce( 'save-leader-report-' . bp_loggedin_user_id() ) ?>" />
+        </div>
         <?php
         endif;
         ?>
+
     </div><!-- end .content-row -->
     <?php
 }
@@ -662,7 +665,6 @@ function console_log( $data ){
 function sa_report_get_json($fips, $id='', $param = '', $api_name ='indicator'){
     $api_url = 'http://services.communitycommons.org/api-report/v1/' . $api_name . '/Salud/';
     $api_url .= $id . '?area_type=county&area_ids=' . $fips . $param;
-    console_log($api_url);
     $result = file_get_contents($api_url);
     return json_decode($result);
 }
@@ -775,7 +777,6 @@ function sa_report_obesity_page($fips){
 
         // obese percentage and dial - should always have data for counties except PR
         $json_value = sa_report_get_json($fips, '603', "&output_gauge=true");
-        console_log($json_value);
         $data->dial_obese = sa_report_get_dial($json_value);
         $value_double = sa_report_get_double($json_value->data->summary->values[3]);
         $data->pct_obese = sa_report_get_single_digit_pct($value_double);

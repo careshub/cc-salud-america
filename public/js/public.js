@@ -229,6 +229,11 @@
             var countyGeoId = $("#county-list").val();
             if (countyGeoId !== "") {
                 $("#report-wait-message").show();
+
+                // KISS tracking
+                _kmq.push(['record', 'opened a salud report card', { 'geoid': countyGeoId }]);
+
+                // load report card
                 document.location = document.location.href.split("?")[0] + "?geoid=" + countyGeoId;
             }
         });
@@ -318,6 +323,53 @@
                     popupMsg(errMsg);
                 }
             });
+
+            // KISS tracking 
+            _kmq.push(['record', 'exported a salud report card to pdf', {
+                'geoid': $("#report-card-geoid").val(),
+                'county': $("#report-card-county").val(),
+                'state': $("#report-card-state").val()
+            }]);
+        });
+
+	    // Handle Save Report Card
+        $("#sa-report-save").on("click", function () {
+            // show a message
+            $("#report-save-message").show();
+
+            // post to WP db
+            var geoid = $("#report-card-geoid").val();
+            var county = $("#report-card-county").val();
+            var state = $("#report-card-state").val();
+            $.ajax({
+                type: 'POST',
+                url: '/wp-admin/admin-ajax.php',
+                data: {
+                    'action': 'save-leader-report-as-doc',
+                    'geoid': geoid,
+                    'county': county,
+                    'state': state,
+                    '_wpnonce': $("#report-card-wpnonce").val()
+                },
+                success: function (response) {
+                    // Do something. response.data is the new post ID.
+                    console.log(response.data);
+                    $("#report-save-message").html("This report card has been saved to your personal library.");
+                    $("#sa-report-save").hide();
+                },
+                error: function (response) {
+                    // Do something. response.data is the new post ID.
+                    console.log(response.data);
+                    $("#report-save-message").html("Unable to save this report card.");
+                }
+            });
+
+            // KISS tracking 
+            _kmq.push(['record', 'saved a salud report card to library', {
+                'geoid': geoid,
+                'county': county,
+                'state': state
+            }]);
         });
 	});
 
