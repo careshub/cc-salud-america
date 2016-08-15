@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
-	pkg: grunt.file.readJSON('package.json'),
+    	pkg: grunt.file.readJSON('package.json'),
 
         // watch for changes and trigger sass, jshint, uglify and livereload
         watch: {
