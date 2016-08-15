@@ -98,9 +98,16 @@ function sa_report_card() {
 
         <?php
         else:
-            // Generat the report.
-            $group_url = "http://www.communitycommons.org/groups/salud-america/"; //bp_get_group_permalink();
+            // Generate the report.
+            $group_url = bp_get_group_permalink();
             $image_url = plugins_url('images/report-card/', dirname(__FILE__));
+            $plugin_base_url = sa_get_plugin_base_uri();
+
+            // Fetch big bet terms.
+            $big_bets_base_url = sa_get_section_permalink( 'big_bets' );
+            $big_bets = get_terms( 'sa_advocacy_targets', array(
+                'hide_empty' => 0,
+             ) );
 
 			// get county FIPS code
 			$fips = preg_replace("/[^',]*US/i", '', $geoid);
@@ -185,18 +192,14 @@ function sa_report_card() {
                 </div>
                 <div class="center-align  sa-report-font-2">so you can start and support healthy changes in these areas:</div>
                 <div class="center-align sa-report-changes">
-                    <a href="<?php echo $group_url?>big-bets/sa-active-spaces" title="Link to Big Bet archice: Active Spaces">
-                    <img src="<?php echo $image_url?>sa-active-spaces.png" /></a>
-                    <a href="<?php echo $group_url?>big-betssa-healthier-schools" title="Link to Big Bet archive: Healthier Schools">
-                    <img src="<?php echo $image_url?>sa-healthier-schools.png" /></a>
-                    <a href="<?php echo $group_url?>big-bets/sa-better-food-in-neighborhoods" title="Link to Big Bet archive: Better Food in Neighborhoods">
-                    <img src="<?php echo $image_url?>sa-better-food.png" /></a>
-                    <a href="<?php echo $group_url?>big-bets/sa-healthy-weight" title="Link to Big Bet archive: Healthy Weight">
-                    <img src="<?php echo $image_url?>sa-healthy-weight.png" /></a>
-                    <a href="<?php echo $group_url?>big-bets/sa-sugary-drinks"  title="Link to Big Bet archive: Sugery Drinks">
-                    <img src="<?php echo $image_url?>sa-sugary-drinks.png" /></a>
-                    <a href="<?php echo $group_url?>big-bets/sa-health-equity" title="Link to Big Bet archive: Health Equity">
-                    <img src="<?php echo $image_url?>sa-health-equity.png" /></a>
+
+                <?php
+                    foreach ( $big_bets as $term ) {
+                        ?>
+                        <a href="<?php echo $big_bets_base_url . $term->slug; ?>" class="big-bet-icon-link" title="Link to Big Bet archive: <?php echo $term->name; ?>"><img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/' . $term->slug . '-112x150.png' ?>" alt="Icon for Big Bet: <?php echo $term->name; ?>" class="big-bet-icon" /></a>
+                        <?php
+                    }
+                ?>
                 </div>
                 <div class="page-break"></div>
             </div>
@@ -204,13 +207,13 @@ function sa_report_card() {
              <div id="obesity-page">
                 <table class="sa-report-page-header sa-background-darkgray"><tr>
                     <td class="sa-img">
-                     <a href="<?php echo $group_url?>big-bets/sa-healthy-weight" title="Link to Big Bet archive: Healthy Weight">
-                    <img src="<?php echo $image_url?>sa-healthy-weight.png" /></a>
+                     <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight" title="Link to Big Bet archive: Healthy Weight">
+                     <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-healthy-weight-112x150.png' ?>" alt="Icon for Big Bet: Healthier Weight" class="big-bet-icon" /></a>
                     </td>
                     <td class="sa-page-title">
                         <div class="sa-report-font-4">Obesity</div>
                         <p>More U.S. Latino kids are obese by age 5 than whites, due to maternal obesity, less breatfeeding, and workplace/childcare issues.</p>
-                        <a href="<?php echo $group_url ?>big-bets/sa-healthy-weight/" target="_blank">
+                        <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank">
                         <img src="<?php echo $image_url?>learn-more.png" /></a>
                     </td>
                        </tr>
@@ -255,14 +258,14 @@ function sa_report_card() {
                         </a>
                         </div>
                         <div class="w3-third sa-col-middle sa-col-media center-align">
-                        <a href="<?php echo $group_url ?>big-bets/sa-healthy-weight/" target="_blank" class="center-align">
+                        <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank" class="center-align">
                             <img src="<?php echo $image_url?>icon-research.png" height="52"  /><br />
                             <p class="sa-report-font-2">Research <br />and Infographics</p>
                             <p><img src="<?php echo $image_url?>obesity-research.jpg" /></p>
                         </a>
                         </div>
                         <div class="w3-third sa-col-end sa-col-media center-align">
-                        <a  class="center-align" href="<?php echo $group_url ?>heroes/baby-cafe-opens-to-bring-breastfeeding-peer-counselors-to-san-antonio-mothers/" target="_blank">
+                        <a  class="center-align" href="<?php echo sa_get_section_permalink( 'heroes' ); ?>baby-cafe-opens-to-bring-breastfeeding-peer-counselors-to-san-antonio-mothers/" target="_blank">
                             <img src="<?php echo $image_url?>icon-stories.png" height="52"  /><br />
                             <p class="sa-report-font-2">Salud Heroes: How to Start a Baby Cafe</p>
                             <p><img src="<?php echo $image_url?>obesity-stories.jpg" /></p>
@@ -276,15 +279,15 @@ function sa_report_card() {
              <div id="food-access-page">
                 <table class="sa-report-page-header sa-background-darkgray"><tr>
                 <td class="sa-img">
-                 <a href="<?php echo $group_url?>big-bets/sa-better-food-in-neighborhoods" title="Link to Big Bet archive: Better Food in Neighborhoods">
-                <img src="<?php echo $image_url?>sa-better-food.png" /></a>
-                 <a href="<?php echo $group_url?>big-bets/sa-sugary-drinks" title="Link to Big Bet archive: Sugary Drinks">
-                <img src="<?php echo $image_url?>sa-sugary-drinks.png" /></a>
+                 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods" title="Link to Big Bet archive: Better Food in Neighborhoods">
+                 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-better-food-112x150.png' ?>" alt="Icon for Big Bet: Better Food in the Neighborhood" class="big-bet-icon" /></a>
+                 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-sugary-drinks" title="Link to Big Bet archive: Sugary Drinks">
+                 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-sugary-drinks-112x150.png' ?>" alt="Icon for Big Bet: Sugary Drinks" class="big-bet-icon" /></a>
                 </td>
                 <td class="sa-page-title">
                     <div class="sa-report-font-4">Food Access</div>
                     <p>U.S. Latino kids face unhealthy neighborhood food environments with fewer grocery stores and more fast food.</p>
-                    <a href="<?php echo $group_url ?>big-bets/sa-better-food-in-neighborhoods/" target="_blank">
+                    <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank">
                         <img src="<?php echo $image_url?>learn-more.png" /></a>
                 </td>
                    </tr>
@@ -341,14 +344,14 @@ function sa_report_card() {
                         </a>
                  </div>
                  <div class="w3-third sa-col-middle sa-col-media center-align">
-                        <a href="<?php echo $group_url ?>big-bets/sa-better-food-in-neighborhoods/" target="_blank">
+                        <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank">
                         <img src="<?php echo $image_url?>icon-research.png" height="52" /><br />
                         <p class="sa-report-font-2">Research <br />and Infographics</p>
                         <p><img src="<?php echo $image_url?>food-research.jpg" /></p>
                         </a>
                  </div>
                  <div class="w3-third sa-col-end sa-col-media center-align">
-                        <a href="<?php echo $group_url ?>heroes/dignowity-hill-farmers-market/" target="_blank">
+                        <a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>dignowity-hill-farmers-market/" target="_blank">
                         <img src="<?php echo $image_url?>icon-stories.png" height="52" /><br />
                         <p class="sa-report-font-2">Salud Heroes: How to Start a Farmers Market</p>
                         <p><img src="<?php echo $image_url?>food-stories.jpg" /></p>
@@ -362,13 +365,13 @@ function sa_report_card() {
              <div id="physical-activity-issues-page">
                 <table class="sa-report-page-header sa-background-darkgray"><tr>
                     <td class="sa-img">
-                    <a href="<?php echo $group_url?>big-bets/sa-active-spaces" title="Link to Big Bet archive: Active Spaces">
-                    <img src="<?php echo $image_url?>sa-active-spaces.png" /></a>
+                    <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces" title="Link to Big Bet archive: Active Spaces">
+                    <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-active-spaces-112x150.png' ?>" alt="Icon for Big Bet: Active Spaces" class="big-bet-icon" /></a>
                     </td>
                     <td class="sa-page-title">
                         <div class="sa-report-font-4">Physical Activity Issues</div>
                         <p>Latino children and adults face less access to recreational facilities and lower activity rates. </p>
-                        <a href="<?php echo $group_url ?>big-bets/sa-active-spaces/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
+                        <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
                     </td>
                        </tr>
                 </table>
@@ -416,14 +419,14 @@ function sa_report_card() {
                             </a>
                     </div>
                      <div class="w3-third sa-col-middle sa-col-media center-align">
-                            <a href="<?php echo $group_url ?>big-bets/sa-active-spaces/" target="_blank">
+                            <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank">
                             <img src="<?php echo $image_url?>icon-research.png" height="52" /><br />
                             <p class="sa-report-font-2">Research <br />and Infographics</p>
                             <p><img src="<?php echo $image_url?>physical-research.jpg" /></p>
                             </a>
                     </div> 
                     <div class="w3-third sa-col-end sa-col-media center-align">
-                            <a href="<?php echo $group_url ?>heroes/move-el-paso-walking-trails-encourage-local-residents-to-get-up-get-walking/" target="_blank">
+                            <a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>move-el-paso-walking-trails-encourage-local-residents-to-get-up-get-walking/" target="_blank">
                             <img src="<?php echo $image_url?>icon-stories.png" height="52" /><br />
                             <p class="sa-report-font-2">Salud Heroes: How to Start Local Trails</p>
                             <p><img src="<?php echo $image_url?>physical-stories.jpg" /></p>
@@ -438,13 +441,13 @@ function sa_report_card() {
              <div id="health-equity-page">
                 <table class="sa-report-page-header sa-background-darkgray"><tr>
                     <td class="sa-img">
-                    <a href="<?php echo $group_url?>big-bets/sa-health-equity" title="Link to Big Bet archive: Health Equity">
-                    <img src="<?php echo $image_url?>sa-health-equity.png" /></a>
+                    <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity" title="Link to Big Bet archive: Health Equity">
+                    <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-health-equity-112x150.png' ?>" alt="Icon for Big Bet: Health Equity" class="big-bet-icon" /></a>
                     </td>
                     <td class="sa-page-title">
                         <div class="sa-report-font-4">Health Equity</div>
                         <p>Latino families face inequities in educational attainment, income, residential segregation, access to care, and more.</p>
-                        <a href="<?php echo $group_url?>big-bets/sa-health-equity/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
+                        <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
                     </td>
                        </tr>
                 </table>
@@ -596,7 +599,7 @@ function sa_report_card() {
                  <div class="sa-report-spacing1"></div>
                 <div class="center-align sa-report-font-large sa-text-orange"><p>Start (or Support) a Change!</p></div>
                       <div class="sa-list">
-                        <p  class="sa-report-font-2">1. <a href="<?php echo $group_url ?>share-your-story/" target="_blank">Start a change and share it with us</a>. 
+                        <p  class="sa-report-font-2">1. <a href="<?php echo $group_url; ?>share-your-story/" target="_blank">Start a change and share it with us</a>.
                     We might write it up, film it, promote it nationally, and move you from Leader to Hero!</p>
                         <p class="sa-report-font-2">2. <a href="http://maps.communitycommons.org/policymap/?bbox=<?php echo $vulnerable_population_page->bbox ?>" target="_blank">
                     Use our map</a> to connect with Salud Leaders who you can ask to support your change, or find changes you can support!</p>
