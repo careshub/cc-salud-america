@@ -43,26 +43,28 @@ function sa_report_card() {
            <div id="sa-report-selection">
                 <?php
             // User isn't logged in.
-            if (! get_current_user_id()) :
+            if ( ! bp_loggedin_user_id() ) :
                 ?>
-                        Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><b>log in</b></a> 
-                            to see your report card. 
-                            If you don't have a Community Commons account and would like to join us, please 
-                            <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><b>register</b></a>.
-                <?php
-            else:
-                ?>
-                    <div id="select-county">Select your state and county to see your own report card:</div>
-                    <select id="state-list">
-                        <option value="" selected>--- Select a State ---</option>
-                    </select>
-                    <select id="county-list">
-                        <option value="" selected>--- Select a County ---</option>
-                    </select>
-                    <span id="report-wait-message">Preparing your report card, please wait...</span>
-                <?php
-            endif
-                ?>
+                Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><b>log in</b></a> to see your report card. If you don't have a Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><b>register</b></a>.
+            <?php
+            elseif ( ! sa_is_current_user_a_member() ) :
+            ?>
+                <p style="margin-bottom:0.6em;">You must be registered with Salud America before you can create a report card.</p>
+                <?php echo sa_get_auxiliary_signup_form(); ?>
+            <?php
+            else :
+            ?>
+                <div id="select-county">Select your state and county to see your own report card:</div>
+                <select id="state-list">
+                    <option value="" selected>--- Select a State ---</option>
+                </select>
+                <select id="county-list">
+                    <option value="" selected>--- Select a County ---</option>
+                </select>
+                <span id="report-wait-message">Preparing your report card, please wait...</span>
+            <?php
+            endif;
+            ?>
             </div>
 
             <p><strong>How can you use it?</strong></p>
