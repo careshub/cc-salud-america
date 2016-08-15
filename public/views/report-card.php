@@ -643,13 +643,15 @@ function sa_report_card() {
 		 </div>
 
 		<div id="sa-report-action">
-			 <input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
-			 <input type="button" class="button sa-report-save" id="sa-report-save" value="Save Report to My Library" />
-			 <div id="report-save-message">Saving your report card, please wait...</div>
-			 <input type="hidden" id="report-card-geoid" value="<?php echo $geoid ?>" />
-			 <input type="hidden" id="report-card-county" value="<?php echo $cover_page->county_name ?>" />
-			 <input type="hidden" id="report-card-state" value="<?php echo $cover_page->state_name ?>" />
-			 <input type="hidden" id="report-card-wpnonce" value="<?php echo wp_create_nonce( 'save-leader-report-' . bp_loggedin_user_id() ) ?>" />
+			<input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
+			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
+				<input type="button" class="button sa-report-save" id="sa-report-save" value="Save Report to My Library" />
+			<?php endif; ?>
+			<div id="report-save-message">Saving your report card, please wait...</div>
+			<input type="hidden" id="report-card-geoid" value="<?php echo $geoid ?>" />
+			<input type="hidden" id="report-card-county" value="<?php echo $cover_page->county_name ?>" />
+			<input type="hidden" id="report-card-state" value="<?php echo $cover_page->state_name ?>" />
+			<input type="hidden" id="report-card-wpnonce" value="<?php echo wp_create_nonce( 'save-leader-report-' . bp_loggedin_user_id() ) ?>" />
 		</div>
 		<?php
 		endif;
