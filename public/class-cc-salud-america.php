@@ -1923,9 +1923,9 @@ class CC_Salud_America {
 		}
 
 		if ( $county && $state ) {
-			$title = "Salud America! Leaders Report for {$county}, {$state}";
+			$title = "Salud Report Card for {$county}, {$state}";
 		} else {
-			$title = 'Salud America! Leaders Report';
+			$title = 'Salud Report Card';
 		}
 
 		$content = '<a href="/groups/salud-america/report-card/?geoid=' . $geoid . '" title="Link to report" class="button report-link"><span class="icon reportx24"></span>View Report Card</a>';
