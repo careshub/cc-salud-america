@@ -280,7 +280,7 @@ function sa_report_card() {
 				<table class="sa-report-page-header sa-background-darkgray"><tr>
 				<td class="sa-img">
 				 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods" title="Link to Big Bet archive: Better Food in Neighborhoods">
-				 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-better-food-112x150.png' ?>" alt="Icon for Big Bet: Better Food in the Neighborhood" class="big-bet-icon" /></a>
+				 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-better-food-in-neighborhoods-112x150.png' ?>" alt="Icon for Big Bet: Better Food in the Neighborhood" class="big-bet-icon" /></a>
 				 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-sugary-drinks" title="Link to Big Bet archive: Sugary Drinks">
 				 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-sugary-drinks-112x150.png' ?>" alt="Icon for Big Bet: Sugary Drinks" class="big-bet-icon" /></a>
 				</td>
