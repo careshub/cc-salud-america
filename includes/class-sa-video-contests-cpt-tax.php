@@ -54,7 +54,6 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 		add_action( 'admin_init', array( $this, 'add_meta_box' ) );
 
 		add_action( 'bp_init', array( $this, 'capture_vote_submission'), 78 );
-		add_action( 'bp_init', array( $this, 'capture_join_group_submission'), 78 );
 
 		add_filter( 'sa_group_home_page_notices', array( $this, 'add_notices' ), 11 );
 
@@ -394,69 +393,6 @@ class CC_SA_Video_Contests_CPT_Tax extends CC_Salud_America {
 	    } else {
 			bp_core_add_message( __( 'Sorry, we couldn\'t count your vote right now.', $this->plugin_slug ), 'error' );
 	    }
-		// Redirect and exit
-		if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
-			bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );
-		} else {
-			bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
-		}
-		return;
-	}
-
-	public function capture_join_group_submission(){
-		// $_POST['sa_video_contest_selection'] is an int
-		// $_POST['video_contest_id'] is the post_id
-		// $_POST['sa_video_contest_submit_vote'] is the submit button
-		if ( ! isset( $_POST['sa_video_contest_join_submit'] ) ) {
-			return;
-		}
-
-		if ( ! sa_is_section( 'take-action') ) {
-			return;
-		}
-		$user_id = get_current_user_id();
-
-		$nonce_value = 'sa_video_contest_join_submit_' . $user_id;
-		if( ! wp_verify_nonce( $_POST[ $nonce_value ], 'sa_video_contest_join_submit' ) ) {
-			bp_core_add_message( __( 'Sorry, we couldn\'t add you to the hub Salud America!', $this->plugin_slug ), 'error' );
-			if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
-				bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );
-			} else {
-				bp_core_redirect( sa_get_section_permalink( 'video-contest' ) );
-			}
-			return;
-		}
-
-		$message = '';
-		$error = false;
-
-		// Add the user to the group if necessary.
-		if ( isset( $_POST[ 'join_salud_america_hub' ] ) && $_POST[ 'join_salud_america_hub' ] == 'agreed' ) {
-			if ( groups_join_group( sa_get_group_id(), $user_id ) ) {
-				$message .= 'You have successfully joined the hub Salud America! ';
-		    } else {
-				$message .= 'Sorry, we couldn\'t add you to the hub Salud America! ';
-				$error = true;
-		    }
-		}
-
-		// Add the user to the group if necessary.
-		if ( isset( $_POST[ 'salud_newsletter_acceptance' ] ) && $_POST[ 'salud_newsletter_acceptance' ] == 'agreed' ) {
-			if ( add_user_meta( $user_id, 'salud_newsletter', 'agreed' ) ) {
-				$message .= 'You have been added to the Salud America mailing list.';
-		    } else {
-				$message .= 'Sorry, we couldn\'t add you to the Salud America mailing list ';
-				$error = true;
-		    }
-		}
-
-		if ( ! empty( $message ) ) {
-			if ( $error ) {
-				bp_core_add_message( $message, 'error' );
-			} else {
-				bp_core_add_message( $message );
-			}
-		}
 		// Redirect and exit
 		if ( isset( $_POST[ 'sa_video_contest_submit_referrer' ] ) && ! empty( $_POST[ 'sa_video_contest_submit_referrer' ] ) ) {
 			bp_core_redirect( $_POST[ 'sa_video_contest_submit_referrer' ] );

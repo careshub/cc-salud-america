@@ -1083,3 +1083,22 @@ ob_start();
 </html><?php
 return ob_get_clean();
 }
+
+/*
+ * We accept signups from a few places. This adds a general-purpose quick sign up form.
+ * The input is captured in CC_Salud_America::capture_join_group_submission()
+ *
+ * @since 1.8.0
+ */
+function sa_get_auxiliary_signup_form() {
+    ?>
+    <form action="" method="POST" enctype="multipart/form-data" name="salud-america-auxiliary-signup">
+        <p style="margin-bottom:0.6em;"><strong>Join the hub <em>Salud America!</em></strong></p>
+        <label style="margin-bottom:0.6em;"><input type="checkbox" name="join_salud_america_hub" id="join_salud_america_hub" value="agreed" checked="checked" /> Yes, I&rsquo;m interested in work by Salud America! to reduce Latino childhood obesity.</label><br />
+        <label><input type="checkbox" name="salud_newsletter_acceptance" id="salud_newsletter_acceptance" value="agreed" checked="checked" /> I would like to receive email updates on this topic.</label>
+        <p class="info" style="margin-bottom:0.6em;"><em>Periodically, Salud America! sends out news updates and brief surveys.</em></p>
+        <?php wp_nonce_field( 'sa_auxiliary_group_join_submit_' . get_current_user_id() ); ?>
+        <input type="submit" id="sa_auxiliary_group_join_submit" name="sa_auxiliary_group_join_submit" alt="Join Salud America!" value="Join Salud America!" />
+    </form>
+    <?php
+}

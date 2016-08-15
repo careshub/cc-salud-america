@@ -45,18 +45,7 @@ if ( $is_active && ( ! $user_id || ! $is_sa_member ) ) {
         // User doesn't belong to the SA group.
         ?>
         <p style="margin-bottom:0.6em;">You must be registered with Salud America before you can vote.</p>
-        <form action="" method="POST" enctype="multipart/form-data" name="salud-america-video-contest-signup">
-            <p style="margin-bottom:0.6em;"><strong>Join the hub <em>Salud America!</em></strong></p>
-            <label style="margin-bottom:0.6em;"><input type="checkbox" name="join_salud_america_hub" id="join_salud_america_hub" value="agreed" checked="checked" /> Yes, I&rsquo;m interested in work by Salud America! to reduce Latino childhood obesity.</label><br />
-            <label><input type="checkbox" name="salud_newsletter_acceptance" id="salud_newsletter_acceptance" value="agreed" checked="checked" /> I would like to receive email updates on this topic.</label>
-            <p class="info" style="margin-bottom:0.6em;"><em>Periodically, Salud America! sends out news updates and brief surveys.</em></p>
-            <?php
-            $nonce_value = 'sa_video_contest_join_submit_' . get_current_user_id();
-            wp_nonce_field( 'sa_video_contest_join_submit', $nonce_value );
-            ?>
-            <input type="hidden" id="sa_video_contest_submit_referrer" name="sa_video_contest_submit_referrer" value="<?php echo ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
-            <input type="submit" id="sa_video_contest_join_submit" name="sa_video_contest_join_submit" alt="Join Salud America!" value="Join Salud America!" />
-        </form>
+        <?php echo sa_get_auxiliary_signup_form(); ?>
         <?php
     }
 ?>

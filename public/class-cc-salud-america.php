@@ -106,6 +106,9 @@ class CC_Salud_America {
 		// Add the Salud America interest query string to the register link on SA pages
 		add_filter( 'registration_form_interest_query_string', array( $this, 'add_registration_interest_parameter' ), 12, 1 );
 
+		// Auxiliary sign-up form capture
+		add_action( 'bp_init', array( $this, 'capture_join_group_submission'), 78 );
+
 		// PROFILE FIELDS
 		// Verify the value of the ZIP code input.
 		add_action( 'bp_signup_validate', array( $this, 'verify_sa_registration_fields' ) );
@@ -839,6 +842,63 @@ class CC_Salud_America {
 		}
 
 	    return $interests;
+	}
+
+	// Capture input from auxiliary signup forms.
+	public function capture_join_group_submission(){
+		if ( ! isset( $_POST['sa_auxiliary_group_join_submit'] ) ) {
+			return;
+		}
+
+		$user_id = get_current_user_id();
+
+		if( ! wp_verify_nonce( $_POST[ '_wpnonce' ], 'sa_auxiliary_group_join_submit_' . get_current_user_id() ) ) {
+			bp_core_add_message( __( 'Sorry, we couldn\'t add you to the hub Salud America!', $this->plugin_slug ), 'error' );
+			if ( ! empty( $_POST[ '_wp_http_referer' ] ) ) {
+				bp_core_redirect( $_POST[ '_wp_http_referer' ] );
+			} else {
+				bp_core_redirect( sa_get_group_permalink() );
+			}
+			return;
+		}
+
+		$message = '';
+		$error = false;
+
+		// Add the user to the group if necessary.
+		if ( isset( $_POST[ 'join_salud_america_hub' ] ) && $_POST[ 'join_salud_america_hub' ] == 'agreed' ) {
+			if ( groups_join_group( sa_get_group_id(), $user_id ) ) {
+				$message .= 'You have successfully joined the hub Salud America! ';
+		    } else {
+				$message .= 'Sorry, we couldn\'t add you to the hub Salud America! ';
+				$error = true;
+		    }
+		}
+
+		// Add the user to the group if necessary.
+		if ( isset( $_POST[ 'salud_newsletter_acceptance' ] ) && $_POST[ 'salud_newsletter_acceptance' ] == 'agreed' ) {
+			if ( add_user_meta( $user_id, 'salud_newsletter', 'agreed' ) ) {
+				$message .= 'You have been added to the Salud America mailing list.';
+		    } else {
+				$message .= 'Sorry, we couldn\'t add you to the Salud America mailing list ';
+				$error = true;
+		    }
+		}
+
+		if ( ! empty( $message ) ) {
+			if ( $error ) {
+				bp_core_add_message( $message, 'error' );
+			} else {
+				bp_core_add_message( $message );
+			}
+		}
+		// Redirect and exit
+		if ( ! empty( $_POST[ '_wp_http_referer' ] ) ) {
+			bp_core_redirect( $_POST[ '_wp_http_referer' ] );
+		} else {
+			bp_core_redirect( sa_get_group_permalink() );
+		}
+		return;
 	}
 
 	public function filter_cc_redirect_after_signup( $redirect ) {
