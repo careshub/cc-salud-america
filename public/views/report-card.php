@@ -40,31 +40,34 @@ function sa_report_card() {
 				and stories so you can start and support healthy changes for Latino kids.
 			</p>
 
-		   <div id="sa-report-selection">
-				<?php
-			// User isn't logged in.
-			if ( ! bp_loggedin_user_id() ) :
-				?>
-				Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><b>log in</b></a> to see your report card. If you don't have a Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><b>register</b></a>.
-			<?php
-			elseif ( ! sa_is_current_user_a_member() ) :
-			?>
-				<p style="margin-bottom:0.6em;">You must be registered with Salud America before you can create a report card.</p>
-				<?php echo sa_get_auxiliary_signup_form(); ?>
-			<?php
-			else :
-			?>
-				<div id="select-county">Select your state and county to see your own report card:</div>
-				<select id="state-list">
-					<option value="" selected>--- Select a State ---</option>
-				</select>
-				<select id="county-list">
-					<option value="" selected>--- Select a County ---</option>
-				</select>
-				<span id="report-wait-message">Preparing your report card, please wait...</span>
-			<?php
-			endif;
-			?>
+			<div id="sa-report-selection" class="report-control-header clear">
+				<h3 class="screamer sagreen">Create a report for your area</h3>
+				<div class="inset-contents">
+					<?php
+					// User isn't logged in.
+					if ( ! bp_loggedin_user_id() ) :
+						?>
+						<p>Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><strong>log in</strong></a> to see your report card. If you don't have a Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><strong>register</strong></a>.</p>
+					<?php
+					elseif ( ! sa_is_current_user_a_member() ) :
+					?>
+						<p style="margin-bottom:0.6em;">You must be registered with Salud America before you can create a report card.</p>
+						<?php echo sa_get_auxiliary_signup_form(); ?>
+					<?php
+					else :
+					?>
+						<div id="select-county">Select your state and county to see your own report card:</div>
+						<select id="state-list">
+							<option value="" selected>--- Select a State ---</option>
+						</select>
+						<select id="county-list">
+							<option value="" selected>--- Select a County ---</option>
+						</select>
+						<span id="report-wait-message">Preparing your report card, please wait...</span>
+					<?php
+					endif;
+					?>
+				</div>
 			</div>
 
 			<p><strong>How can you use it?</strong></p>
@@ -135,8 +138,9 @@ function sa_report_card() {
 			$vulnerable_population_page = sa_report_vulnerable_population_page($geoid);
 
 			// add share and mailto links
+			$share_title_twitter = 'Check out this @SaludToday Report Card on Latino health for ' . $report_area;
 			$share_title = 'Check out this Salud Report Card on Latino health for ' . $report_area;
-			$share_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+			$share_url = ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
 			$mail_to = '?subject=Check Out Latino Health in ' . $report_area . '&body=' . $share_title . ': ' . $share_url;
 		?>
 		<style>
@@ -157,8 +161,16 @@ function sa_report_card() {
 				}
 			}
 		</style>
-		 <div id="sa-report-content">
-			 <div id="cover-page">
+		<div id="sa-report-action-top" class="sa-report-action">
+			<input type="button" class="button sa-report-export" id="sa-report-export-top" value="Export Report to PDF" />
+			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
+				<input type="button" class="button sa-report-save" id="sa-report-save-top" value="Save Report to My Library" />
+			<?php endif; ?>
+			<div id="report-save-message-top" class="report-save-message">Saving your report card, please wait...</div>
+		</div>
+		<hr />
+		<div id="sa-report-content">
+			<div id="cover-page">
 				<table class="sa-report-cols"><tr>
 					<td class="col3"><img src="<?php echo $image_url?>logo-salud.png" width="70" /></td>
 					<td class="col3 center-align"><?php echo date("F, Y") ?></td>
@@ -212,16 +224,16 @@ function sa_report_card() {
 					</td>
 					<td class="sa-page-title">
 						<div class="sa-report-font-4">Obesity</div>
-						<p>More U.S. Latino kids are obese by age 5 than whites, due to maternal obesity, less breatfeeding, and workplace/childcare issues.</p>
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank">
-						<img src="<?php echo $image_url?>learn-more.png" /></a>
+						<p>More U.S. Latino kids are obese by age 5 than whites, due to maternal obesity, less breastfeeding, and workplace/childcare issues.</p>
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank" class="learn-more-link">
+						Learn More</a>
 					</td>
 					   </tr>
 				</table>
 
 				<p>In <span class="sa-text-orange sa-text-capital">THE UNITED STATES OVERALL</span>, nearly 40% of U.S. Latino youths ages 2-19 are overweight or obese,
 					compared with only 28.5% of non-Latino white youths.</p>
-				<p>In <span class="sa-text-capital sa-text-purple"><?php echo $cover_page->state_name ?> OVERALL</span>,
+				<p>In <span class="sa-text-capital sa-text-pink"><?php echo $cover_page->state_name ?> OVERALL</span>,
 					<?php echo $obesity_page->pct_latino_obese ?> of Latino children ages 10-17 are overweight or obese,
 					compared with <?php echo $obesity_page->pct_white_obese ?> of non-Latino white children.<sup>4</sup></p>
 				<p>In <span class="sa-text-capital sa-text-green"><?php echo $cover_page->county_name ?> OVERALL</span>,
@@ -287,8 +299,8 @@ function sa_report_card() {
 				<td class="sa-page-title">
 					<div class="sa-report-font-4">Food Access</div>
 					<p>U.S. Latino kids face unhealthy neighborhood food environments with fewer grocery stores and more fast food.</p>
-					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank">
-						<img src="<?php echo $image_url?>learn-more.png" /></a>
+					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank" class="learn-more-link">
+						Learn More</a>
 				</td>
 				   </tr>
 			</table>
@@ -371,7 +383,7 @@ function sa_report_card() {
 					<td class="sa-page-title">
 						<div class="sa-report-font-4">Physical Activity Issues</div>
 						<p>Latino children and adults face less access to recreational facilities and lower activity rates. </p>
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank" class="learn-more-link">Learn More</a>
 					</td>
 					   </tr>
 				</table>
@@ -447,7 +459,7 @@ function sa_report_card() {
 					<td class="sa-page-title">
 						<div class="sa-report-font-4">Health Equity</div>
 						<p>Latino families face inequities in educational attainment, income, residential segregation, access to care, and more.</p>
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity/" target="_blank"><img src="<?php echo $image_url?>learn-more.png" /></a>
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity/" target="_blank" class="learn-more-link">Learn More</a>
 					</td>
 					   </tr>
 				</table>
@@ -594,12 +606,12 @@ function sa_report_card() {
 				<div class="sa-report-font-2">
 					<a href="mailto:<?php echo $mail_to ?>">Email this report to colleagues</a>;
 					share it to start discussions on <a href="http://www.facebook.com/sharer.php?t=<?php echo $share_title ?>&u=<?php echo $share_url ?>" target="_blank">Facebook</a> and
-					<a href="http://twitter.com/share?text=<?php echo $share_title ?>&url=<?php echo $share_url ?>" target="_blank">Twitter</a>, or at the PTA, etc.;
+					<a href="http://twitter.com/share?text=<?php echo $share_title_twitter ?>&url=<?php echo $share_url ?>" target="_blank">Twitter</a>, or at the PTA, etc.;
 					and bring it to city/school leaders to spur change.</div>
 				 <div class="sa-report-spacing1"></div>
 				<div class="center-align sa-report-font-large sa-text-orange"><p>Start (or Support) a Change!</p></div>
 					  <div class="sa-list">
-						<p  class="sa-report-font-2">1. <a href="<?php echo $group_url; ?>share-your-story/" target="_blank">Start a change and share it with us</a>.
+						<p  class="sa-report-font-2">1. <a href="<?php echo $group_url; ?>report-card/share-your-story/" target="_blank">Start a change and share it with us</a>.
 					We might write it up, film it, promote it nationally, and move you from Leader to Hero!</p>
 						<p class="sa-report-font-2">2. <a href="http://maps.communitycommons.org/policymap/?bbox=<?php echo $vulnerable_population_page->bbox ?>" target="_blank">
 					Use our map</a> to connect with Salud Leaders who you can ask to support your change, or find changes you can support!</p>
@@ -639,20 +651,21 @@ function sa_report_card() {
 					<div id="footer"></div>
 					<sup>1</sup> Additional estimation and analysis done by <a href="http://cares.missouri.edu" target="_blank">CARES</a>.
 				</div>
-			 </div>
-		 </div>
-
-		<div id="sa-report-action">
+			</div>
+		</div>
+		<hr />
+		<div id="sa-report-action" class="sa-report-action">
 			<input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
 			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
 				<input type="button" class="button sa-report-save" id="sa-report-save" value="Save Report to My Library" />
 			<?php endif; ?>
-			<div id="report-save-message">Saving your report card, please wait...</div>
+			<div id="report-save-message" class="report-save-message">Saving your report card, please wait...</div>
 			<input type="hidden" id="report-card-geoid" value="<?php echo $geoid ?>" />
 			<input type="hidden" id="report-card-county" value="<?php echo $cover_page->county_name ?>" />
 			<input type="hidden" id="report-card-state" value="<?php echo $cover_page->state_name ?>" />
 			<input type="hidden" id="report-card-wpnonce" value="<?php echo wp_create_nonce( 'save-leader-report-' . bp_loggedin_user_id() ) ?>" />
 		</div>
+		<hr />
 		<?php
 		endif;
 		?>

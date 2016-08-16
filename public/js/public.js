@@ -240,7 +240,7 @@
 
 	    //Handle PDF export for report card
         var popup;
-        $("#sa-report-export").on("click", function () {
+        $(".sa-report-export").on("click", function () {
             var pageFont = "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700&#038;subset=latin,latin-ext";
 
             // local methods - dependent on popup window being set
@@ -265,7 +265,7 @@
             popup = window.open("", "newwin", "width=500,height=300");
             popupMsg("Converting report card to Adobe PDF format. Please wait...");
             popupCenter(550, 400);
-                 
+
             // compile html contents
             var htmContent = "<!DOCTYPE html><html><head>";
 
@@ -324,7 +324,7 @@
                 }
             });
 
-            // KISS tracking 
+            // KISS tracking
             _kmq.push(['record', 'exported a salud report card to pdf', {
                 'geoid': $("#report-card-geoid").val(),
                 'county': $("#report-card-county").val(),
@@ -333,9 +333,9 @@
         });
 
 	    // Handle Save Report Card
-        $("#sa-report-save").on("click", function () {
+        $(".sa-report-save").on("click", function () {
             // show a message
-            $("#report-save-message").show();
+            $(".report-save-message").show();
 
             // post to WP db
             var geoid = $("#report-card-geoid").val();
@@ -353,18 +353,18 @@
                 },
                 success: function (response) {
                     // Do something. response.data is the new post ID.
-                    console.log(response.data);
-                    $("#report-save-message").html("This report card has been saved to your personal library.");
-                    $("#sa-report-save").hide();
+                    // console.log(response.data);
+                    $(".report-save-message").html("This report card has been saved to your personal library.");
+                    $(".sa-report-save").hide();
                 },
                 error: function (response) {
                     // Do something. response.data is the new post ID.
-                    console.log(response.data);
-                    $("#report-save-message").html("Unable to save this report card.");
+                    // console.log(response.data);
+                    $(".report-save-message").html("Unable to save this report card.");
                 }
             });
 
-            // KISS tracking 
+            // KISS tracking
             _kmq.push(['record', 'saved a salud report card to library', {
                 'geoid': geoid,
                 'county': county,
