@@ -15,7 +15,7 @@
  * Plugin Name:       CC Salud America
  * Plugin URI:        @TODO
  * Description:       Adds SA functionality to CC site
- * Version:           1.8.0
+ * Version:           1.8.1
  * Author:            David Cavins
  * Author URI:        @TODO
  * Text Domain:       plugin-name-locale
