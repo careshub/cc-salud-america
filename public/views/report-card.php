@@ -47,7 +47,7 @@ function sa_report_card() {
 					// User isn't logged in.
 					if ( ! bp_loggedin_user_id() ) :
 						?>
-						<p>Please <a class="login-link" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><strong>log in</strong></a> to see your report card. If you don't have a Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><strong>register</strong></a>.</p>
+		                <p><a class="login-link sa-cta-button" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in">Log In to Choose Your Report Area!</a><br /> If you don't have a free Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><strong>register</strong></a>.</p>
 					<?php
 					elseif ( ! sa_is_current_user_a_member() ) :
 					?>
