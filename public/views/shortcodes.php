@@ -233,3 +233,24 @@ function sa_report_card_shortcode() {
     return ob_get_clean();
 }
 add_shortcode( 'sa_report_card', 'sa_report_card_shortcode' );
+
+/**
+ * Output html for an action that requires group membership.
+ *
+ * @since   1.8.2
+ *
+ * @param   string $header_text Number of columns the posts should be displayed in.
+ * @param   string $carrot_text How many posts to fetch.
+ * @return  html The blocks and their contents.
+ */
+function sa_membership_conditional_box_shortcode( $atts, $content ) {
+    $a = shortcode_atts( array(
+        'header_text' => 'We\'ve got something special planned for you',
+        'login_button_text' => 'Log in now!',
+        'carrot_text' => 'You must become a member before taking this action.'
+        ), $atts );
+    ob_start();
+    sa_membership_conditional_box( $a['header_text'], $a['login_button_text'], $a['carrot_text'], $content );
+    return ob_get_clean();
+}
+add_shortcode( 'sa_membership_conditional_box', 'sa_membership_conditional_box_shortcode' );

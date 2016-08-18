@@ -1098,7 +1098,39 @@ function sa_get_auxiliary_signup_form() {
         <label><input type="checkbox" name="salud_newsletter_acceptance" id="salud_newsletter_acceptance" value="agreed" checked="checked" /> I would like to receive email updates on this topic.</label>
         <p class="info" style="margin-bottom:0.6em;"><em>Periodically, Salud America! sends out news updates and brief surveys.</em></p>
         <?php wp_nonce_field( 'sa_auxiliary_group_join_submit_' . get_current_user_id() ); ?>
-        <input type="submit" id="sa_auxiliary_group_join_submit" name="sa_auxiliary_group_join_submit" alt="Join Salud America!" value="Join Salud America!" />
+        <input type="submit" id="sa_auxiliary_group_join_submit" name="sa_auxiliary_group_join_submit" class="sa-cta-button" alt="Join Salud America!" value="Join Salud America!" />
     </form>
+    <?php
+}
+
+/*
+ * Use this function to protect actions behind SA hub membership.
+ * Most likely used via the `sa_membership_conditional_box` shortcode.
+ *
+ * @since 1.8.2
+ */
+function sa_membership_conditional_box( $header_text, $login_button_text, $carrot_text, $content ) {
+    ?>
+    <div class="sa-membership-conditional-box clear background-light-gray">
+        <h3 class="screamer sa-membership-conditional-box-header sagreen"><?php echo $header_text; ?></h3>
+        <div class="inset-contents">
+            <?php
+            // User isn't logged in.
+            if ( ! bp_loggedin_user_id() ) :
+                ?>
+                <p><a class="login-link sa-cta-button" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><?php echo $login_button_text; ?></a><br />
+                If you don't have a free Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><strong>register</strong></a>.</p>
+            <?php
+            elseif ( ! sa_is_current_user_a_member() ) :
+            ?>
+                <p style="margin-bottom:0.6em;"><?php echo $carrot_text; ?></p>
+                <?php echo sa_get_auxiliary_signup_form(); ?>
+            <?php
+            else :
+                echo $content;
+            endif;
+            ?>
+        </div>
+    </div>
     <?php
 }
