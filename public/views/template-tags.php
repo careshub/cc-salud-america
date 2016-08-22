@@ -1118,8 +1118,7 @@ function sa_membership_conditional_box( $header_text, $login_button_text, $carro
             // User isn't logged in.
             if ( ! bp_loggedin_user_id() ) :
                 ?>
-                <p><a class="login-link sa-cta-button" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><?php echo $login_button_text; ?></a><br />
-                If you don't have a free Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><strong>register</strong></a>.</p>
+                <p><a class="login-link sa-cta-button" href="<?php echo wp_login_url( ( is_ssl() ? 'https://' : 'http://' ) .  $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] ); ?>" title="Log in"><?php echo $login_button_text; ?></a><br /> If you don't have a free Community Commons account and would like to join us, please <a href="<?php echo site_url( bp_get_signup_slug() . '?salud-america=1' ); ?>"><strong>register</strong></a>.</p>
             <?php
             elseif ( ! sa_is_current_user_a_member() ) :
             ?>
@@ -1128,6 +1127,18 @@ function sa_membership_conditional_box( $header_text, $login_button_text, $carro
             <?php
             else :
                 echo $content;
+            ?>
+            <script type="text/javascript">
+                jQuery(document).ready( function( $ ) {
+                    $( '.sa-track-kiss' ).on( 'click', function() {
+                        var action = $( this ).data( 'track-action' );
+                        // console.log( action );
+                        // KISS tracking
+                        _kmq.push(['record', 'sa-' + action]);
+                    });
+                });
+            </script>
+            <?php
             endif;
             ?>
         </div>
