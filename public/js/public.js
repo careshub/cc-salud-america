@@ -203,6 +203,12 @@
                     }
                 });
             });
+        } else {
+            // KISS tracking for loading a report card -- either directly from shared link or this tool
+            var geoid = $("#report-card-geoid").length? $("#report-card-geoid").val(): "";
+            if (geoid !== "") {
+                _kmq.push(['record', 'opened a salud report card', { 'geoid': geoid }]);
+            }
         }
 
 	    // Handle state-list selection for report card
@@ -229,9 +235,6 @@
             var countyGeoId = $("#county-list").val();
             if (countyGeoId !== "") {
                 $("#report-wait-message").show();
-
-                // KISS tracking
-                _kmq.push(['record', 'opened a salud report card', { 'geoid': countyGeoId }]);
 
                 // load report card
                 document.location = document.location.href.split("?")[0] + "?geoid=" + countyGeoId;
