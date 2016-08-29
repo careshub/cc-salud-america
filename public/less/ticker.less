@@ -2,6 +2,9 @@
 // This creates a ticker-only file for use in the admin area.
 @import "less-mixins";
 @import "ticker-default";
-@media screen and (min-width:600px), print {
+@media screen and (min-width:42px), print {
 	@import "ticker-600";
+}
+@media screen and (min-width:64em), print {
+	@import "ticker-900";
 }
