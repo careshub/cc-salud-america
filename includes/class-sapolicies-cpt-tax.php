@@ -63,6 +63,8 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		// Add the autosuggest handler on this post_type's edit screen.
 		add_action( 'save_post', array( $this, 'sa_related_leaders_meta_box_save' ) );
 
+		// Change the REST API response so that it includes important info for these items.
+		add_action( 'rest_api_init', array( $this, 'rest_read_meta' ) );
 	}
 
 	/**
@@ -869,6 +871,72 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 		$action = sprintf( __( '%1$s published the change %2$s in the Hub %3$s', $this->plugin_slug ), $user_link, $post_link, $group_link );
 
 		return $action;
+	}
+
+ 	/**
+	 * Change the REST API response so that it includes important meta for policies.
+	 *
+	 * @since    1.8.2
+	 *
+	 * @return   void
+	 */
+	public function rest_read_meta() {
+	    register_rest_field( $this->post_type,
+	        'geoid',
+	        array(
+	            'get_callback'    => array( $this, 'rest_get_policy_info' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	    register_rest_field( $this->post_type,
+	        'stage',
+	        array(
+	            'get_callback'    => array( $this, 'rest_get_policy_info' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	    register_rest_field( $this->post_type,
+	        'type',
+	        array(
+	            'get_callback'    => array( $this, 'rest_get_policy_info' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	}
+
+ 	/**
+	 * Get extra info to include in the response.
+	 *
+	 * @param array $object Details of current post.
+	 * @param string $field_name Name of field.
+	 * @param WP_REST_Request $request Current request
+	 *
+	 * @return mixed
+	 */
+	public function rest_get_policy_info( $object, $field_name, $request ) {
+		switch ( $field_name ) {
+			case 'geoid':
+				$terms = get_the_terms( $object[ 'id' ], 'geographies' );
+		        $value = ( ! empty( $terms ) ) ? current( $terms )->description : '01000US';
+				break;
+			case 'type' :
+				// These are all title case.
+				$value = get_post_meta( $object[ 'id' ], 'sa_policytype', true );
+			break;
+			case 'stage' :
+				// These are all lowercase.
+				$stage = get_post_meta( $object[ 'id' ], 'sa_policystage', true );
+				$value = ucfirst( $stage );
+			break;
+			default:
+				$value = '';
+				break;
+		}
+
+	    return $value;
 	}
 
 } //End class CC_SA_Policies_CPT_Tax
