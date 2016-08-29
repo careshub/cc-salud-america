@@ -151,6 +151,7 @@ class CC_Salud_America {
 
 		// Sub-navigation label changes
 		// We'll be operating on the $bp global, so I've added an action that only occurs in the SA header to target these changes.
+		// Typically done on bp_actions
 		add_filter( 'sa_bp_after_group_header', array( $this, 'filter_subnav_tab_labels' ) );
 		// add_filter( 'bp_init', array( $this, 'filter_subnav_tab_labels' ) );
 
@@ -1468,19 +1469,17 @@ class CC_Salud_America {
 	 *
 	 */
 	public function filter_subnav_tab_labels() {
+		if ( ! bp_is_group() ) {
+			return;
+		}
 		$bp = buddypress();
 
-		// $towrite = PHP_EOL . 'bp nav' . print_r($bp->bp_nav, TRUE);
-		// $towrite .= PHP_EOL . 'bp options nav' . print_r($bp->bp_options_nav, TRUE);
-		// // $towrite = PHP_EOL . 'bp options nav[groups]' . print_r($bp->bp_options_nav['groups'], TRUE);
-		// $fp = fopen('sa_navigation_changes.txt', 'a');
-		// fwrite($fp, $towrite);
-		// fclose($fp);
+		$salud_nav = $bp->groups->nav->get_secondary( array(
+			'parent_slug' => bp_get_current_group_slug(),
+		) );
 
-		// Activity tab has position 10.
-		$bp->bp_options_nav['salud-america'][10]['name'] = 'Hub Activity';
-		// Members tab has position 60.
-		$bp->bp_options_nav['salud-america'][60]['name'] = str_replace( 'Members', 'Salud Leaders', $bp->bp_options_nav['salud-america'][60]['name'] );
+		$bp->groups->nav->edit_nav( array( 'name' => __( 'Hub Activity', 'buddypress' ) ), 'home', bp_current_item() );
+		$bp->groups->nav->edit_nav( array( 'name' => str_replace( 'Members', 'Salud Leaders', $salud_nav[60]['name'] ) ), 'members', bp_current_item() );
 	}
 
 	// PERFORMANCE /////////////////////////////////////////////////////////////
