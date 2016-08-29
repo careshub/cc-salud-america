@@ -919,10 +919,10 @@ function sa_get_the_home_page_join_pitch_box( $user_id = null, $is_sa_member = n
         <?php endif; ?>
         <span class="sa-login-register-cta">&hellip;get tools for healthy change.</span>
         <ul class="sa-join-group-reasons no-bullets">
-            <?php /* ?><li><span class="li-customize-data"></span>&emsp;<a href="/groups/salud-america/report-card/">Customize data for you</a>!</li><?php */ ?>
             <li><span class="li-map-connect"></span>&emsp;<a href="http://maps.communitycommons.org/policymap/">Hop on our map and connect</a>!</li>
-            <li><span class="li-changes-heroes"></span>&emsp;See new <a href="/groups/salud-america/changes/">changes</a> and <a href="/groups/salud-america/heroes/">heroes</a>!</li>
-            <li><span class="li-share-story"></span>&emsp;<a href="/groups/salud-america/share-your-story/">Share your change</a>!</li>
+            <li><span class="li-changes-heroes"></span>&emsp;See new <a href="<?php echo sa_get_section_permalink( 'policies' ); ?>">changes</a> and <a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>">heroes</a>!</li>
+            <li><span class="li-customize-data"></span>&emsp;<a href="<?php echo sa_get_group_permalink(); ?>report-card/">Customized data for you</a>!</li>
+            <?php /* ?><li><span class="li-share-story"></span>&emsp;<a href="/groups/salud-america/share-your-story/">Share your change</a>!</li><?php */ ?>
         </ul>
     </div>
 <?php
