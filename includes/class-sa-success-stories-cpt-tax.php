@@ -58,6 +58,8 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		// Add action buttons, including "download PDF" button, after first paragraph
 		add_filter( 'the_content', array( $this, 'insert_actions_in_success_stories' ) );
 
+		// Change the REST API response so that it includes important info for these items.
+		add_action( 'rest_api_init', array( $this, 'rest_read_meta' ) );
 	}
 
 	/**
@@ -424,6 +426,77 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		}
 
 		return $content;
+	}
+
+ 	/**
+	 * Change the REST API response so that it includes important meta for hero stories.
+	 *
+	 * @since    1.8.2
+	 *
+	 * @return   void
+	 */
+	public function rest_read_meta() {
+	    register_rest_field( $this->post_type,
+	        'url',
+	        array(
+	            'get_callback'    => array( $this, 'rest_get_hero_info' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	    register_rest_field( $this->post_type,
+	        'lat',
+	        array(
+	            'get_callback'    => array( $this, 'rest_get_hero_info' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	    register_rest_field( $this->post_type,
+	        'lon',
+	        array(
+	            'get_callback'    => array( $this, 'rest_get_hero_info' ),
+	            'update_callback' => null,
+	            'schema'          => null,
+	        )
+	    );
+	}
+
+ 	/**
+	 * Get extra info to include in the response.
+	 *
+	 * @param array $object Details of current post.
+	 * @param string $field_name Name of field.
+	 * @param WP_REST_Request $request Current request
+	 *
+	 * @return mixed
+	 */
+	public function rest_get_hero_info( $object, $field_name, $request ) {
+		switch ( $field_name ) {
+			case 'url':
+				// Use the featured video url if it exists
+				if ( $video_url = get_post_meta( $object[ 'id' ], 'sa_featured_video_url', true ) ) {
+					$value = $video_url;
+				// Then try the featured image.
+				} elseif ( $featured_image_id = get_post_thumbnail_id( $object[ 'id' ] ) ) {
+					$value = wp_get_attachment_url( $featured_image_id, 'feature-front' );
+				// All else fails, use the fallback
+				} else {
+					$value = sa_get_advo_target_fallback_image_for_post( $object[ 'id' ], 'feature-front', '', 'src' );
+				}
+				break;
+			case 'lat' : // Check this
+				$value = get_post_meta( $object[ 'id' ], 'sa_success_story_latitude', true );
+			break;
+			case 'lon' : //// Check this
+				$value = get_post_meta( $object[ 'id' ], 'sa_success_story_longitude', true );
+			break;
+			default:
+				$value = '';
+				break;
+		}
+
+	    return $value;
 	}
 
 } //End class CC_SA_Policies_CPT_Tax

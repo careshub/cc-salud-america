@@ -431,16 +431,16 @@ $sa_term_intros_cpt_tax = new CC_SA_Term_Intros_CPT_Tax();
  *
  * @return string html for image output
  */
-function sa_get_advo_target_fallback_image_for_post( $post_id = 0, $size = 'feature-front-sub', $class = 'alignleft' ) {
+function sa_get_advo_target_fallback_image_for_post( $post_id = 0, $size = 'feature-front-sub', $class = 'alignleft', $return = 'html' ) {
 	if ( empty( $post_id ) ) {
 		$post_id = get_the_ID();
 	}
     $terms = get_the_terms( $post_id, 'sa_advocacy_targets' );
 
 	if ( ! empty( $terms ) ) {
-		$retval = sa_get_advo_target_fallback_image( current( $terms ), $size, $class );
+		$retval = sa_get_advo_target_fallback_image( current( $terms ), $size, $class, $return );
 	} else {
-		$retval = sa_get_advo_target_fallback_image( '', $size, $class );
+		$retval = sa_get_advo_target_fallback_image( '', $size, $class, $return );
 	}
 
     return $retval;
@@ -452,10 +452,13 @@ function sa_get_advo_target_fallback_image_for_post( $post_id = 0, $size = 'feat
  * @param object $term WP Taxonomy Term object.
  * @param string $size One of the WP-defined sizes.
  * @param string $class Classes to include in output html.
+ * @param string $return  Whether to return the img element or the image src
  *
  * @return string html for image output
  */
-function sa_get_advo_target_fallback_image( $term, $size = 'feature-front-sub', $class = 'alignleft' ) {
+function sa_get_advo_target_fallback_image( $term, $size = 'feature-front-sub', $class = 'alignleft', $return = 'html' ) {
+	$retval = '';
+
 	if ( empty( $term ) ) {
 		// We'll grab one at random.
 		$args = array(
@@ -488,10 +491,18 @@ function sa_get_advo_target_fallback_image( $term, $size = 'feature-front-sub', 
 
 	// Get the html:
 	if ( ! empty( $fallback_image_post_id ) ) {
-		$args = array( 'class' => "attachment-{$size} {$class} wp-post-image" );
 
-        // If there's no video, we use the fullsize fallback image for the term.
-        $retval = wp_get_attachment_image( $fallback_image_post_id, $size, false, $args );
+		if ( 'src' == $return ) {
+			$src = wp_get_attachment_image_src( $fallback_image_post_id, $size );
+			if ( isset( $src[0] ) ) {
+				$retval = $src[0];
+			}
+		} else {
+			$args = array( 'class' => "attachment-{$size} {$class} wp-post-image" );
+
+	        // If there's no video, we use the fullsize fallback image for the term.
+	        $retval = wp_get_attachment_image( $fallback_image_post_id, $size, false, $args );
+	    }
     }
 
     return $retval;
