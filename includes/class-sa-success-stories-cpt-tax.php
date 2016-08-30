@@ -253,11 +253,11 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 		<input type="text" id="sa_featured_video_url" name="sa_featured_video_url" value="<?php echo esc_attr( $value); ?>" size="75" /><br />
 		<em>e.g.: http://www.youtube.com/watch?v=UueU0-EFido</em>
 
-		<!--****ADDED BY MIKE B.*********-->
 		<label for="sa_success_story_location" class="description"><h4>Location</h4>
 			<em>e.g.: Houston, Texas</em></label><br />
-		<input type="text" id="sa_success_story_location" name="sa_success_story_location" value="<?php echo esc_attr( $locvalue); ?>" size="75" />	<input type="button" id="sa_success_story_save_location" value="Verify Location" /> <img id="sa_success_story_save_location_check" src="/wp-content/uploads/2013/12/greencheck.png" style="vertical-align:middle;" />
-		<input type="hidden" id="sa_success_story_latitude" name="sa_success_story_latitude" value="<?php echo esc_attr( $latvalue); ?>" /><input type="hidden" id="sa_success_story_longitude" name="sa_success_story_longitude" value="<?php echo esc_attr( $longvalue); ?>" />
+		<input type="text" id="sa_success_story_location" name="sa_success_story_location" value="<?php echo esc_attr( $locvalue); ?>" size="75" style="max-width:75%" />	<input type="button" id="sa_success_story_verify_location" value="Verify Location" /> <img id="sa_success_story_working_location_check" src="<?php echo sa_get_plugin_base_uri(); ?>public/images/ajax-loader.gif" style="vertical-align:middle; display:none;" /><img id="sa_success_story_save_location_check" src="<?php echo sa_get_plugin_base_uri(); ?>public/images/checkmark.png" style="vertical-align:middle; display:none;" />
+		<input type="hidden" id="sa_success_story_latitude" name="sa_success_story_latitude" value="<?php echo esc_attr( $latvalue); ?>" />
+		<input type="hidden" id="sa_success_story_longitude" name="sa_success_story_longitude" value="<?php echo esc_attr( $longvalue); ?>" />
 
 		<label for="sa_success_story_pdf" class="description"><h4>Attach the PDF version of this story</h4></label>
 		<input id="sa_success_story_pdf" type="file" name="sa_success_story_pdf" value="" size="25" />
@@ -289,8 +289,9 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 				var data = {
 					action: 'delete_success_story_pdf',
 					post_attachment_to_delete: <?php echo $post->ID; ?>,
-					security: '<?php echo wp_create_nonce( 'delete_attached_pdf' ); ?>'
+					security: "<?php echo wp_create_nonce( 'delete_attached_pdf' ); ?>"
 				};
+
 
 				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				$("#delete_attached_pdf").click(function(evt) {
@@ -306,34 +307,31 @@ class CC_SA_Success_Stories_CPT_Tax extends CC_Salud_America {
 						);
 				});
 
-
-				//*******ADDED BY MIKE B.****************
 				$("#sa_success_story_save_location_check").hide();
-				$("#sa_success_story_save_location").click(function() {
-					var geogterm = jQuery("#sa_success_story_location").val();
-					var dataString = 'geogstr=' + geogterm;
+				$("#sa_success_story_verify_location").click(function() {
+					$("#sa_success_story_save_location_check").hide();
+					$("#sa_success_story_working_location_check").show();
 
-					 $.ajax
-						 ({
-						   type: "POST",
-						   url: "http://www.communitycommons.org/wp-content/themes/CommonsRetheme/ajax/getlatlong.php",
-						   data: dataString,
-						   cache: false,
-						   error: function() {
-							 alert("Could not compute a latitude/longitude for this location. Please modify your location.");
-						   },
-						   success: function(k)
-						   {
-							 //alert(k);
-							 var coord = $.parseJSON(k);
-							 $("#sa_success_story_latitude").val(coord.latitude);
-							 $("#sa_success_story_longitude").val(coord.longitude);
-							 $("#sa_success_story_save_location_check").show();
-						   }
-						 });
+					$.ajax({
+						url: ajaxurl,
+						data: {
+							action: "get_lat_long",
+							location: $("#sa_success_story_location").val(),
+							_ajax_nonce: "<?php echo wp_create_nonce( 'get_lat_long_for_user_' . get_current_user_id() ); ?>"
+						},
+						cache: false,
+						error: function() {
+							alert("Could not compute a latitude/longitude for this location. Please modify your location.");
+							$("#sa_success_story_working_location_check").hide();
+						},
+						success: function(k) {
+							$("#sa_success_story_latitude").val(k.latitude);
+							$("#sa_success_story_longitude").val(k.longitude);
+							$("#sa_success_story_working_location_check").hide();
+							$("#sa_success_story_save_location_check").show();
+						}
+					});
 				});
-
-
 			});
 		</script>
 <?php
