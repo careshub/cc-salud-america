@@ -27,6 +27,8 @@ function sa_report_card() {
 	 */
 	$geoid = isset( $_GET['geoid'] ) ? $_GET['geoid'] : '';
 	if (strlen($geoid) != 12 || preg_match('/^05000US\d{5}/i', $geoid) == 0) $geoid = '';
+  
+  $image_url = plugins_url('images/report-card/', dirname(__FILE__));
 	?>
 	<div class="content-row clear">
 		<?php
@@ -35,10 +37,17 @@ function sa_report_card() {
 
 			<h2 class="screamer sablue no-top-margin">See How Your Area Stacks Up in Obesity, Food Access, Physical Activity &amp; Equity</h2>
 
-			<p>
+    <div style="float: right; font-size: 12px; font-style: italic; margin-left: 10px;">
+        <a href="?geoid=05000US08031" title="See a sample Report Card">
+          <img src="<?php echo $image_url?>sample-report.png" height="100" /><br />
+        See a sample Report Card!</a>
+    </div>
+        <p >
 				The <em>Salud America!</em> Salud Report Card highlights health issues in your county (vs. state + nation) with data, policy solutions, research,
 				and stories so you can start and support healthy changes for Latino kids.
-			</p>
+        </p>
+
+    <div style="clear:both"></div>
 
 			<div id="sa-report-selection" class="report-control-header clear">
 				<h3 class="screamer sagreen">Create a report for your area</h3>
@@ -103,7 +112,6 @@ function sa_report_card() {
 		else:
 			// Generate the report.
 			$group_url = bp_get_group_permalink();
-			$image_url = plugins_url('images/report-card/', dirname(__FILE__));
 			$plugin_base_url = sa_get_plugin_base_uri();
 
 			// Fetch big bet terms.
