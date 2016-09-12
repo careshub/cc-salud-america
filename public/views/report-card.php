@@ -162,7 +162,8 @@ function sa_report_card() {
 			}
 		</style>
 		<div id="sa-report-action-top" class="sa-report-action">
-			<input type="button" class="button sa-report-export" id="sa-report-export-top" value="Export Report to PDF" />
+      <input type="button" class="button"  value="Email Report" onclick="document.location='mailto:<?php echo $mail_to ?>';" />
+      <input type="button" class="button sa-report-export" id="sa-report-export-top" value="Export Report to PDF" />
 			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
 				<input type="button" class="button sa-report-save" id="sa-report-save-top" value="Save Report to My Library" />
 			<?php endif; ?>
@@ -655,7 +656,8 @@ function sa_report_card() {
 		</div>
 		<hr />
 		<div id="sa-report-action" class="sa-report-action">
-			<input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
+      <input type="button" class="button"  value="Email Report" onclick="document.location='mailto:<?php echo $mail_to ?>';" />
+      <input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
 			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
 				<input type="button" class="button sa-report-save" id="sa-report-save" value="Save Report to My Library" />
 			<?php endif; ?>
