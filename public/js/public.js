@@ -209,6 +209,14 @@
             if (geoid !== "") {
                 _kmq.push(['record', 'opened a salud report card', { 'geoid': geoid }]);
             }
+
+            // KISS tracking for clicking various links on the report card
+            $.each([".big-bet-icon-link", ".learn-more-link", ".salud-report-card-link"], function (i, v) {
+                $(v).on("click", function () {
+                    //console.log($(this).attr("title"));
+                    _kmq.push(['record', 'clicked link on salud report card', { 'geoid': geoid, 'link': $(this).attr("title") }]);
+                });
+            });
         }
 
 	    // Handle state-list selection for report card

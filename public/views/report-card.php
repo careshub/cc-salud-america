@@ -38,7 +38,7 @@ function sa_report_card() {
 			<h2 class="screamer sablue no-top-margin">See How Your Area Stacks Up in Obesity, Food Access, Physical Activity &amp; Equity</h2>
 
     <div style="float: right; font-size: 12px; font-style: italic; margin-left: 10px;">
-        <a href="?geoid=05000US08031" title="See a sample Report Card">
+        <a href="?geoid=05000US08031" class="salud-report-card-link" title="See a sample Report Card">
           <img src="<?php echo $image_url?>sample-report.png" height="100" /><br />
         See a sample Report Card!</a>
     </div>
@@ -154,7 +154,7 @@ function sa_report_card() {
 			}
 		</style>
 		<div id="sa-report-action-top" class="sa-report-action">
-      <input type="button" class="button"  value="Email Report" onclick="document.location='mailto:<?php echo $mail_to ?>';" />
+      <input type="button" class="button salud-report-card-link"  value="Email Report" onclick="document.location='mailto:<?php echo $mail_to ?>';" title="Email it"/>
       <input type="button" class="button sa-report-export" id="sa-report-export-top" value="Export Report to PDF" />
 			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
 				<input type="button" class="button sa-report-save" id="sa-report-save-top" value="Save Report to My Library" />
@@ -212,13 +212,13 @@ function sa_report_card() {
 			 <div id="obesity-page">
 				<table class="sa-report-page-header sa-background-darkgray"><tr>
 					<td class="sa-img">
-					 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight" title="Link to Big Bet archive: Healthy Weight">
+					 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight" class="salud-report-card-link" title="Link to Big Bet archive: Healthy Weight">
 					 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-healthy-weight-112x150.png' ?>" alt="Icon for Big Bet: Healthier Weight" class="big-bet-icon" /></a>
 					</td>
 					<td class="sa-page-title">
 						<div class="sa-report-font-4">Obesity</div>
 						<p>More U.S. Latino kids are obese by age 5 than whites, due to maternal obesity, less breastfeeding, and workplace/childcare issues.</p>
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank" class="learn-more-link">
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank" class="learn-more-link" title="Learn more about obesity">
 						Learn More</a>
 					</td>
 					   </tr>
@@ -256,21 +256,22 @@ function sa_report_card() {
 
 				 <div class="w3-row">
 					   <div class="w3-third sa-col-end sa-col-media center-align">
-						<a href="https://youtu.be/3yFOgZ2ku6k" target="_blank" class="center-align">
+						<a href="https://youtu.be/3yFOgZ2ku6k" target="_blank" class="center-align salud-report-card-link" title="Policy solutions: obesity">
 							<img src="<?php echo $image_url?>icon-policy.png" height="52" /><br />
 							<p class="sa-report-font-2">Policy<br />Solutions</p>
 							<p><img src="<?php echo $image_url?>obesity-policy.jpg" /></p>
 						</a>
 						</div>
 						<div class="w3-third sa-col-middle sa-col-media center-align">
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank" class="center-align">
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-healthy-weight/" target="_blank" class="center-align salud-report-card-link" title="Research and infographics: obesity">
 							<img src="<?php echo $image_url?>icon-research.png" height="52"  /><br />
 							<p class="sa-report-font-2">Research <br />and Infographics</p>
 							<p><img src="<?php echo $image_url?>obesity-research.jpg" /></p>
 						</a>
 						</div>
 						<div class="w3-third sa-col-end sa-col-media center-align">
-						<a  class="center-align" href="<?php echo sa_get_section_permalink( 'heroes' ); ?>baby-cafe-opens-to-bring-breastfeeding-peer-counselors-to-san-antonio-mothers/" target="_blank">
+						<a  href="<?php echo sa_get_section_permalink( 'heroes' ); ?>baby-cafe-opens-to-bring-breastfeeding-peer-counselors-to-san-antonio-mothers/"
+            target="_blank" class="center-align salud-report-card-link" title="Salud heroes: obesity">
 							<img src="<?php echo $image_url?>icon-stories.png" height="52"  /><br />
 							<p class="sa-report-font-2">Salud Heroes: How to Start a Baby Cafe</p>
 							<p><img src="<?php echo $image_url?>obesity-stories.jpg" /></p>
@@ -284,15 +285,15 @@ function sa_report_card() {
 			 <div id="food-access-page">
 				<table class="sa-report-page-header sa-background-darkgray"><tr>
 				<td class="sa-img">
-				 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods" title="Link to Big Bet archive: Better Food in Neighborhoods">
+				 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods" class="salud-report-card-link" title="Link to Big Bet archive: Better Food in Neighborhoods">
 				 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-better-food-in-neighborhoods-112x150.png' ?>" alt="Icon for Big Bet: Better Food in the Neighborhood" class="big-bet-icon" /></a>
-				 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-sugary-drinks" title="Link to Big Bet archive: Sugary Drinks">
+				 <a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-sugary-drinks" class="salud-report-card-link" title="Link to Big Bet archive: Sugary Drinks">
 				 <img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-sugary-drinks-112x150.png' ?>" alt="Icon for Big Bet: Sugary Drinks" class="big-bet-icon" /></a>
 				</td>
 				<td class="sa-page-title">
 					<div class="sa-report-font-4">Food Access</div>
 					<p>U.S. Latino kids face unhealthy neighborhood food environments with fewer grocery stores and more fast food.</p>
-					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank" class="learn-more-link">
+					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank" class="learn-more-link" title="Learn more about food access">
 						Learn More</a>
 				</td>
 				   </tr>
@@ -342,21 +343,21 @@ function sa_report_card() {
 
 			 <div class="w3-row">
 				 <div class="w3-third sa-col-end sa-col-media center-align">
-						<a href="https://youtu.be/WLoZrkIAZT8" target="_blank">
+						<a href="https://youtu.be/WLoZrkIAZT8" target="_blank" class="salud-report-card-link" title="Policy solutions: food access">
 						<img src="<?php echo $image_url?>icon-policy.png" height="52" /><br />
 						<p class="sa-report-font-2">Policy<br />Solutions</p>
 						<p><img src="<?php echo $image_url?>food-policy.jpg" /></p>
 						</a>
 				 </div>
 				 <div class="w3-third sa-col-middle sa-col-media center-align">
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank">
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-better-food-in-neighborhoods/" target="_blank"  class="salud-report-card-link" title="Research and infographics: food access">
 						<img src="<?php echo $image_url?>icon-research.png" height="52" /><br />
 						<p class="sa-report-font-2">Research <br />and Infographics</p>
 						<p><img src="<?php echo $image_url?>food-research.jpg" /></p>
 						</a>
 				 </div>
 				 <div class="w3-third sa-col-end sa-col-media center-align">
-						<a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>dignowity-hill-farmers-market/" target="_blank">
+						<a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>dignowity-hill-farmers-market/" target="_blank" class="salud-report-card-link" title="Salud heroes: food access">
 						<img src="<?php echo $image_url?>icon-stories.png" height="52" /><br />
 						<p class="sa-report-font-2">Salud Heroes: How to Start a Farmers Market</p>
 						<p><img src="<?php echo $image_url?>food-stories.jpg" /></p>
@@ -370,13 +371,13 @@ function sa_report_card() {
 			 <div id="physical-activity-issues-page">
 				<table class="sa-report-page-header sa-background-darkgray"><tr>
 					<td class="sa-img">
-					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces" title="Link to Big Bet archive: Active Spaces">
+					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces" class="salud-report-card-link" title="Link to Big Bet archive: Active Spaces">
 					<img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-active-spaces-112x150.png' ?>" alt="Icon for Big Bet: Active Spaces" class="big-bet-icon" /></a>
 					</td>
 					<td class="sa-page-title">
 						<div class="sa-report-font-4">Physical Activity Issues</div>
 						<p>Latino children and adults face less access to recreational facilities and lower activity rates. </p>
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank" class="learn-more-link">Learn More</a>
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank" class="learn-more-link" title="Learn more about physical activity issues">Learn More</a>
 					</td>
 					   </tr>
 				</table>
@@ -417,21 +418,22 @@ function sa_report_card() {
 
 					  <div class="w3-row">
 					 <div class="w3-third sa-col-end sa-col-media center-align">
-							<a href="https://youtu.be/CJfaMmsCzNo" target="_blank">
+							<a href="https://youtu.be/CJfaMmsCzNo" target="_blank" class="salud-report-card-link" title="Policy solutions: physical activity issues">
 							<img src="<?php echo $image_url?>icon-policy.png" height="52" /><br />
 							<p class="sa-report-font-2">Policy<br />Solutions</p>
 							<p><img src="<?php echo $image_url?>physical-policy.jpg" /></p>
 							</a>
 					</div>
 					 <div class="w3-third sa-col-middle sa-col-media center-align">
-							<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank">
+							<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-active-spaces/" target="_blank" class="salud-report-card-link" title="Research and infographics: physical activity issues">
 							<img src="<?php echo $image_url?>icon-research.png" height="52" /><br />
 							<p class="sa-report-font-2">Research <br />and Infographics</p>
 							<p><img src="<?php echo $image_url?>physical-research.jpg" /></p>
 							</a>
 					</div>
 					<div class="w3-third sa-col-end sa-col-media center-align">
-							<a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>move-el-paso-walking-trails-encourage-local-residents-to-get-up-get-walking/" target="_blank">
+							<a href="<?php echo sa_get_section_permalink( 'heroes' ); ?>move-el-paso-walking-trails-encourage-local-residents-to-get-up-get-walking/" target="_blank" 
+              class="salud-report-card-link" title="Salud heroes: physical activity issues">
 							<img src="<?php echo $image_url?>icon-stories.png" height="52" /><br />
 							<p class="sa-report-font-2">Salud Heroes: How to Start Local Trails</p>
 							<p><img src="<?php echo $image_url?>physical-stories.jpg" /></p>
@@ -446,13 +448,13 @@ function sa_report_card() {
 			 <div id="health-equity-page">
 				<table class="sa-report-page-header sa-background-darkgray"><tr>
 					<td class="sa-img">
-					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity" title="Link to Big Bet archive: Health Equity">
+					<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity" class="salud-report-card-link" title="Link to Big Bet archive: Health Equity">
 					<img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/sa-health-equity-112x150.png' ?>" alt="Icon for Big Bet: Health Equity" class="big-bet-icon" /></a>
 					</td>
 					<td class="sa-page-title">
 						<div class="sa-report-font-4">Health Equity</div>
 						<p>Latino families face inequities in educational attainment, income, residential segregation, access to care, and more.</p>
-						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity/" target="_blank" class="learn-more-link">Learn More</a>
+						<a href="<?php echo sa_get_section_permalink( 'big-bets' ); ?>sa-health-equity/" target="_blank" class="learn-more-link" title="Learn more about health equity">Learn More</a>
 					</td>
 					   </tr>
 				</table>
@@ -597,19 +599,23 @@ function sa_report_card() {
 					<div><img src="<?php echo $image_url?>icon-share.png" width="35" /> Share This Report!</div>
 				</div>
 				<div class="sa-report-font-2">
-					<a href="mailto:<?php echo $mail_to ?>">Email this report to colleagues</a>;
-					share it to start discussions on <a href="http://www.facebook.com/sharer.php?t=<?php echo $share_title ?>&u=<?php echo $share_url ?>" target="_blank">Facebook</a> and
-					<a href="http://twitter.com/share?text=<?php echo $share_title_twitter ?>&url=<?php echo $share_url ?>" target="_blank">Twitter</a>, or at the PTA, etc.;
+					<a href="mailto:<?php echo $mail_to ?>" class="salud-report-card-link" title="Email it">Email this report to colleagues</a>;
+					share it to start discussions on <a href="http://www.facebook.com/sharer.php?t=<?php echo $share_title ?>&u=<?php echo $share_url ?>" 
+          class="salud-report-card-link" title="Share on Facebook" target="_blank">Facebook</a> and
+					<a href="http://twitter.com/share?text=<?php echo $share_title_twitter ?>&url=<?php echo $share_url ?>" class="salud-report-card-link" 
+          title="Share on Twitter" target="_blank">Twitter</a>, or at the PTA, etc.;
 					and bring it to city/school leaders to spur change.</div>
 				 <div class="sa-report-spacing1"></div>
 				<div class="center-align sa-report-font-large sa-text-orange"><p>Start (or Support) a Change!</p></div>
 					  <div class="sa-list">
-						<p  class="sa-report-font-2">1. <a href="<?php echo $group_url; ?>report-card/share-your-story/" target="_blank">Start a change and share it with us</a>.
+						<p  class="sa-report-font-2">1. <a href="<?php echo $group_url; ?>report-card/share-your-story/" class="salud-report-card-link" 
+            title="Share your story" target="_blank">Start a change and share it with us</a>.
 					We might write it up, film it, promote it nationally, and move you from Leader to Hero!</p>
-						<p class="sa-report-font-2">2. <a href="http://maps.communitycommons.org/policymap/?bbox=<?php echo $vulnerable_population_page->bbox ?>" target="_blank">
+						<p class="sa-report-font-2">2. <a href="http://maps.communitycommons.org/policymap/?bbox=<?php echo $vulnerable_population_page->bbox ?>" 
+            class="salud-report-card-link" title="Use policy map" target="_blank">
 					Use our map</a> to connect with Salud Leaders who you can ask to support your change, or find changes you can support!</p>
 						<p class="sa-report-font-2">3. Gather support from others by
-							<a href="<?php echo $group_url ?>forum/" target="_blank">starting your own forum for discussion on the SA! Hub</a>.</p>
+							<a href="<?php echo $group_url ?>forum/" class="salud-report-card-link" title="Start a forum" target="_blank">starting your own forum for discussion on the SA! Hub</a>.</p>
 					</div>
 				<p></p>
 				<div class="center-align sa-report-font-3"><p>Need more data first?</p></div>
@@ -648,7 +654,7 @@ function sa_report_card() {
 		</div>
 		<hr />
 		<div id="sa-report-action" class="sa-report-action">
-      <input type="button" class="button"  value="Email Report" onclick="document.location='mailto:<?php echo $mail_to ?>';" />
+      <input type="button" class="button salud-report-card-link"  value="Email Report" onclick="document.location='mailto:<?php echo $mail_to ?>';" title="Email it"/>
       <input type="button" class="button sa-report-export" id="sa-report-export" value="Export Report to PDF" />
 			<?php if ( current_user_can( 'bp_docs_associate_with_group', sa_get_group_id() ) ) : ?>
 				<input type="button" class="button sa-report-save" id="sa-report-save" value="Save Report to My Library" />
