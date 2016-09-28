@@ -1,1 +1,5 @@
 node_modules/**
+public/website.publishproj
+*.publishproj
+App_Data/PublishProfiles/cc-prod.pubxml
+*.pubxml

@@ -214,7 +214,7 @@
             $.each([".big-bet-icon-link", ".learn-more-link", ".salud-report-card-link"], function (i, v) {
                 $(v).on("click", function () {
                     //console.log($(this).attr("title"));
-                    _kmq.push(['record', 'clicked link on salud report card', { 'geoid': geoid, 'link': $(this).attr("title") }]);
+                    _kmq.push(['record', 'clicked link on salud report card: ' + $(this).attr("title"), { 'geoid': geoid}]);
                 });
             });
         }
