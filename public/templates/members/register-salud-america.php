@@ -192,7 +192,7 @@
 					}
 
 					// Now we remove the fields we want to include from the exclude list.
-					    $location = get_site_url();
+					    $location = get_site_url( null, '', 'http' );
 					    switch ( $location ) {
 					        case 'http://commonsdev.local':
 					            $include_fields = array(

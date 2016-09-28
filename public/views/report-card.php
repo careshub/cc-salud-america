@@ -27,7 +27,7 @@ function sa_report_card() {
 	 */
 	$geoid = isset( $_GET['geoid'] ) ? $_GET['geoid'] : '';
 	if (strlen($geoid) != 12 || preg_match('/^05000US\d{5}/i', $geoid) == 0) $geoid = '';
-  
+
   $image_url = plugins_url('images/report-card/', dirname(__FILE__));
 	?>
 	<div class="content-row clear">
@@ -83,7 +83,7 @@ function sa_report_card() {
 			<p><strong>You know the issues...now start a change!</strong></p>
 			<p>Want to solve one of these health issues?</p>
 			<p>
-			<a href="http://www.communitycommons.org/groups/salud-america">Log in to our website</a> and use our research, which suggests lots of achievable healthy changes,
+			<a href="<?php echo sa_get_group_permalink(); ?>">Log in to our website</a> and use our research, which suggests lots of achievable healthy changes,
 			or our many posts about policy changes happening now. Or follow the footsteps of Salud Heroes and how they made change, like opening locked playgrounds after school hours!
 			</p>
 			<p><strong>Get help</strong></p>
@@ -620,16 +620,16 @@ function sa_report_card() {
 				<p></p>
 				<div class="center-align sa-report-font-3"><p>Need more data first?</p></div>
 				<p>Email our <i>Salud America!</i> digital curators,
-					<a href="http://www.communitycommons.org/members/amfitness/profile/" target="_blank">Amanda</a>,
-					<a href="http://www.communitycommons.org/members/lveraza/profile/" target="_blank">Lisa</a> and
-					<a href="http://www.communitycommons.org/members/ericmoreno77/profile/" target="_blank">Eric</a>,
+					<a href="<?php echo bp_core_get_userlink( bp_core_get_userid( 'amfitness' ), false, true ); ?>" target="_blank">Amanda</a>,
+					<a href="<?php echo bp_core_get_userlink( bp_core_get_userid( 'lveraza' ), false, true ); ?>" target="_blank">Lisa</a> and
+					<a href="<?php echo bp_core_get_userlink( bp_core_get_userid( 'ericmoreno77' ), false, true ); ?>" target="_blank">Eric</a>,
 					who can answer questions and help you access information, data and maps on many other topics.
 				</p>
 				<div id="sa-reference">
 					<p><b>References</b></p>
 					<p>Note: Data in this Salud Report Card was selected by <i>Salud America!</i> curators from several data and mapping tools
 						available on the Community Commons website, including the
-						<a href="http://www.communitycommons.org/chna/" target="_blank">Community Health Needs Assessment</a>
+						<a href="<?php echo get_site_url( null, 'chna' ); ?>" target="_blank">Community Health Needs Assessment</a>
 						and the <a href="http://assessment.communitycommons.org/Footprint/" target="_blank">Vulnerable Populations Footprint</a> tools.
 						Contact our curator team at <a href="mailto:saludamerica@uthscsa.edu">saludamerica@uthscsa.edu</a> for a full report or more tailored data.
 					</p>
