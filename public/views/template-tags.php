@@ -1057,7 +1057,7 @@ ob_start();
     <table style="font-size: 12px; font-family: Helvetica, Arial, sans-serif; background: #ffffff; margin-top: 2em; margin-bottom: 2em;" border="0" width="700" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff">
       <tbody>
         <tr>
-          <td><a style="text-decoration: none;" href="%blog_url%" target="_blank"><img style="width: 65%; max-width: 720px;" src="http://www.communitycommons.org/wp-content/themes/CommonsRetheme/img/cc_logo_horizontal_org.png" alt="" align="middle" /></a></td>
+          <td><a style="text-decoration: none;" href="%blog_url%" target="_blank"><img style="width: 65%; max-width: 720px;" src="<?php echo get_stylesheet_directory_uri(); ?>/img/cc_logo_horizontal_org.png" alt="" align="middle" /></a></td>
         </tr>
         <tr>
           <td style="padding: 12px 30px; border-bottom: 4px solid #f5f5f5; color: #444444;">
@@ -1066,14 +1066,14 @@ ob_start();
         </tr>
         <tr>
           <td style="padding: 12px 30px; border-bottom: 4px solid #f5f5f5; color: #444444;">
-            <h4 style="font-size: 14px; font-weight: normal; line-height: 50px;"><img src="http://www.communitycommons.org/wp-content/plugins/cc-salud-america/public/images/SA-logox50.png" style="margin-right:1em;display:inline-block;vertical-align:middle;">Welcome to the <em>Salud America</em> hub!</h4>
+            <h4 style="font-size: 14px; font-weight: normal; line-height: 50px;"><img src="<?php echo sa_get_plugin_base_uri(); ?>/public/images/SA-logox50.png" style="margin-right:1em;display:inline-block;vertical-align:middle;">Welcome to the <em>Salud America</em> hub!</h4>
           </td>
         </tr>
         <tr>
           <td style="line-height: 19px; color: #111111; padding: 12px 30px; border-bottom: 4px solid #f5f5f5;">%content%</td>
         </tr>
         <tr>
-          <td style="color: #bbbbbb; padding: 12px 30px;"><img style="padding-top: 0px;" src="http://www.communitycommons.org/wp-content/themes/CommonsRetheme/img/cc_logomark-30x30.png" alt="Supporting collaboration through data, maps and stories." width="30" height="30" align="right" />
+          <td style="color: #bbbbbb; padding: 12px 30px;"><img style="padding-top: 0px;" src="<?php echo get_stylesheet_directory_uri(); ?>/img/cc_logomark-30x30.png" alt="Supporting collaboration through data, maps and stories." width="30" height="30" align="right" />
             <div style="padding-top: 8px; padding-bottom: 1px;">Email sent %date% @ %time%</div>
           </td>
         </tr>

@@ -720,7 +720,7 @@ class CC_Salud_America {
 			// We need to truck some data between fields, too.
 			// Backfill SA Location to CC Location (vis is only me)
 			// Backfill SA About Me to CC About Me (match vis)
-			$site = get_site_url();
+			$site = get_site_url( null, '', 'http' );
 		    switch ( $site ) {
 		        case 'http://commonsdev.local':
 		            $transfer_fields = array(
@@ -815,7 +815,7 @@ class CC_Salud_America {
 	 * @return int ID of the SA ZIP code field
 	 */
 	public function get_location_field_id() {
-		$site = get_site_url();
+		$site = get_site_url( null, '', 'http' );
 	    switch ( $site ) {
 	        case 'http://commonsdev.local':
 	            $field_id = 98;

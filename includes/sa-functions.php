@@ -20,7 +20,7 @@
  * @return  int The SA group ID
  */
 function sa_get_group_id(){
-    $location = get_site_url();
+    $location = get_site_url( null, '', 'http' );
     switch ( $location ) {
         case 'http://commonsdev.local':
             $group_id = 42;
@@ -946,7 +946,7 @@ function sa_get_most_recent_items_by_big_bet( $term_slug = '', $exclude_ids = ar
  * @return  int The field ID
  */
 function sa_get_location_xprofile_field_ids(){
-    $location = get_site_url();
+    $location = get_site_url( null, '', 'http' );
     switch ( $location ) {
         case 'http://commonsdev.local':
             $ids = array( 'optin' => 96, 'location' => 98 );
