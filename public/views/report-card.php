@@ -575,7 +575,7 @@ function sa_report_card() {
 					<div id="sa-vulnerable-map" class="w3-threequarter"><?php echo $vulnerable_population_page->map ?></div>
 					<div id="sa-vulnerable-sidebar" class="w3-rest">
 							<div id="sa-vulnerable-maplegend">
-								<p><b>Vulnerable Populations Footprint, ACS 2009-13</b></p>
+								<p><b>Vulnerable Populations Footprint</b> <sup>2</sup></p>
 								<div class="sa-vulnerable-map-legend"><span style="background: #A32A00; border: 1px solid #7F0400"></span>Above all thresholds (Footprint)</div>
 								<div class="sa-vulnerable-map-legend"><span style="background: #F09432; border: 1px solid #D17615"></span>Population living below poverty: >= 20%</div>
 								<div class="sa-vulnerable-map-legend"><span style="background: #9D6EBA; border: 1px solid #80509C"></span>Populaton with below high school attainment: >= 25%</div>
