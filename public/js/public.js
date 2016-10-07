@@ -277,8 +277,11 @@
             popupMsg("Converting report card to Adobe PDF format. Please wait...");
             popupCenter(550, 400);
 
+
+
             // compile html contents
             var htmContent = "<!DOCTYPE html><html><head>";
+            htmContent += '<meta charset="UTF-8" />';
 
             // add font and css files
             var hostname = location.protocol;
@@ -292,6 +295,13 @@
 
             // add report content
             var contentId = "sa-report-content";
+
+            // remove noscript blocks and replace img lazyload with original src
+            $("noscript").remove();
+            $('#' + contentId + ' img').each(function () {
+                $(this).attr("src", $(this).attr("data-lazy-src"));
+            });
+
             var reportContent = $("#"+contentId).html();
             reportContent = reportContent.replace(/src=("|')\//g, 'src="' + hostname);         // append hostname to any relative links
             htmContent += "</head><body class='custom-font-enabled'>" +
