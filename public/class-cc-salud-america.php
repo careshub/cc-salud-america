@@ -464,7 +464,7 @@ class CC_Salud_America {
 		} // end if
 
 		// Verify that the input is coming from the proper form
-		if( ! wp_verify_nonce( $_POST[ $nonce_value ], $nonce_name ) ) {
+		if ( ! isset( $_POST[ $nonce_value ] ) || ! wp_verify_nonce( $_POST[ $nonce_value ], $nonce_name ) ) {
 			return false;
 		} // end if
 

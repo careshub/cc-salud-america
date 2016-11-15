@@ -109,7 +109,9 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
         <footer class="entry-meta clear">
             <?php
             sa_post_terms_meta( $main_post_id, 'sapolicies' );
-            cc_the_policy_progress_tracker( $post_meta['sa_policystage'][0] );
+            if ( ! empty( $post_meta['sa_policystage'][0] ) ) {
+                cc_the_policy_progress_tracker( $post_meta['sa_policystage'][0] );
+            }
             edit_post_link( 'Edit This Post', '<span class="edit-link">', '</span>', $main_post_id );
             ?>
         </footer>

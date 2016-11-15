@@ -5,7 +5,8 @@
 $paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
 // Should we display the video archive?
 $archive_style = ( isset( $_GET['style'] ) && $_GET['style'] == 'videos'  ) ? 'videos' : '';
-
+$user_id = get_current_user_id();
+$is_sa_member = groups_is_user_member( $user_id, sa_get_group_id() );
 
 if ( sa_is_section_front() ) {
 
@@ -79,9 +80,8 @@ if ( sa_is_section_front() ) {
      } // END non-advocacy target version
     // Show the top section on the front page only.
 // Not the section front? OK, let's figure out what to display.
-} elseif ( sa_is_archive_taxonomy() ) {
+} elseif ( sa_is_archive_taxonomy() && $tax_term = sa_get_requested_tax_term() ) {
 
-    $tax_term = sa_get_requested_tax_term();
     // Special case: we're looking at an advocacy target
     if ( $tax_term->taxonomy == 'sa_advocacy_targets' ) {
         bp_get_template_part( 'groups/single/satermintros/advocacy-target' );

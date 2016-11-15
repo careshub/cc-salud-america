@@ -773,6 +773,7 @@ function sa_single_post_header_meta( $post_id = 0 ) {
             $location_meta = get_post_meta( $post_id, 'sa_success_story_location', true );
             $location = ( ! empty( $location_meta ) ) ? $location_meta : 'United States';
             $map_link = sa_get_policy_map_base_url( '?address=' . urlencode( $location ) );
+            $geo_id = '01000US';
         break;
         case 'sapolicies':
         case 'saresources':
@@ -798,11 +799,8 @@ function sa_single_post_header_meta( $post_id = 0 ) {
         </div>
         <div class="Grid-cell background-light-gray">
             <div class="inset-contents">
-                <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map." class="tiny-policymap-container"><?php /*<img src="<?php echo sa_get_plugin_base_uri() . 'public/images/policy_map_thumb_90x90.png' ; ?>"> */ ?>
-                    <?php /* ?> <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=base&w=90&h=90&geoid=<?php echo $geo_id; ?>" ></script><?php */ ?>
+                <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map." class="tiny-policymap-container">
                     <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=natgeo&w=90&h=90&maplink=0&buffer=<?php echo $buffer; ?>&geoid=<?php echo $geo_id; ?>" ></script>
-                  <?php /* ?> <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=imagery&w=90&h=90&geoid=<?php echo $geo_id; ?>" ></script>
-                    <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=ve&w=90&h=90&geoid=<?php echo $geo_id; ?>" ></script><?php */ ?>
                 </a>
                 <p><strong class="meta-action"><?php salud_the_location( $post_type ); ?></strong><br />
                 <span class="policy-header-meta">See all changes, resources, and Salud Heroes in <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map.">this area</a>!</span></p>

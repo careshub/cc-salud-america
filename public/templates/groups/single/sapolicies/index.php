@@ -77,9 +77,8 @@ if ( sa_is_section_front() ) {
     </div>
 <?php
 
-} elseif ( sa_is_archive_taxonomy() ) {
+} elseif ( sa_is_archive_taxonomy() && $tax_term = sa_get_requested_tax_term() ) {
 
-    $tax_term = sa_get_requested_tax_term();
     // Special case: Advocacy targets get a special introductory block
     if ( $tax_term->taxonomy == 'sa_advocacy_targets' ) {
         bp_get_template_part( 'groups/single/satermintros/advocacy-target' );

@@ -574,7 +574,7 @@ function sa_is_archive_taxonomy(){
                 'fields' => 'id=>slug'
              ) );
             // The advocacy target slug will be the action variable if we're looking at a term archive.
-            if ( ! empty( $action_variables ) && in_array( $action_variables[0], $terms ) ) {
+            if ( ! empty( $action_variables[0] ) && in_array( $action_variables[0], $terms ) ) {
                 $is_tax = true;
             }
         } else {
@@ -583,7 +583,7 @@ function sa_is_archive_taxonomy(){
             $taxonomy_names = get_object_taxonomies( $cpt );
 
             // If $action_variables is populated, and the first entry is the slug of a related taxonomy, this must be a taxonomy term filter.
-            if ( ! empty( $action_variables ) && in_array( $action_variables[0], $taxonomy_names ) ) {
+            if ( ! empty( $action_variables[0] ) && in_array( $action_variables[0], $taxonomy_names ) ) {
                 $is_tax = true;
             }
         }

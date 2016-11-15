@@ -493,16 +493,6 @@ class CC_SA_Policies_CPT_Tax extends CC_Salud_America {
 					}
 					?>
 				</select></p>
-				<!-- <input id="sa_finalgeog" value="<?php echo $selectedgeog; ?>" name="sa_finalgeog" />
-				<input id="sa_state-check" disabled="disabled" value="<?php echo $state; ?>" name="sa_finalgeog" /> -->
-				<!-- <div id="geography_coords">
-					<input id="sa_latitude" value="<?php echo $sa_latitude; ?>" name="sa_latitude">
-					<input id="sa_longitude" value="<?php echo $sa_longitude; ?>" name="sa_longitude">
-					<input id="sa_nelat" value="<?php echo $sa_nelat; ?>" name="sa_nelat">
-					<input id="sa_nelng" value="<?php echo $sa_nelng; ?>" name="sa_nelng">
-					<input id="sa_swlat" value="<?php echo $sa_swlat; ?>" name="sa_swlat">
-					<input id="sa_swlng" value="<?php echo $sa_swlng; ?>" name="sa_swlng">
-				</div> -->
 			</div>
 		</div>
 	</div>
