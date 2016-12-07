@@ -368,6 +368,8 @@ class CC_Salud_America {
 
 			// Scripts
 			wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'js/public.min.js', __FILE__ ), array( 'jquery', 'wp-util' ), self::VERSION );
+
+			wp_enqueue_script( $this->plugin_slug . '-intercept-survey-script', 'https://ethn.io/19447.js', array(), self::VERSION, true );
 		}
 
 	    if ( bp_is_register_page() && isset( $_GET['salud-america'] ) && $_GET['salud-america'] ) {
