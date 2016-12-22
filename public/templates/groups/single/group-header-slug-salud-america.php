@@ -5,6 +5,7 @@ $plugin_base_url = sa_get_plugin_base_uri();
 $big_bets_base_url = sa_get_section_permalink( 'big_bets' );
 $big_bets = get_terms( 'sa_advocacy_targets', array(
     'hide_empty' => 0,
+    'exclude'    => array( 74550, 74551, 74552 ),
  ) );
 ?>
 
