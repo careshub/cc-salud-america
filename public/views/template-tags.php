@@ -800,7 +800,7 @@ function sa_single_post_header_meta( $post_id = 0 ) {
         <div class="Grid-cell background-light-gray">
             <div class="inset-contents">
                 <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map." class="tiny-policymap-container">
-                    <script src="http://maps.communitycommons.org/jscripts/mapWidget.js?vr=natgeo&w=90&h=90&maplink=0&buffer=<?php echo $buffer; ?>&geoid=<?php echo $geo_id; ?>" ></script>
+                    <script src="//maps.communitycommons.org/jscripts/mapWidget.js?vr=natgeo&w=90&h=90&maplink=0&buffer=<?php echo $buffer; ?>&geoid=<?php echo $geo_id; ?>" ></script>
                 </a>
                 <p><strong class="meta-action"><?php salud_the_location( $post_type ); ?></strong><br />
                 <span class="policy-header-meta">See all changes, resources, and Salud Heroes in <a href="<?php echo $map_link; ?>" title="See recent changes, resources and Salud Hero stories on a map.">this area</a>!</span></p>
@@ -877,7 +877,7 @@ function sa_the_policy_map_widget( $hero_story_id = 0 ) {
     // base_map_widget_src
     echo '<div id="map-widget-container" class="sa-policy-map-widget"></div>';
     echo '<script type="text/javascript">
-            var base_map_widget_src = "http://maps.communitycommons.org/jscripts/mapWidget.js?interface=policymap' . $story_id_arg . '";
+            var base_map_widget_src = "//maps.communitycommons.org/jscripts/mapWidget.js?interface=policymap' . $story_id_arg . '";
         </script>';
 }
 

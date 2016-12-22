@@ -65,14 +65,14 @@ while ( $main_post->have_posts() ) : $main_post->the_post();
                     <h5 style="margin-bottom:0;">Area at a glance</h5>
                         <!-- Default dial -->
                         <div id="dial-779" class="dial-container">
-                            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=779'></script>
+                            <script src='//maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=779'></script>
                         </div>
                         <!-- Placeholders for other dials -->
                         <div id="dial-781" class="dial-container" style="display: none;">
-                            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=781'></script>
+                            <script src='//maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=781'></script>
                         </div>
                         <div id="dial-760" class="dial-container" style="display: none;">
-                            <script src='http://maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=760'></script>
+                            <script src='//maps.communitycommons.org/jscripts/dialWidget.js?geoid=<?php echo $geoid; ?>&id=760'></script>
                         </div>
                         <!-- Dial display controls -->
                         <input type="button" class="dial-controls" value="Poverty rate" data-indicator-id='779' />
