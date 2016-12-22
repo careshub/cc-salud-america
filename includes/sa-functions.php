@@ -26,17 +26,11 @@ function sa_get_group_id(){
             $group_id = 42;
             break;
         case 'http://dev.communitycommons.org':
-            $group_id = 42;
-            break;
         case 'http://staging.communitycommons.org':
-            $group_id = 583;
-            break;
         case 'http://www.communitycommons.org':
         case 'http://abydos.cares.missouri.edu':
-            $group_id = 678;
-            break;
         default:
-            $group_id = 42;
+            $group_id = 678;
             break;
     }
     return apply_filters( 'sa_get_group_id', $group_id );
