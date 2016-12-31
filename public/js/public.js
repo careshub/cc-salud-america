@@ -175,7 +175,7 @@
         });
 
 	    /**************** Report Card **********************/
-        var apiHost = "http://services.communitycommons.org/";
+        var apiHost = "https://services.communitycommons.org/";
 
         // ajax call to get geoid list
         var getGeoidList = function (api_param, callback) {

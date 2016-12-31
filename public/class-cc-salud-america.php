@@ -29,7 +29,7 @@ class CC_Salud_America {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.8.2.1';
+	const VERSION = '1.8.2.2';
 
 	/**
 	 *
@@ -1922,7 +1922,7 @@ class CC_Salud_America {
 			if ( ! empty( $long_lat ) ) {
 				$long_lat = explode( ',', $long_lat );
 
-				$api_url = "http://services.communitycommons.org/api-location/v1/geoid/050?lat={$long_lat[1]}&lon={$long_lat[0]}";
+				$api_url = "https://services.communitycommons.org/api-location/v1/geoid/050?lat={$long_lat[1]}&lon={$long_lat[0]}";
 				$geoid_resp = wp_remote_get( $api_url,  array( 'headers' => array( 'Accept' => 'application/json' ) ) );
 				$geoid = json_decode( wp_remote_retrieve_body( $geoid_resp ) );
 				$message_data['content'] = str_replace( '/groups/salud-america/report-card/', '/groups/salud-america/report-card/?geoid=' . $geoid, $message_data['content'] );

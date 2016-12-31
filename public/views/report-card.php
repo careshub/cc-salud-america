@@ -683,7 +683,7 @@ function console_log( $data ){
 
 // get json object from API service
 function sa_report_get_json($fips, $id='', $param = '', $api_name ='indicator'){
-	$api_url = 'http://services.communitycommons.org/api-report/v1/' . $api_name . '/Salud/';
+	$api_url = 'https://services.communitycommons.org/api-report/v1/' . $api_name . '/Salud/';
 	$api_url .= $id . '?area_type=county&area_ids=' . $fips . $param;
 	$result = file_get_contents($api_url);
 	return json_decode($result);
