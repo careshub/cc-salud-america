@@ -102,6 +102,7 @@ function sa_report_card() {
 			$big_bets_base_url = sa_get_section_permalink( 'big_bets' );
 			$big_bets = get_terms( 'sa_advocacy_targets', array(
 				'hide_empty' => 0,
+        'exclude'    => array( 74550, 74551, 74552 ),
 			 ) );
 
 			// get county FIPS code
@@ -201,7 +202,9 @@ function sa_report_card() {
 				<?php
 					foreach ( $big_bets as $term ) {
 						?>
-						<a href="<?php echo $big_bets_base_url . $term->slug; ?>" class="big-bet-icon-link" title="Link to Big Bet archive: <?php echo $term->name; ?>"><img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/' . $term->slug . '-112x150.png' ?>" alt="Icon for Big Bet: <?php echo $term->name; ?>" class="big-bet-icon" /></a>
+						<a href="<?php echo $big_bets_base_url . $term->slug; ?>" class="big-bet-icon-link" title="Link to Big Bet archive: 
+            <?php echo $term->name; ?>"><img src="<?php echo $plugin_base_url . 'public/images/big_bets/icons-with-titles/' . $term->slug . '-112x150.png' ?>" 
+            alt="Icon for Big Bet: <?php echo $term->name; ?>" class="big-bet-icon" /></a>
 						<?php
 					}
 				?>
