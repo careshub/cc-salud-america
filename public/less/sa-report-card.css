@@ -1,0 +1,416 @@
+﻿/*** Salud report card ***/
+.report-control-header {
+  font-size: 15.400000000000002px;
+  font-size: 1.1rem;
+}
+.report-control-header .screamer {
+  margin-top: 0;
+}
+.report-control-header .inset-contents {
+  margin: .6em;
+}
+#sa-report-selection {
+  margin: 20px 0;
+  background: #eee;
+  border-radius: 3px;
+}
+#sa-report-selection select {
+  margin-bottom: 10px;
+}
+#sa-report-selection div#select-county {
+  font-weight: 700;
+  line-height: 150%;
+  margin-bottom: 10px;
+}
+#sa-report-selection #county-list {
+  display: none;
+}
+#sa-report-selection #report-wait-message {
+  display: none;
+  color: #f00;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+#sa-report-content {
+  background-color: #fff;
+  margin: 0 auto;
+  font-family: inherit;
+}
+#sa-report-content th,
+#sa-report-content td {
+  font-size: 14px;
+  color: #333;
+  border: 0;
+}
+#sa-report-content table {
+  margin: 0;
+  border: 0;
+}
+#sa-report-content p {
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+#sa-report-content div {
+  line-height: 135%;
+  box-sizing: border-box;
+}
+#sa-report-content .page-break {
+  clear: both;
+  page-break-after: always;
+}
+#sa-report-content .float-left {
+  float: left;
+}
+#sa-report-content .float-right {
+  float: right;
+}
+#sa-report-content .right-align {
+  text-align: right;
+}
+#sa-report-content .center-align {
+  text-align: center;
+}
+#sa-report-content .sa-report-header {
+  border-bottom: 1px solid #aaa;
+  clear: both;
+  margin: 20px 0;
+  padding-top: 10px;
+}
+#sa-report-content .sa-text-orange {
+  color: #f48120;
+}
+#sa-report-content .sa-text-green {
+  color: #60b035;
+}
+#sa-report-content .sa-text-lime {
+  color: #72bf44;
+}
+#sa-report-content .sa-text-purple {
+  color: #92278f;
+}
+#sa-report-content .sa-text-pink {
+  color: #eb008b;
+}
+#sa-report-content .sa-text-capital {
+  text-transform: uppercase;
+}
+#sa-report-content .sa-text-bold {
+  font-weight: bold;
+}
+#sa-report-content .sa-report-title {
+  background-color: #f48120;
+  color: #fff;
+  text-align: center;
+  padding: 8px;
+  margin: 10px 0;
+}
+#sa-report-content .sa-report-font-large {
+  font-size: 40px;
+  font-weight: 700;
+}
+#sa-report-content .sa-report-font-2 {
+  font-size: 21px;
+}
+#sa-report-content .sa-report-font-3 {
+  font-size: 30px;
+  font-weight: 600;
+}
+#sa-report-content .sa-report-font-4 {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 100%;
+}
+#sa-report-content .sa-report-icons img {
+  height: 30px;
+  vertical-align: middle;
+  margin-left: 20px;
+}
+#sa-report-content .sa-report-changes img {
+  width: 80px;
+  margin: 50px 10px 0 10px;
+}
+#sa-report-content .sa-report-page-header {
+  margin: 20px 0;
+}
+#sa-report-content .sa-report-page-header p {
+  font-size: 14px;
+}
+#sa-report-content .sa-report-page-header div,
+#sa-report-content .sa-report-page-header p {
+  color: #fff;
+}
+#sa-report-content .sa-report-page-header a.learn-more-link {
+  background-color: #fdb913;
+  /* Old browsers */
+  background: -webkit-gradient(linear, left top, left bottom, from(#fdb913), to(#f48120));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #fdb913, #f48120);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, #fdb913, #f48120);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, #fdb913, #f48120);
+  /* IE10+ */
+  background: -o-linear-gradient(top, #fdb913, #f48120);
+  /* Opera 11.10+ */
+  background: linear-gradient(to bottom, #fdb913, #f48120);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdb913', endColorstr='#f48120', GradientType=0);
+  /* IE6-9 */
+  border: 1px solid #fdb913;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  color: #ffffff;
+  font-size: 14px;
+  font-size: 1rem;
+  padding: .3em .6em;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
+  line-height: 1.6;
+  display: inline-block;
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.4);
+  transition: all .2s;
+}
+#sa-report-content .sa-report-page-header a.learn-more-link:hover {
+  color: #ffffff;
+  box-shadow: 0px 1px 5px rgba(253, 185, 19, 0.8);
+  background-position: 100px;
+}
+#sa-report-content .sa-report-page-header a.learn-more-link:visited {
+  color: #ffffff;
+}
+#sa-report-content .sa-background-darkgray {
+  height: 130px;
+  color: #fff;
+  background: #808080;
+}
+#sa-report-content .sa-img {
+  padding: 10px;
+  width: 90px;
+}
+#sa-report-content .sa-img img {
+  width: 80px;
+  margin-right: 10px;
+}
+#sa-report-content .sa-background-darkgray a img {
+  max-width: 110px;
+}
+#sa-report-content .sa-page-title {
+  margin-top: -10px;
+}
+#sa-report-content .sa-report-spacing1,
+#sa-report-content .sa-report-spacing2 {
+  clear: both;
+  display: inline-block;
+}
+#sa-report-content .sa-report-spacing1 {
+  margin: 10px 0;
+}
+#sa-report-content .sa-report-spacing2 {
+  margin: 20px 0;
+}
+#sa-report-content .sa-report-indicator-title {
+  text-decoration: underline;
+  font-weight: 700;
+  font-size: 18px;
+}
+#sa-report-content .sa-report-dial {
+  margin: 0 auto;
+  text-align: left;
+  width: 150px;
+  white-space: nowrap;
+}
+#sa-report-content .sa-report-sociobarriers {
+  min-width: 70% ;
+  max-width: 700px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+#sa-report-content .sa-report-sociobarriers td {
+  border: 1px solid #444;
+  padding: 2px;
+}
+#sa-report-content td.sa-report-sociobarriers-area {
+  padding-left: 15px;
+}
+#sa-report-content .sa-background-gray {
+  background: #C0C0C0;
+}
+#sa-report-content .sa-vulnerable-header {
+  background: #C0504D;
+  padding: 10px;
+  color: #fff;
+  clear: left;
+  margin: 10px 0 0 0;
+}
+#sa-report-content #sa-vulnerable-map {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 450px;
+  margin-bottom: 20px;
+}
+#sa-report-content #sa-vulnerable-map img {
+  width: 100%;
+  height: 450px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid #bbb;
+}
+#sa-report-content #sa-vulnerable-sidebar {
+  clear: left;
+  margin: 0 auto;
+  padding: 0;
+}
+#sa-report-content #sa-vulnerable-maplegend {
+  border: 1px solid #bbb;
+  padding: 5px;
+  margin: 0 5px 5px 5px;
+}
+#sa-report-content .sa-vulnerable-map-legend {
+  padding-left: 2.2em;
+  text-indent: -2.2em;
+  margin-top: 5px;
+}
+#sa-report-content #sa-vulnerable-maplegend span {
+  display: inline-block;
+  height: 15px;
+  margin-right: 5px;
+  vertical-align: middle;
+  width: 20px;
+}
+#sa-report-content #sa-vulnerable-contact {
+  border: 1px solid #bbb;
+  font-weight: 600;
+  padding: 5px;
+  margin: 15px 5px;
+}
+#sa-report-content #sa-reference {
+  font-size: 10pt;
+}
+#sa-report-content #sa-reference #footer {
+  border-bottom: 1px solid #000;
+  width: 200px;
+  margin: 10px 0 5px;
+}
+#sa-report-content .sa-list p {
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#sa-report-content #sa-reference .sa-list p {
+  font-size: 9pt;
+  margin-bottom: 8px;
+}
+#sa-report-content .sa-report-cols {
+  width: 100%;
+}
+#sa-report-content .sa-report-cols td {
+  vertical-align: top;
+  padding: 0 10px;
+}
+#sa-report-content .sa-report-cols td.col2 {
+  width: 50%;
+}
+#sa-report-content .sa-report-cols td.col3 {
+  width: 33%;
+}
+#sa-report-content .w3-row::after,
+#sa-report-content .w3-clear::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+#sa-report-content .w3-half,
+#sa-report-content .w3-third,
+#sa-report-content .w3-threequarter,
+#sa-report-content .w3-quarter {
+  float: left;
+  width: 99.99999%;
+  padding: 0 8px;
+  margin-bottom: 10px;
+}
+#sa-report-content .w3-rest {
+  overflow: hidden;
+}
+#sa-report-content .sa-col-media {
+  max-width: 260px;
+}
+#sa-report-content .sa-col-middle {
+  min-width: 223px;
+}
+#sa-report-content .sa-col-end {
+  padding: 0;
+}
+#sa-report-content .sa-col-1 {
+  padding-right: 10px;
+}
+#sa-report-content .sa-col-2 {
+  padding: 0 5px;
+}
+#sa-report-content .sa-col-3 {
+  padding-left: 10px;
+}
+.sa-report-action .report-save-message {
+  display: none;
+  color: #f00;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+@media screen and (min-width: 601px) {
+  #sa-report-content .w3-third {
+    width: 33.3333%;
+    margin: 0;
+    padding: 0 8px;
+  }
+  #sa-report-content .w3-half {
+    width: 49.99999%;
+    margin: 0;
+    padding: 0 8px;
+  }
+  #sa-report-content .w3-threequarter {
+    width: 74.99999%;
+  }
+  #sa-report-content .sa-col-media {
+    max-width: none;
+  }
+  #sa-report-content .sa-img {
+    white-space: nowrap;
+  }
+  #sa-report-content .sa-vulnerable-header {
+    margin-left: 215px;
+    height: 140px;
+    clear: none;
+  }
+  #sa-report-content #sa-vulnerable-map,
+  #sa-report-content #sa-vulnerable-map img {
+    width: 600px;
+    height: 615px;
+    margin: 0;
+  }
+  #sa-report-content #sa-vulnerable-sidebar {
+    clear: none;
+    padding-left: 10px;
+  }
+  #sa-report-content .sa-report-indicator-food {
+    min-height: 240px;
+  }
+  #sa-report-content .sa-report-indicator-physical {
+    min-height: 250px;
+  }
+  #sa-report-content .sa-report-indicator-health {
+    min-height: 220px;
+  }
+}
+@media screen and (min-width: 801px) {
+  #sa-report-content .sa-col-media {
+    min-width: 260px;
+  }
+  #sa-report-content .sa-col-middle {
+    padding: 0 10px;
+    min-width: 223px;
+  }
+}
+/*# sourceMappingURL=sa-report-card.css.map */

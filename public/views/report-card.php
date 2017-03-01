@@ -639,7 +639,7 @@ function sa_report_card() {
 
 					<div class="sa-list">
 						<p>1. National Center for Education Statistics. <a href="http://nces.ed.gov/programs/coe/indicator_cge.asp" target="_blank">http://nces.ed.gov/programs/coe/indicator_cge.asp</a>. </p>
-						<p>2. U.S. Census Bureau. American Community Survey (<a href="http://www.census.gov/programs-surveys/acs/" target="_blank">ACS</a>). 2010-2014. U.S. Department of Commerce, Washington, DC. Available.</p>
+						<p>2. U.S. Census Bureau. American Community Survey (<a href="http://www.census.gov/programs-surveys/acs/" target="_blank">ACS</a>). 2011-2015. U.S. Department of Commerce, Washington, DC. Available.</p>
 						<p>3. County Health Rankings (2016). <a href="http://www.countyhealthrankings.org/" target="_blank">http://www.countyhealthrankings.org/</a>.</p>
 						<p>4. National Survey of Children's Health 2011-12. Data Resource Center for Child and Adolescent Health.</p>
 						<p>5. Overweight and Obesity: Centers for Disease Control and Prevention (CDC), Behavioral Risk Factor Surveillance System (BRFSS). 2011-12. Atlanta, GA..<sup>1</sup></p>
@@ -927,7 +927,7 @@ function sa_report_vulnerable_population_page($geoid){
 		);
 	try{
 		// get data and map for vulnerable population
-		$json_value = sa_report_get_json('', $geoid, '&map_width=600&map_height=620', 'vpf');
+		$json_value = sa_report_get_json('', $geoid, '&map_width=600&map_height=615', 'vpf');
 
 		if ($json_value->values != null){
 			$data->pct_white = sa_report_get_single_digit_pct($json_value->values[0]->value);
